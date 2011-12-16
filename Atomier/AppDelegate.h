@@ -7,9 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GoogleReader.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+#define kNOTIFICATION_LOGIN_SUCCESS @"kNOTIFICATION_LOGIN_SUCCESS"
+#define kNOTIFICATION_LOGIN_FAILED @"kNOTIFICATION_LOGIN_FAILED"
+
+@interface AppDelegate : UIResponder <UIApplicationDelegate, GoogleReaderDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+
+- (void)requestSession;
+- (void)requestSessionWithEmail:(NSString *)email password:(NSString *)password;
 
 @end

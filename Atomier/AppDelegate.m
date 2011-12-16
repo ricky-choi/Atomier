@@ -7,6 +7,17 @@
 //
 
 #import "AppDelegate.h"
+#import "ViewController.h"
+
+@interface AppDelegate ()
+
+- (BOOL)existSignInIDAndPassword;
+- (void)showSignInView;
+
+- (NSString *)savedGoogleID;
+- (NSString *)savedGooglePassword;
+
+@end
 
 @implementation AppDelegate
 
@@ -46,6 +57,16 @@
 	/*
 	 Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 	 */
+	GoogleReader *reader = [GoogleReader sharedInstance];
+	reader.delegate = self;
+	[reader deleteToken];
+	
+	if ([reader isAuth]) {
+		[reader requestToken];
+	}
+	else if ([reader isAuth] == NO) {
+		[self requestSession];		
+	}
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -55,6 +76,78 @@
 	 Save data if appropriate.
 	 See also applicationDidEnterBackground:.
 	 */
+}
+
+#pragma mark -
+
+- (void)requestSession {
+	if ([self existSignInIDAndPassword]) {
+		// 저장되어 있는 아이디와 패스워드가 있다.
+		[self requestSessionWithEmail:[self savedGoogleID] password:[self savedGooglePassword]];
+	} else {
+		[self showSignInView];
+	}
+}
+
+- (void)requestSessionWithEmail:(NSString *)email password:(NSString *)password {
+	if (email && password) {
+		GoogleReader *reader = [GoogleReader sharedInstance];
+		reader.email = email;
+		reader.password = password;
+		[reader requestSession];
+	}	
+}
+
+- (void)showSignInView {
+	ViewController *viewController = [self.window.rootViewController.storyboard instantiateViewControllerWithIdentifier:@"ViewController"];
+	[self.window.rootViewController presentModalViewController:viewController animated:NO];
+}
+
+- (BOOL)existSignInIDAndPassword {
+	return ([self savedGoogleID] && [self savedGooglePassword]);
+}
+
+- (NSString *)savedGoogleID {
+	return nil;
+}
+
+- (NSString *)savedGooglePassword {
+	return nil;
+}
+
+#pragma mark - GoogleReader Delegate
+
+- (void)googleReaderAuthenticateSuccess {
+	NSLog(@"googleReaderAuthenticateSuccess");
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_LOGIN_SUCCESS
+														object:nil
+													  userInfo:nil];
+}
+- (void)googleReaderAuthenticateFailed {
+	NSLog(@"googleReaderAuthenticateFailed");
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_LOGIN_FAILED
+														object:nil
+													  userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Authenticate", @"Kind", nil]];
+}
+
+- (void)googleReaderRequestTokenFailed {
+	NSLog(@"googleReaderRequestTokenFailed");
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_LOGIN_FAILED
+														object:nil
+													  userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Token", @"Kind", nil]];
+}
+
+- (void)googleReaderAllSubscriptionsDidDownload:(NSArray *)allSubscriptions {
+	NSLog(@"googleReaderAllSubscriptionsDidDownload");
+}
+- (void)googleReaderUnreadsDidDownload:(NSArray *)allUnreads {
+	NSLog(@"googleReaderUnreadsDidDownload");
+}
+- (void)googleReaderStaredDidDownload:(NSArray *)allStareds {
+	NSLog(@"googleReaderStaredDidDownload");
 }
 
 @end
