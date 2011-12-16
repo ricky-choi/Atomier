@@ -19,6 +19,8 @@
 
 #define REFRESH_COUNT_IMMEDIATE 0
 
+#define DEFAULT_KEY_SYNCDATE @"DEFAULT_KEY_SYNCDATE"
+
 @interface AppDelegate ()
 
 - (BOOL)existSignInIDAndPassword;
@@ -121,7 +123,7 @@
 	/*
 	 Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 	 */
-	return;
+
 	GoogleReader *reader = [GoogleReader sharedInstance];
 	reader.delegate = self;
 	[reader deleteToken];
@@ -185,7 +187,14 @@
 - (void)googleReaderAuthenticateSuccess {
 	NSLog(@"googleReaderAuthenticateSuccess");
 	
-	[self refresh];
+	NSDate *lastSyncDate = [[NSUserDefaults standardUserDefaults] valueForKey:DEFAULT_KEY_SYNCDATE];
+	NSDate *now = [NSDate date];
+	NSTimeInterval interval = [now timeIntervalSinceDate:lastSyncDate];
+	NSTimeInterval oneDay = 24 * 60 * 60;
+	
+	if (interval > oneDay) {
+		[self refresh];
+	}	
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_LOGIN_SUCCESS
 														object:nil
@@ -521,6 +530,9 @@
 	NSLog(@"check load done: %@, %@, %@", loadingForSubscriptions ? @"YES" : @"NO", loadingForUnreads ? @"YES" : @"NO", loadingForStarreds ? @"YES" : @"NO");
 	if (loadingForSubscriptions == NO && loadingForUnreads == NO && loadingForStarreds == NO) {
 		// loading complete
+		
+		[[NSUserDefaults standardUserDefaults] setValue:[NSDate date] forKey:DEFAULT_KEY_SYNCDATE];
+		[[NSUserDefaults standardUserDefaults] synchronize];
 		
 #if (REFRESH_COUNT_IMMEDIATE == 0)
 		NSLog(@"refresh count all");
