@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TopViewController : UIViewController
+@interface TopViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end

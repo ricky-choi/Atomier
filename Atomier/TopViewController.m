@@ -8,7 +8,16 @@
 
 #import "TopViewController.h"
 
+@interface TopViewController ()
+
+@property (nonatomic, retain) UIView *sectionView;
+
+@end
+
 @implementation TopViewController
+
+@synthesize tableView = _tableView;
+@synthesize sectionView = _sectionView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -46,6 +55,7 @@
 
 - (void)viewDidUnload
 {
+	[self setTableView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -55,6 +65,51 @@
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+#pragma mark - UITableView Datasource and Delegate
+
+#define SECTION_HEIGHT 30.0f
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return nil;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	return 0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+	return SECTION_HEIGHT;
+}
+
+- (UIView *)sectionView {
+	if (_sectionView == nil) {
+		_sectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.bounds.size.width, SECTION_HEIGHT)];
+		_sectionView.backgroundColor = [UIColor blueColor];
+		
+		UISegmentedControl *segmentControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Unread", @"Starred", @"All Items", nil]];
+		segmentControl.segmentedControlStyle = UISegmentedControlStyleBar;
+		segmentControl.frame = _sectionView.bounds;
+		segmentControl.center = _sectionView.center;
+		segmentControl.selectedSegmentIndex = 0;
+		
+		[_sectionView addSubview:segmentControl];
+	}
+	
+	return _sectionView;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+	if (section == 0) {
+		return self.sectionView;
+	}
+	
+	return nil;
 }
 
 @end
