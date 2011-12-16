@@ -1,0 +1,296 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6933994A149B141100DD4E53 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69339949149B141100DD4E53 /* UIKit.framework */; };
+		6933994C149B141100DD4E53 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6933994B149B141100DD4E53 /* Foundation.framework */; };
+		6933994E149B141100DD4E53 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6933994D149B141100DD4E53 /* CoreGraphics.framework */; };
+		69339954149B141100DD4E53 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 69339952149B141100DD4E53 /* InfoPlist.strings */; };
+		69339956149B141100DD4E53 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 69339955149B141100DD4E53 /* main.m */; };
+		6933995A149B141100DD4E53 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 69339959149B141100DD4E53 /* AppDelegate.m */; };
+		6933995D149B141100DD4E53 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6933995B149B141100DD4E53 /* MainStoryboard_iPhone.storyboard */; };
+		69339960149B141100DD4E53 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6933995E149B141100DD4E53 /* MainStoryboard_iPad.storyboard */; };
+		69339963149B141100DD4E53 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69339962149B141100DD4E53 /* ViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		69339945149B141100DD4E53 /* Atomier.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Atomier.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		69339949149B141100DD4E53 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		6933994B149B141100DD4E53 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		6933994D149B141100DD4E53 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		69339951149B141100DD4E53 /* Atomier-Info.plist */ = {isa = PBXFileReference; path = "Atomier-Info.plist"; sourceTree = "<group>"; };
+		69339953149B141100DD4E53 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		69339955149B141100DD4E53 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		69339957149B141100DD4E53 /* Atomier-Prefix.pch */ = {isa = PBXFileReference; path = "Atomier-Prefix.pch"; sourceTree = "<group>"; };
+		69339958149B141100DD4E53 /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
+		69339959149B141100DD4E53 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		6933995C149B141100DD4E53 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
+		6933995F149B141100DD4E53 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
+		69339961149B141100DD4E53 /* ViewController.h */ = {isa = PBXFileReference; path = ViewController.h; sourceTree = "<group>"; };
+		69339962149B141100DD4E53 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		69339942149B141100DD4E53 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6933994A149B141100DD4E53 /* UIKit.framework in Frameworks */,
+				6933994C149B141100DD4E53 /* Foundation.framework in Frameworks */,
+				6933994E149B141100DD4E53 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6933993A149B141100DD4E53 = {
+			isa = PBXGroup;
+			children = (
+				6933994F149B141100DD4E53 /* Atomier */,
+				69339948149B141100DD4E53 /* Frameworks */,
+				69339946149B141100DD4E53 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		69339946149B141100DD4E53 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				69339945149B141100DD4E53 /* Atomier.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		69339948149B141100DD4E53 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				69339949149B141100DD4E53 /* UIKit.framework */,
+				6933994B149B141100DD4E53 /* Foundation.framework */,
+				6933994D149B141100DD4E53 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6933994F149B141100DD4E53 /* Atomier */ = {
+			isa = PBXGroup;
+			children = (
+				69339958149B141100DD4E53 /* AppDelegate.h */,
+				69339959149B141100DD4E53 /* AppDelegate.m */,
+				6933995B149B141100DD4E53 /* MainStoryboard_iPhone.storyboard */,
+				6933995E149B141100DD4E53 /* MainStoryboard_iPad.storyboard */,
+				69339961149B141100DD4E53 /* ViewController.h */,
+				69339962149B141100DD4E53 /* ViewController.m */,
+				69339950149B141100DD4E53 /* Supporting Files */,
+			);
+			path = Atomier;
+			sourceTree = "<group>";
+		};
+		69339950149B141100DD4E53 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				69339951149B141100DD4E53 /* Atomier-Info.plist */,
+				69339952149B141100DD4E53 /* InfoPlist.strings */,
+				69339955149B141100DD4E53 /* main.m */,
+				69339957149B141100DD4E53 /* Atomier-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		69339944149B141100DD4E53 /* Atomier */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 69339966149B141100DD4E53 /* Build configuration list for PBXNativeTarget "Atomier" */;
+			buildPhases = (
+				69339941149B141100DD4E53 /* Sources */,
+				69339942149B141100DD4E53 /* Frameworks */,
+				69339943149B141100DD4E53 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Atomier;
+			productName = Atomier;
+			productReference = 69339945149B141100DD4E53 /* Atomier.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6933993C149B141100DD4E53 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = Appcid;
+			};
+			buildConfigurationList = 6933993F149B141100DD4E53 /* Build configuration list for PBXProject "Atomier" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 6933993A149B141100DD4E53;
+			productRefGroup = 69339946149B141100DD4E53 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				69339944149B141100DD4E53 /* Atomier */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		69339943149B141100DD4E53 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				69339954149B141100DD4E53 /* InfoPlist.strings in Resources */,
+				6933995D149B141100DD4E53 /* MainStoryboard_iPhone.storyboard in Resources */,
+				69339960149B141100DD4E53 /* MainStoryboard_iPad.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		69339941149B141100DD4E53 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				69339956149B141100DD4E53 /* main.m in Sources */,
+				6933995A149B141100DD4E53 /* AppDelegate.m in Sources */,
+				69339963149B141100DD4E53 /* ViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		69339952149B141100DD4E53 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				69339953149B141100DD4E53 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		6933995B149B141100DD4E53 /* MainStoryboard_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6933995C149B141100DD4E53 /* en */,
+			);
+			name = MainStoryboard_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		6933995E149B141100DD4E53 /* MainStoryboard_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6933995F149B141100DD4E53 /* en */,
+			);
+			name = MainStoryboard_iPad.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		69339964149B141100DD4E53 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		69339965149B141100DD4E53 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		69339967149B141100DD4E53 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
+				INFOPLIST_FILE = "Atomier/Atomier-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		69339968149B141100DD4E53 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
+				INFOPLIST_FILE = "Atomier/Atomier-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6933993F149B141100DD4E53 /* Build configuration list for PBXProject "Atomier" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				69339964149B141100DD4E53 /* Debug */,
+				69339965149B141100DD4E53 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		69339966149B141100DD4E53 /* Build configuration list for PBXNativeTarget "Atomier" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				69339967149B141100DD4E53 /* Debug */,
+				69339968149B141100DD4E53 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6933993C149B141100DD4E53 /* Project object */;
+}
