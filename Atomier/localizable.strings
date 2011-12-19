@@ -1,0 +1,14 @@
+/* 
+  localizable.strings
+  Atomier
+
+  Created by Choi Jaeyoung on 12/19/11.
+  Copyright (c) 2011 Appcid. All rights reserved.
+*/
+
+"Unread" = "안 읽은 글";
+"Starred" = "별표한 글";
+"All Items" = "모든 글";
+
+"Subscribe" = "구독";
+"Unsubscribe" = "구독 해지";

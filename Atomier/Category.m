@@ -36,7 +36,7 @@
 	self.starredCount = [NSNumber numberWithUnsignedInteger:count];
 }
 
-- (Feed *)latestFeed {
+- (Feed *)latestFeed {	
 	__block Subscription *returnSubscription = nil;
 	[self.subscriptions enumerateObjectsUsingBlock:^(id obj, BOOL *stop){
 		Subscription *subscription = (Subscription *)obj;

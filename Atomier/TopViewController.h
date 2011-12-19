@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
+#import "PreviewFeed.h"
 
-@interface TopViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate>
+@interface TopViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, PreviewFeedDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
@@ -18,6 +19,8 @@
 @property (assign, nonatomic) NSInteger currentSegment;
 @property (strong, nonatomic) NSString *currentCacheNameForCategory;
 @property (strong, nonatomic) NSString *currentCacheNameForSubscription;
+@property (strong, nonatomic) PreviewFeed *previewFeed;
+@property (strong, nonatomic) PreviewFeed *tempPreviewFeed;
 
 - (IBAction)refresh:(id)sender;
 - (IBAction)changeMode:(id)sender;

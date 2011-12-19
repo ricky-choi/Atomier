@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GoogleReader.h"
+#import "Subscription.h"
 
 #define kNOTIFICATION_LOGIN_SUCCESS @"kNOTIFICATION_LOGIN_SUCCESS"
 #define kNOTIFICATION_LOGIN_FAILED @"kNOTIFICATION_LOGIN_FAILED"
@@ -33,5 +34,6 @@
 - (NSURL *)applicationCachesDirectory;
 
 - (void)refresh;
+- (void)unsubscribe:(Subscription *)subscription;
 
 @end

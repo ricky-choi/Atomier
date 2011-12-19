@@ -7,6 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		69142930149DAF010096C5AE /* CDataChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 6914290F149DAF010096C5AE /* CDataChunk.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		69142931149DAF010096C5AE /* Chunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 69142911149DAF010096C5AE /* Chunk.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		69142932149DAF010096C5AE /* CommentChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 69142913149DAF010096C5AE /* CommentChunk.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		69142933149DAF010096C5AE /* CSSPartMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 69142915149DAF010096C5AE /* CSSPartMatcher.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		69142934149DAF010096C5AE /* CSSSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 69142917149DAF010096C5AE /* CSSSelector.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		69142935149DAF010096C5AE /* CSSSelectorMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 69142919149DAF010096C5AE /* CSSSelectorMatcher.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		69142936149DAF010096C5AE /* CSSSelectorPart.m in Sources */ = {isa = PBXBuildFile; fileRef = 6914291B149DAF010096C5AE /* CSSSelectorPart.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		69142937149DAF010096C5AE /* DoctypeChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 6914291D149DAF010096C5AE /* DoctypeChunk.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		69142938149DAF010096C5AE /* DocumentRoot.m in Sources */ = {isa = PBXBuildFile; fileRef = 6914291F149DAF010096C5AE /* DocumentRoot.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		69142939149DAF010096C5AE /* Element.m in Sources */ = {isa = PBXBuildFile; fileRef = 69142921149DAF010096C5AE /* Element.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		6914293A149DAF010096C5AE /* ElementParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 69142923149DAF010096C5AE /* ElementParser.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		6914293B149DAF010096C5AE /* EntityChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 69142925149DAF010096C5AE /* EntityChunk.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		6914293C149DAF010096C5AE /* NSString_HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 69142927149DAF010096C5AE /* NSString_HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		6914293D149DAF010096C5AE /* ProcessingInstructionChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 69142929149DAF010096C5AE /* ProcessingInstructionChunk.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		6914293E149DAF010096C5AE /* TagChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 6914292B149DAF010096C5AE /* TagChunk.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		6914293F149DAF010096C5AE /* TxtChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 6914292D149DAF010096C5AE /* TxtChunk.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		69142940149DAF010096C5AE /* URLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 6914292F149DAF010096C5AE /* URLParser.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		69142943149DC8550096C5AE /* PreviewFeed.m in Sources */ = {isa = PBXBuildFile; fileRef = 69142942149DC8550096C5AE /* PreviewFeed.m */; };
 		6933994A149B141100DD4E53 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69339949149B141100DD4E53 /* UIKit.framework */; };
 		6933994C149B141100DD4E53 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6933994B149B141100DD4E53 /* Foundation.framework */; };
 		6933994E149B141100DD4E53 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6933994D149B141100DD4E53 /* CoreGraphics.framework */; };
@@ -16,6 +34,7 @@
 		6933995D149B141100DD4E53 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6933995B149B141100DD4E53 /* MainStoryboard_iPhone.storyboard */; };
 		69339960149B141100DD4E53 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6933995E149B141100DD4E53 /* MainStoryboard_iPad.storyboard */; };
 		69339963149B141100DD4E53 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69339962149B141100DD4E53 /* ViewController.m */; };
+		693CA342149F0A5B00DA7DC8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 693CA341149F0A5B00DA7DC8 /* Localizable.strings */; };
 		695035DF149B181D005C7151 /* TopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 695035DE149B181D005C7151 /* TopViewController.m */; };
 		695035E6149B18E8005C7151 /* GoogleReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 695035E5149B18E8005C7151 /* GoogleReader.m */; };
 		695035FF149B1911005C7151 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 695035EA149B1911005C7151 /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -54,6 +73,42 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6914290E149DAF010096C5AE /* CDataChunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDataChunk.h; sourceTree = "<group>"; };
+		6914290F149DAF010096C5AE /* CDataChunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDataChunk.m; sourceTree = "<group>"; };
+		69142910149DAF010096C5AE /* Chunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chunk.h; sourceTree = "<group>"; };
+		69142911149DAF010096C5AE /* Chunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Chunk.m; sourceTree = "<group>"; };
+		69142912149DAF010096C5AE /* CommentChunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentChunk.h; sourceTree = "<group>"; };
+		69142913149DAF010096C5AE /* CommentChunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentChunk.m; sourceTree = "<group>"; };
+		69142914149DAF010096C5AE /* CSSPartMatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSPartMatcher.h; sourceTree = "<group>"; };
+		69142915149DAF010096C5AE /* CSSPartMatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSPartMatcher.m; sourceTree = "<group>"; };
+		69142916149DAF010096C5AE /* CSSSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSSelector.h; sourceTree = "<group>"; };
+		69142917149DAF010096C5AE /* CSSSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSSelector.m; sourceTree = "<group>"; };
+		69142918149DAF010096C5AE /* CSSSelectorMatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSSelectorMatcher.h; sourceTree = "<group>"; };
+		69142919149DAF010096C5AE /* CSSSelectorMatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSSelectorMatcher.m; sourceTree = "<group>"; };
+		6914291A149DAF010096C5AE /* CSSSelectorPart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSSelectorPart.h; sourceTree = "<group>"; };
+		6914291B149DAF010096C5AE /* CSSSelectorPart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSSelectorPart.m; sourceTree = "<group>"; };
+		6914291C149DAF010096C5AE /* DoctypeChunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DoctypeChunk.h; sourceTree = "<group>"; };
+		6914291D149DAF010096C5AE /* DoctypeChunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DoctypeChunk.m; sourceTree = "<group>"; };
+		6914291E149DAF010096C5AE /* DocumentRoot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentRoot.h; sourceTree = "<group>"; };
+		6914291F149DAF010096C5AE /* DocumentRoot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentRoot.m; sourceTree = "<group>"; };
+		69142920149DAF010096C5AE /* Element.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Element.h; sourceTree = "<group>"; };
+		69142921149DAF010096C5AE /* Element.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Element.m; sourceTree = "<group>"; };
+		69142922149DAF010096C5AE /* ElementParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElementParser.h; sourceTree = "<group>"; };
+		69142923149DAF010096C5AE /* ElementParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ElementParser.m; sourceTree = "<group>"; };
+		69142924149DAF010096C5AE /* EntityChunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntityChunk.h; sourceTree = "<group>"; };
+		69142925149DAF010096C5AE /* EntityChunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EntityChunk.m; sourceTree = "<group>"; };
+		69142926149DAF010096C5AE /* NSString_HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSString_HTML.h; sourceTree = "<group>"; };
+		69142927149DAF010096C5AE /* NSString_HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSString_HTML.m; sourceTree = "<group>"; };
+		69142928149DAF010096C5AE /* ProcessingInstructionChunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcessingInstructionChunk.h; sourceTree = "<group>"; };
+		69142929149DAF010096C5AE /* ProcessingInstructionChunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProcessingInstructionChunk.m; sourceTree = "<group>"; };
+		6914292A149DAF010096C5AE /* TagChunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagChunk.h; sourceTree = "<group>"; };
+		6914292B149DAF010096C5AE /* TagChunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagChunk.m; sourceTree = "<group>"; };
+		6914292C149DAF010096C5AE /* TxtChunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TxtChunk.h; sourceTree = "<group>"; };
+		6914292D149DAF010096C5AE /* TxtChunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TxtChunk.m; sourceTree = "<group>"; };
+		6914292E149DAF010096C5AE /* URLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = URLParser.h; sourceTree = "<group>"; };
+		6914292F149DAF010096C5AE /* URLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = URLParser.m; sourceTree = "<group>"; };
+		69142941149DC8550096C5AE /* PreviewFeed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreviewFeed.h; sourceTree = "<group>"; };
+		69142942149DC8550096C5AE /* PreviewFeed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreviewFeed.m; sourceTree = "<group>"; };
 		69339945149B141100DD4E53 /* Atomier.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Atomier.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		69339949149B141100DD4E53 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6933994B149B141100DD4E53 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -68,6 +123,7 @@
 		6933995F149B141100DD4E53 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
 		69339961149B141100DD4E53 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		69339962149B141100DD4E53 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		693CA341149F0A5B00DA7DC8 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		695035DD149B181D005C7151 /* TopViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopViewController.h; sourceTree = "<group>"; };
 		695035DE149B181D005C7151 /* TopViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopViewController.m; sourceTree = "<group>"; };
 		695035E4149B18E8005C7151 /* GoogleReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GoogleReader.h; path = ../../ReaderStandard/ReaderStandard/GoogleReader.h; sourceTree = "<group>"; };
@@ -147,6 +203,47 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6914290C149DAEED0096C5AE /* Element Parser */ = {
+			isa = PBXGroup;
+			children = (
+				6914290E149DAF010096C5AE /* CDataChunk.h */,
+				6914290F149DAF010096C5AE /* CDataChunk.m */,
+				69142910149DAF010096C5AE /* Chunk.h */,
+				69142911149DAF010096C5AE /* Chunk.m */,
+				69142912149DAF010096C5AE /* CommentChunk.h */,
+				69142913149DAF010096C5AE /* CommentChunk.m */,
+				69142914149DAF010096C5AE /* CSSPartMatcher.h */,
+				69142915149DAF010096C5AE /* CSSPartMatcher.m */,
+				69142916149DAF010096C5AE /* CSSSelector.h */,
+				69142917149DAF010096C5AE /* CSSSelector.m */,
+				69142918149DAF010096C5AE /* CSSSelectorMatcher.h */,
+				69142919149DAF010096C5AE /* CSSSelectorMatcher.m */,
+				6914291A149DAF010096C5AE /* CSSSelectorPart.h */,
+				6914291B149DAF010096C5AE /* CSSSelectorPart.m */,
+				6914291C149DAF010096C5AE /* DoctypeChunk.h */,
+				6914291D149DAF010096C5AE /* DoctypeChunk.m */,
+				6914291E149DAF010096C5AE /* DocumentRoot.h */,
+				6914291F149DAF010096C5AE /* DocumentRoot.m */,
+				69142920149DAF010096C5AE /* Element.h */,
+				69142921149DAF010096C5AE /* Element.m */,
+				69142922149DAF010096C5AE /* ElementParser.h */,
+				69142923149DAF010096C5AE /* ElementParser.m */,
+				69142924149DAF010096C5AE /* EntityChunk.h */,
+				69142925149DAF010096C5AE /* EntityChunk.m */,
+				69142926149DAF010096C5AE /* NSString_HTML.h */,
+				69142927149DAF010096C5AE /* NSString_HTML.m */,
+				69142928149DAF010096C5AE /* ProcessingInstructionChunk.h */,
+				69142929149DAF010096C5AE /* ProcessingInstructionChunk.m */,
+				6914292A149DAF010096C5AE /* TagChunk.h */,
+				6914292B149DAF010096C5AE /* TagChunk.m */,
+				6914292C149DAF010096C5AE /* TxtChunk.h */,
+				6914292D149DAF010096C5AE /* TxtChunk.m */,
+				6914292E149DAF010096C5AE /* URLParser.h */,
+				6914292F149DAF010096C5AE /* URLParser.m */,
+			);
+			name = "Element Parser";
+			sourceTree = "<group>";
+		};
 		6933993A149B141100DD4E53 = {
 			isa = PBXGroup;
 			children = (
@@ -196,6 +293,7 @@
 			children = (
 				6950362F149B53A5005C7151 /* temp image */,
 				69339951149B141100DD4E53 /* Atomier-Info.plist */,
+				693CA341149F0A5B00DA7DC8 /* Localizable.strings */,
 				69339952149B141100DD4E53 /* InfoPlist.strings */,
 				69339955149B141100DD4E53 /* main.m */,
 				69339957149B141100DD4E53 /* Atomier-Prefix.pch */,
@@ -224,6 +322,8 @@
 				695035DE149B181D005C7151 /* TopViewController.m */,
 				6950362C149B3B8B005C7151 /* TopViewCell.h */,
 				6950362D149B3B8B005C7151 /* TopViewCell.m */,
+				69142941149DC8550096C5AE /* PreviewFeed.h */,
+				69142942149DC8550096C5AE /* PreviewFeed.m */,
 			);
 			name = "Folder & Subscription List";
 			sourceTree = "<group>";
@@ -240,6 +340,7 @@
 		695035E8149B18F9005C7151 /* 3rd Party */ = {
 			isa = PBXGroup;
 			children = (
+				6914290C149DAEED0096C5AE /* Element Parser */,
 				69503608149B1918005C7151 /* ASIHTTP */,
 			);
 			name = "3rd Party";
@@ -377,6 +478,7 @@
 				69503641149B53B4005C7151 /* FeedDefaultIcon@2x.png in Resources */,
 				69503642149B53B4005C7151 /* Folder.png in Resources */,
 				69503643149B53B4005C7151 /* Folder@2x.png in Resources */,
+				693CA342149F0A5B00DA7DC8 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,6 +512,24 @@
 				69503655149B65F9005C7151 /* Subscription.m in Sources */,
 				69503657149B65F9005C7151 /* Feed.m in Sources */,
 				69503658149B6B9D005C7151 /* Category.m in Sources */,
+				69142930149DAF010096C5AE /* CDataChunk.m in Sources */,
+				69142931149DAF010096C5AE /* Chunk.m in Sources */,
+				69142932149DAF010096C5AE /* CommentChunk.m in Sources */,
+				69142933149DAF010096C5AE /* CSSPartMatcher.m in Sources */,
+				69142934149DAF010096C5AE /* CSSSelector.m in Sources */,
+				69142935149DAF010096C5AE /* CSSSelectorMatcher.m in Sources */,
+				69142936149DAF010096C5AE /* CSSSelectorPart.m in Sources */,
+				69142937149DAF010096C5AE /* DoctypeChunk.m in Sources */,
+				69142938149DAF010096C5AE /* DocumentRoot.m in Sources */,
+				69142939149DAF010096C5AE /* Element.m in Sources */,
+				6914293A149DAF010096C5AE /* ElementParser.m in Sources */,
+				6914293B149DAF010096C5AE /* EntityChunk.m in Sources */,
+				6914293C149DAF010096C5AE /* NSString_HTML.m in Sources */,
+				6914293D149DAF010096C5AE /* ProcessingInstructionChunk.m in Sources */,
+				6914293E149DAF010096C5AE /* TagChunk.m in Sources */,
+				6914293F149DAF010096C5AE /* TxtChunk.m in Sources */,
+				69142940149DAF010096C5AE /* URLParser.m in Sources */,
+				69142943149DC8550096C5AE /* PreviewFeed.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

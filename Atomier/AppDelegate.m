@@ -188,13 +188,18 @@
 	NSLog(@"googleReaderAuthenticateSuccess");
 	
 	NSDate *lastSyncDate = [[NSUserDefaults standardUserDefaults] valueForKey:DEFAULT_KEY_SYNCDATE];
-	NSDate *now = [NSDate date];
-	NSTimeInterval interval = [now timeIntervalSinceDate:lastSyncDate];
-	NSTimeInterval oneDay = 24 * 60 * 60;
-	
-	if (interval > oneDay) {
+	if (lastSyncDate) {
+		NSDate *now = [NSDate date];
+		NSTimeInterval interval = [now timeIntervalSinceDate:lastSyncDate];
+		NSTimeInterval oneDay = 12 * 60 * 60;
+		
+		if (interval > oneDay) {
+			[self refresh];
+		}
+	}
+	else {
 		[self refresh];
-	}	
+	}
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_LOGIN_SUCCESS
 														object:nil
@@ -602,6 +607,15 @@
 	
 	GoogleReader *reader = [GoogleReader sharedInstance];
 	[reader getSubscriptionList];
+}
+
+- (void)unsubscribe:(Subscription *)subscription {
+	NSLog(@"unsubscribe: %@", subscription.keyId);
+	[[GoogleReader sharedInstance] unsubscribeToRSSFeedURL:subscription.keyId];
+	[self.savedSubscriptionIDs removeObjectForKey:subscription.keyId];
+	[self.managedObjectContext deleteObject:subscription];
+	
+	[self saveContext];
 }
 
 #pragma mark - Core Data stack

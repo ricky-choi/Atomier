@@ -77,6 +77,7 @@
 	NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"updatedDate" ascending:ascending];
 	return [unreadFeeds sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 }
+
 - (Feed *)unreadLatestFeed {
 	return [[self unreadFeedsByDate:YES] lastObject];
 }
@@ -87,6 +88,7 @@
 	NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"updatedDate" ascending:ascending];
 	return [starredFeeds sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 }
+
 - (Feed *)starredLatestFeed {
 	return [[self starredFeedsByDate:YES] lastObject];
 }

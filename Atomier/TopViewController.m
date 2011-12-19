@@ -12,12 +12,15 @@
 #import "Category.h"
 #import "Subscription.h"
 #import "Feed.h"
+#import "ContentOrganizer.h"
 
 @interface TopViewController ()
 
 @property (nonatomic, retain) UIView *sectionView;
 
 - (void)configureCell:(TopViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
+- (void)addPreviewFeed:(PreviewFeed *)previewFeed;
+- (BOOL)loadPreviewFeed:(NSFetchedResultsController *)controller;
 
 @end
 
@@ -31,6 +34,8 @@
 @synthesize currentSegment = _currentSegment;
 @synthesize currentCacheNameForCategory = _currentCacheNameForCategory;
 @synthesize currentCacheNameForSubscription = _currentCacheNameForSubscription;
+@synthesize previewFeed = _previewFeed;
+@synthesize tempPreviewFeed = _tempPreviewFeed;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -63,13 +68,91 @@
 }
 */
 
-/*
+- (BOOL)loadPreviewFeed:(NSFetchedResultsController *)controller {
+	if (self.previewFeed == nil || self.previewFeed.needRefresh == YES) {
+		id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[controller sections] objectAtIndex:0];
+		NSUInteger subscriptionCount = [subscriptionSectionInfo numberOfObjects];
+		if (subscriptionCount > 0) {
+			id folder = [controller objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+			Feed *latestFeed;
+			if (self.currentSegment == 0) {
+				latestFeed = [folder unreadLatestFeed];
+			}
+			else if (self.currentSegment == 1) {
+				latestFeed = [folder starredLatestFeed];
+			}
+			else {
+				latestFeed = [folder latestFeed];
+			}
+			if (latestFeed) {
+				self.tempPreviewFeed = [[PreviewFeed alloc] init];
+				self.tempPreviewFeed.feed = latestFeed;
+#if 0
+				[self addPreviewFeed:self.tempPreviewFeed];
+#else
+				if ([self.tempPreviewFeed allDataExist]) {
+					NSLog(@"add preview now");
+					[self addPreviewFeed:self.tempPreviewFeed];
+				}
+				else {
+					NSLog(@"add preview request (%@)", [latestFeed.keyId lastPathComponent]);
+					self.tempPreviewFeed.delegate = self;
+					[[ContentOrganizer sharedInstance] makeSummaryAndFirstImageForID:[latestFeed.keyId lastPathComponent]];
+				}
+#endif
+			}
+			
+			return YES;
+		}
+	}
+	
+	return NO;
+}
+
+- (void)invalidateEditButton {
+	[self.navigationItem.rightBarButtonItem setEnabled:([self.fetchedResultsControllerForSubscription.fetchedObjects count] > 0)];
+}
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	
+	self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	[self invalidateEditButton];
+	
+	UISegmentedControl *segmentControl = [[UISegmentedControl alloc] initWithItems:
+										  [NSArray arrayWithObjects:
+										   NSLocalizedString(@"Unread", nil),
+										   NSLocalizedString(@"Starred", nil),
+										   NSLocalizedString(@"All Items", nil), nil]];
+	segmentControl.segmentedControlStyle = UISegmentedControlStyleBar;
+	segmentControl.selectedSegmentIndex = 0;
+	_currentSegment = segmentControl.selectedSegmentIndex;
+	[segmentControl addTarget:self action:@selector(changeMode:) forControlEvents:UIControlEventValueChanged];
+	
+	UIBarButtonItem *segmentItem = [[UIBarButtonItem alloc] initWithCustomView:segmentControl];
+	UIBarButtonItem *flexibleSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+	
+	self.toolbarItems = [NSArray arrayWithObjects:flexibleSpaceItem, segmentItem, flexibleSpaceItem, nil];
 }
-*/
+
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+	[super setEditing:editing animated:animated];
+	
+	[self.tableView setEditing:editing animated:animated];
+}
+
+- (void)loadAnyPreview {
+	BOOL load = [self loadPreviewFeed:self.fetchedResultsControllerForSubscription];
+	if (load == NO) {
+		[self loadPreviewFeed:self.fetchedResultsControllerForCategory];
+	}
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+}
 
 - (void)viewDidUnload
 {
@@ -90,7 +173,7 @@
 
 #pragma mark - UITableView Datasource and Delegate
 
-#define SECTION_HEIGHT 30.0f
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	static NSString *CellIdentifier = @"FolderCell";
@@ -109,7 +192,16 @@
 		// Subscriptions
 		Subscription *subscription = [self.fetchedResultsControllerForSubscription objectAtIndexPath:indexPath];
 		cell.titleLabel.text = subscription.title;
-		Feed *latestFeed = [subscription unreadLatestFeed];
+		Feed *latestFeed = nil;
+		if (self.currentSegment == 0) {
+			latestFeed = [subscription unreadLatestFeed];
+		}
+		else if (self.currentSegment == 1) {
+			latestFeed = [subscription starredLatestFeed];
+		}
+		else {
+			latestFeed = [subscription latestFeed];
+		}
 		if (latestFeed) {
 			cell.descriptionLabel.text = latestFeed.title;
 		} else {
@@ -128,7 +220,16 @@
 		NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row - subscriptionCount inSection:indexPath.section];
 		Category *category = [self.fetchedResultsControllerForCategory objectAtIndexPath:newIndexPath];
 		cell.titleLabel.text = category.label;
-		Feed *latestFeed = [category latestFeed];
+		Feed *latestFeed = nil;
+		if (self.currentSegment == 0) {
+			latestFeed = [category unreadLatestFeed];
+		}
+		else if (self.currentSegment == 1) {
+			latestFeed = [category starredLatestFeed];
+		}
+		else {
+			latestFeed = [category latestFeed];
+		}
 		if (latestFeed) {
 			cell.descriptionLabel.text = latestFeed.title;
 		} else {
@@ -148,6 +249,10 @@
 	return 1;
 }
 
+- (float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return 66.0f;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	
 	id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:section];
@@ -155,6 +260,47 @@
 	
 	return [subscriptionSectionInfo numberOfObjects] + [categorySectionInfo numberOfObjects];
 }
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+	id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:indexPath.section];
+	if (indexPath.row < [subscriptionSectionInfo numberOfObjects]) {
+		return YES;
+	}
+	
+	return NO;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {	
+	return UITableViewCellEditingStyleDelete;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return NSLocalizedString(@"Unsubscribe", nil);
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+	if (editingStyle == UITableViewCellEditingStyleDelete) {
+		Subscription *subscription = [self.fetchedResultsControllerForSubscription objectAtIndexPath:indexPath];
+		AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		[appDelegate unsubscribe:subscription];
+	}
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:indexPath.section];
+	NSUInteger subscriptionCount = [subscriptionSectionInfo numberOfObjects];
+	if (indexPath.row < subscriptionCount) {
+		// Subscription
+	}
+	else {
+		// Category
+		TopViewController *newTopViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"TopViewController"];
+	}
+}
+
+#if 0
+
+#define SECTION_HEIGHT 30.0f
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
 	if (section == 0) {
@@ -190,6 +336,8 @@
 	
 	return nil;
 }
+
+#endif
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 	
@@ -322,10 +470,33 @@
     return __fetchedResultsControllerForSubscription;
 }
 
+
+
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
 	// In the simplest, most efficient, case, reload the table view.
+	NSLog(@"controllerDidChangeContent: %@", controller);
 	[self.tableView reloadData];
+	
+	[self invalidateEditButton];
+}
+
+- (void)previewFeedImageDownloadCompleted:(PreviewFeed *)sender {
+	[self addPreviewFeed:sender];
+}
+
+- (void)addPreviewFeed:(PreviewFeed *)previewFeed {
+	self.previewFeed = previewFeed;
+	self.previewFeed.needRefresh = NO;
+	
+	UIView *tableHeaderView = [self.tableView tableHeaderView];
+	if (tableHeaderView == nil) {
+		// add
+		[self.tableView setTableHeaderView:previewFeed.headerView];
+	} else {
+		// modify
+		[self.tableView setTableHeaderView:previewFeed.headerView];
+	}
 }
 
 #pragma mark - IBAction
@@ -336,6 +507,8 @@
 }
 
 - (IBAction)changeMode:(id)sender {
+	self.editing = NO;
+	
 	UISegmentedControl *segmentedControl = (UISegmentedControl *)sender;
 	NSInteger segment = [segmentedControl selectedSegmentIndex];
 	_currentSegment = segment;
@@ -346,7 +519,18 @@
 	self.fetchedResultsControllerForCategory = nil;
 	self.fetchedResultsControllerForSubscription = nil;
 	
+#if 0
 	[self.tableView reloadData];
+#else
+	[self.tableView beginUpdates];
+	
+	[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+	[self.tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+	
+	[self.tableView endUpdates];
+#endif
+	
+	[self invalidateEditButton];
 }
 
 @end
