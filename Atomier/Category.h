@@ -23,6 +23,8 @@
 - (void)refreshUnreadCount;
 - (void)refreshStarredCount;
 
+- (NSUInteger)allCount;
+
 - (Subscription *)anySubscription;
 - (Feed *)anyFeed;
 

@@ -26,6 +26,8 @@
 @property (strong, nonatomic) NSMutableDictionary *savedFeedIDs;
 @property (strong, nonatomic) NSMutableDictionary *savedTags;
 
+@property (strong, nonatomic) NSMutableArray *readyGetIcons;
+
 - (void)requestSession;
 - (void)requestSessionWithEmail:(NSString *)email password:(NSString *)password;
 

@@ -52,6 +52,16 @@
 @synthesize savedFeedIDs = _savedFeedIDs;
 @synthesize savedTags = _savedTags;
 
+@synthesize readyGetIcons = _readyGetIcons;
+
+- (NSMutableArray *)readyGetIcons {
+	if (_readyGetIcons == nil) {
+		_readyGetIcons = [NSMutableArray arrayWithCapacity:10];
+	}
+	
+	return _readyGetIcons;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	self.savedCategoryIDs = [NSMutableDictionary dictionaryWithCapacity:10];
@@ -255,14 +265,16 @@
 				} else {
 					// 새로운 카테고리
 					Category *newCategory = [NSEntityDescription insertNewObjectForEntityForName:@"Category" inManagedObjectContext:self.managedObjectContext];
-					newCategory.keyId = categoryID;
-					newCategory.label = [aCategory valueForKey:@"label"];
-					
-					[subscription addCategoriesObject:newCategory];
-					
-					NSLog(@"ADDED Category: %@", [newCategory description]);
-					
-					[self.savedCategoryIDs setValue:newCategory forKey:categoryID];
+					if (newCategory) {
+						newCategory.keyId = categoryID;
+						newCategory.label = [aCategory valueForKey:@"label"];
+						
+						[subscription addCategoriesObject:newCategory];
+						
+						NSLog(@"ADDED Category: %@", [newCategory description]);
+						
+						[self.savedCategoryIDs setValue:newCategory forKey:categoryID];
+					}					
 				}				
 			}
 			// 이미 저장되어 있던 카테고리에서 새롭게 확인한 카테고리들은 삭제되었다.
@@ -286,14 +298,16 @@
 				} else {
 					// 새로운 카테고리
 					Category *newCategory = [NSEntityDescription insertNewObjectForEntityForName:@"Category" inManagedObjectContext:self.managedObjectContext];
-					newCategory.keyId = categoryID;
-					newCategory.label = [aCategory valueForKey:@"label"];
-					
-					[subscription addCategoriesObject:newCategory];
-					
-					NSLog(@"ADDED Category: %@", [newCategory description]);
-					
-					[self.savedCategoryIDs setValue:newCategory forKey:categoryID];
+					if (newCategory) {
+						newCategory.keyId = categoryID;
+						newCategory.label = [aCategory valueForKey:@"label"];
+						
+						[subscription addCategoriesObject:newCategory];
+						
+						NSLog(@"ADDED Category: %@", [newCategory description]);
+						
+						[self.savedCategoryIDs setValue:newCategory forKey:categoryID];
+					}					
 				}				
 			}
 			
@@ -420,6 +434,14 @@
 							// 원본 주소가 없으면 추가해준다.
 							if (subscriptionForFeed.htmlUrl == nil && htmlUrl != nil) {
 								subscriptionForFeed.htmlUrl = htmlUrl;
+#if 0								
+								NSURL *url = [NSURL URLWithString:htmlUrl];
+
+								ContentOrganizer *contentOrganizer = [ContentOrganizer sharedInstance];
+								[contentOrganizer makeIcon:[url host] scheme:[url scheme]];
+#else
+								[self.readyGetIcons addObject:[NSURL URLWithString:htmlUrl]];
+#endif
 							}
 							newFeed.subscription = subscriptionForFeed;
 #if REFRESH_COUNT_IMMEDIATE								
@@ -561,6 +583,15 @@
 #endif		
 		
 		[self saveContext];
+		
+		if ([self.readyGetIcons count] > 0) {
+			for (NSURL *url in self.readyGetIcons) {
+				ContentOrganizer *contentOrganizer = [ContentOrganizer sharedInstance];
+				[contentOrganizer makeIcon:[url host] scheme:[url scheme]];
+			}			
+		}
+		[self.readyGetIcons removeAllObjects];
+		self.readyGetIcons = nil;
 	}
 }
 
@@ -612,6 +643,21 @@
 - (void)unsubscribe:(Subscription *)subscription {
 	NSLog(@"unsubscribe: %@", subscription.keyId);
 	[[GoogleReader sharedInstance] unsubscribeToRSSFeedURL:subscription.keyId];
+	
+	NSSet *willDeleteFeeds = subscription.feeds;
+	for (Feed *willDeleteFeed in willDeleteFeeds) {
+		NSSet *willDeleteAlternates = willDeleteFeed.alternates;
+		for (Alternate *willDeleteAlternate in willDeleteAlternates) {
+			NSLog(@"will delete alternate: %@", willDeleteAlternate);
+			[self.managedObjectContext deleteObject:willDeleteAlternate];
+		}
+		
+		NSLog(@"will delete feed: %@", willDeleteFeed);
+		[self.savedFeedIDs removeObjectForKey:willDeleteFeed.keyId];
+		[self.managedObjectContext deleteObject:willDeleteFeed];
+	}
+	
+	NSLog(@"will delete subscription: %@", subscription);
 	[self.savedSubscriptionIDs removeObjectForKey:subscription.keyId];
 	[self.managedObjectContext deleteObject:subscription];
 	

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 #import "PreviewFeed.h"
+#import "Category.h"
 
 @interface TopViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, PreviewFeedDelegate>
 
@@ -21,6 +22,8 @@
 @property (strong, nonatomic) NSString *currentCacheNameForSubscription;
 @property (strong, nonatomic) PreviewFeed *previewFeed;
 @property (strong, nonatomic) PreviewFeed *tempPreviewFeed;
+
+@property (strong, nonatomic) Category *category;
 
 - (IBAction)refresh:(id)sender;
 - (IBAction)changeMode:(id)sender;

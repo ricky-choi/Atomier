@@ -36,6 +36,7 @@
 @synthesize currentCacheNameForSubscription = _currentCacheNameForSubscription;
 @synthesize previewFeed = _previewFeed;
 @synthesize tempPreviewFeed = _tempPreviewFeed;
+@synthesize category = _category;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -121,14 +122,18 @@
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	[self invalidateEditButton];
 	
+	if (self.category == nil) {
+		UIBarButtonItem *refreshItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresh:)];
+		self.navigationItem.leftBarButtonItem = refreshItem;
+	}
+	
 	UISegmentedControl *segmentControl = [[UISegmentedControl alloc] initWithItems:
 										  [NSArray arrayWithObjects:
 										   NSLocalizedString(@"Unread", nil),
 										   NSLocalizedString(@"Starred", nil),
 										   NSLocalizedString(@"All Items", nil), nil]];
 	segmentControl.segmentedControlStyle = UISegmentedControlStyleBar;
-	segmentControl.selectedSegmentIndex = 0;
-	_currentSegment = segmentControl.selectedSegmentIndex;
+	segmentControl.selectedSegmentIndex = _currentSegment;
 	[segmentControl addTarget:self action:@selector(changeMode:) forControlEvents:UIControlEventValueChanged];
 	
 	UIBarButtonItem *segmentItem = [[UIBarButtonItem alloc] initWithCustomView:segmentControl];
@@ -148,6 +153,12 @@
 	if (load == NO) {
 		[self loadPreviewFeed:self.fetchedResultsControllerForCategory];
 	}
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	
+	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -173,9 +184,71 @@
 
 #pragma mark - UITableView Datasource and Delegate
 
+- (NSUInteger)countForMode:(NSInteger)segment {
+	if (self.category == nil) {
+		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+		NSEntityDescription *entity = [NSEntityDescription entityForName:@"Feed" inManagedObjectContext:self.managedObjectContext];
+		[fetchRequest setEntity:entity];
+		
+		NSPredicate *predicate = nil;
+		if (segment == 0) {
+			predicate = [NSPredicate predicateWithFormat:@"unread = 1"];		
+		}
+		else if (segment == 1) {
+			predicate = [NSPredicate predicateWithFormat:@"starred = 1"];		
+		}
+		
+		if (predicate) {
+			[fetchRequest setPredicate:predicate];
+		}
+		
+		return [self.managedObjectContext countForFetchRequest:fetchRequest error:nil];
+	}
+	
+	if (segment == 0) {
+		return [[self.category unreadCount] unsignedIntegerValue];
+	}
+	else if (segment == 1) {
+		return [[self.category starredCount] unsignedIntegerValue];
+	}
+	else if (segment == 2) {
+		return [self.category allCount];
+	}
+	
+	return 0;
+}
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	if (indexPath.section == 0) {
+		static NSString *AllCellIdentifier = @"AllCell";
+		
+		UITableViewCell *allCell = [tableView dequeueReusableCellWithIdentifier:AllCellIdentifier];
+		if (self.currentSegment == 0) {
+			allCell.textLabel.text = NSLocalizedString(@"Unread", nil);
+			allCell.imageView.image = [UIImage imageNamed:@"UnreadItem"];
+		}
+		else if (self.currentSegment == 1) {
+			allCell.textLabel.text = NSLocalizedString(@"Starred", nil);
+			allCell.imageView.image = [UIImage imageNamed:@"StarredItem"];
+		}
+		else if (self.currentSegment == 2) {
+			allCell.textLabel.text = NSLocalizedString(@"All Items", nil);
+			allCell.imageView.image = [UIImage imageNamed:@"FilterNoneBlack"];
+		}
+		
+		NSUInteger count = [self countForMode:self.currentSegment];
+		if (count > 0) {
+			allCell.detailTextLabel.text = [NSString stringWithFormat:@"%d", count];
+		} else {
+			allCell.detailTextLabel.text = @"";
+		}
+		
+		allCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		
+		return allCell;
+	}
+	
 	static NSString *CellIdentifier = @"FolderCell";
     
     TopViewCell *cell = (TopViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -186,21 +259,29 @@
 
 - (void)configureCell:(TopViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
 	
-	id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:indexPath.section];
+	id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:0];
 	NSUInteger subscriptionCount = [subscriptionSectionInfo numberOfObjects];
 	if (indexPath.row < subscriptionCount) {
 		// Subscriptions
-		Subscription *subscription = [self.fetchedResultsControllerForSubscription objectAtIndexPath:indexPath];
+		// title
+		NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
+		Subscription *subscription = [self.fetchedResultsControllerForSubscription objectAtIndexPath:newIndexPath];
 		cell.titleLabel.text = subscription.title;
+		
+		// inner feed
 		Feed *latestFeed = nil;
+		NSUInteger feedCount = 0;
 		if (self.currentSegment == 0) {
 			latestFeed = [subscription unreadLatestFeed];
+			feedCount = [subscription.unreadCount unsignedIntegerValue];
 		}
 		else if (self.currentSegment == 1) {
 			latestFeed = [subscription starredLatestFeed];
+			feedCount = [subscription.starredCount unsignedIntegerValue];
 		}
 		else {
 			latestFeed = [subscription latestFeed];
+			feedCount = [subscription allCount];
 		}
 		if (latestFeed) {
 			cell.descriptionLabel.text = latestFeed.title;
@@ -208,61 +289,98 @@
 			cell.descriptionLabel.text = @"";
 		}
 		
-		NSUInteger unreadCount = [subscription.unreadCount unsignedIntegerValue];
-		if (unreadCount > 0) {
-			cell.countLabel.text = [subscription.unreadCount stringValue];
+		// count
+		if (feedCount > 0) {
+			cell.countLabel.text = [NSString stringWithFormat:@"%d", feedCount];
 		} else {
 			cell.countLabel.text = @"";
 		}
-		cell.iconImageView.image = [UIImage imageNamed:@"FeedDefaultIcon"];
+		
+		// icon image
+		NSURL *sourceURL = [NSURL URLWithString:subscription.htmlUrl];
+		UIImage *icon = [[ContentOrganizer sharedInstance] iconForSubscription:[sourceURL host]];
+		if (icon) {
+			cell.iconImageView.image = icon;
+		} else {
+			cell.iconImageView.image = [UIImage imageNamed:@"FeedDefaultIcon"];
+		}	
+		
+		// accessory
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	} else {
 		// Folders (Categories)
-		NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row - subscriptionCount inSection:indexPath.section];
+		// title
+		NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row - subscriptionCount inSection:0];
 		Category *category = [self.fetchedResultsControllerForCategory objectAtIndexPath:newIndexPath];
 		cell.titleLabel.text = category.label;
+		
+		// inner feed
 		Feed *latestFeed = nil;
+		NSUInteger feedCount = 0;
 		if (self.currentSegment == 0) {
 			latestFeed = [category unreadLatestFeed];
+			feedCount = [category.unreadCount unsignedIntegerValue];
 		}
 		else if (self.currentSegment == 1) {
 			latestFeed = [category starredLatestFeed];
+			feedCount = [category.starredCount unsignedIntegerValue];
 		}
 		else {
 			latestFeed = [category latestFeed];
+			feedCount = [category allCount];
 		}
 		if (latestFeed) {
 			cell.descriptionLabel.text = latestFeed.title;
 		} else {
 			cell.descriptionLabel.text = @"";
 		}
-		NSUInteger unreadCount = [category.unreadCount unsignedIntegerValue];
-		if (unreadCount > 0) {
-			cell.countLabel.text = [category.unreadCount stringValue];
+		
+		// count
+		if (feedCount > 0) {
+			cell.countLabel.text = [NSString stringWithFormat:@"%d", feedCount];
 		} else {
 			cell.countLabel.text = @"";
 		}
+		
+		// icon image
 		cell.iconImageView.image = [UIImage imageNamed:@"Folder"];
+		
+		// accessory
+		cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 	}
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 1;
+	return 2;
 }
 
 - (float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	if (indexPath.section == 0) {
+		return 44.0f;
+	}
+	
 	return 66.0f;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	
-	id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:section];
-	id <NSFetchedResultsSectionInfo> categorySectionInfo = [[self.fetchedResultsControllerForCategory sections] objectAtIndex:section];
+	if (section == 0) {
+		return 1;
+	}
+	
+	id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:0];
+	id <NSFetchedResultsSectionInfo> categorySectionInfo = [[self.fetchedResultsControllerForCategory sections] objectAtIndex:0];
 	
 	return [subscriptionSectionInfo numberOfObjects] + [categorySectionInfo numberOfObjects];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-	id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:indexPath.section];
+	
+	if (indexPath.section == 0) {
+		return NO;
+	}
+	
+	id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:0];
 	if (indexPath.row < [subscriptionSectionInfo numberOfObjects]) {
 		return YES;
 	}
@@ -280,35 +398,39 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
-		Subscription *subscription = [self.fetchedResultsControllerForSubscription objectAtIndexPath:indexPath];
+		NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
+		Subscription *subscription = [self.fetchedResultsControllerForSubscription objectAtIndexPath:newIndexPath];
 		AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		[appDelegate unsubscribe:subscription];
 	}
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:indexPath.section];
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+	id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:0];
 	NSUInteger subscriptionCount = [subscriptionSectionInfo numberOfObjects];
-	if (indexPath.row < subscriptionCount) {
-		// Subscription
+	
+	NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row - subscriptionCount inSection:0];
+	Category *category = [self.fetchedResultsControllerForCategory objectAtIndexPath:newIndexPath];
+	
+	TopViewController *newTopViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"TopViewController"];
+	newTopViewController.category = category;
+	newTopViewController.title = category.label;
+	newTopViewController.currentSegment = self.currentSegment;
+	
+	[self.navigationController pushViewController:newTopViewController animated:YES];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+	if (section == 1) {
+		return 10.0f;
 	}
-	else {
-		// Category
-		TopViewController *newTopViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"TopViewController"];
-	}
+	
+	return 0;
 }
 
 #if 0
 
 #define SECTION_HEIGHT 30.0f
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-	if (section == 0) {
-		return SECTION_HEIGHT;
-	}
-	
-	return 0;
-}
 
 - (UIView *)sectionView {
 	if (_sectionView == nil) {
@@ -347,6 +469,10 @@
 
 - (NSFetchedResultsController *)fetchedResultsControllerForCategory
 {
+	if (self.category) {
+		return nil;
+	}
+	
     if (__fetchedResultsControllerForCategory != nil) {
         return __fetchedResultsControllerForCategory;
     }
@@ -433,15 +559,30 @@
 	NSPredicate *noCategoryPredicate = nil;
 	if (self.currentSegment == 0) {
 		//cacheName = @"SubscriptionUnread";
-		noCategoryPredicate = [NSPredicate predicateWithFormat:@"categories.@count == 0 AND unreadCount > 0"];
+		if (self.category) {
+			noCategoryPredicate = [NSPredicate predicateWithFormat:@"(ANY categories.keyId == %@) AND (unreadCount > 0)", self.category.keyId];
+		} else {
+			noCategoryPredicate = [NSPredicate predicateWithFormat:@"categories.@count == 0 AND unreadCount > 0"];
+		}
+		
 	}
 	else if (self.currentSegment == 1) {
 		//cacheName = @"SubscriptionStarred";
-		noCategoryPredicate = [NSPredicate predicateWithFormat:@"categories.@count == 0 AND starredCount > 0"];
+		if (self.category) {
+			noCategoryPredicate = [NSPredicate predicateWithFormat:@"(ANY categories.keyId == %@) AND (starredCount > 0)", self.category.keyId];
+		} else {
+			noCategoryPredicate = [NSPredicate predicateWithFormat:@"categories.@count == 0 AND starredCount > 0"];
+		}
+		
 	}
 	else if (self.currentSegment == 2) {
 		//cacheName = @"SubscriptionAll";
-		noCategoryPredicate = [NSPredicate predicateWithFormat:@"categories.@count == 0"];
+		if (self.category) {
+			noCategoryPredicate = [NSPredicate predicateWithFormat:@"ANY categories.keyId == %@", self.category.keyId];
+		} else {
+			noCategoryPredicate = [NSPredicate predicateWithFormat:@"categories.@count == 0"];
+		}
+		
 	}
 	
 	self.currentCacheNameForSubscription = cacheName;
@@ -524,8 +665,9 @@
 #else
 	[self.tableView beginUpdates];
 	
-	[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-	[self.tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+	[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+	[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+	[self.tableView insertSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
 	
 	[self.tableView endUpdates];
 #endif

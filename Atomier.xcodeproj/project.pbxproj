@@ -35,6 +35,8 @@
 		69339960149B141100DD4E53 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6933995E149B141100DD4E53 /* MainStoryboard_iPad.storyboard */; };
 		69339963149B141100DD4E53 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69339962149B141100DD4E53 /* ViewController.m */; };
 		693CA342149F0A5B00DA7DC8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 693CA341149F0A5B00DA7DC8 /* Localizable.strings */; };
+		693CA384149F740300DA7DC8 /* FeedsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 693CA383149F740300DA7DC8 /* FeedsViewController.m */; };
+		693CA387149F774F00DA7DC8 /* FeedsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 693CA386149F774F00DA7DC8 /* FeedsViewCell.m */; };
 		695035DF149B181D005C7151 /* TopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 695035DE149B181D005C7151 /* TopViewController.m */; };
 		695035E6149B18E8005C7151 /* GoogleReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 695035E5149B18E8005C7151 /* GoogleReader.m */; };
 		695035FF149B1911005C7151 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 695035EA149B1911005C7151 /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -124,6 +126,10 @@
 		69339961149B141100DD4E53 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		69339962149B141100DD4E53 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		693CA341149F0A5B00DA7DC8 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		693CA382149F740300DA7DC8 /* FeedsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedsViewController.h; sourceTree = "<group>"; };
+		693CA383149F740300DA7DC8 /* FeedsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedsViewController.m; sourceTree = "<group>"; };
+		693CA385149F774E00DA7DC8 /* FeedsViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedsViewCell.h; sourceTree = "<group>"; };
+		693CA386149F774F00DA7DC8 /* FeedsViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedsViewCell.m; sourceTree = "<group>"; };
 		695035DD149B181D005C7151 /* TopViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopViewController.h; sourceTree = "<group>"; };
 		695035DE149B181D005C7151 /* TopViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopViewController.m; sourceTree = "<group>"; };
 		695035E4149B18E8005C7151 /* GoogleReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GoogleReader.h; path = ../../ReaderStandard/ReaderStandard/GoogleReader.h; sourceTree = "<group>"; };
@@ -281,7 +287,7 @@
 			children = (
 				69503614149B3633005C7151 /* Managed Objects */,
 				695035E8149B18F9005C7151 /* 3rd Party */,
-				695035D8149B172A005C7151 /* Folder & Subscription List */,
+				695035D8149B172A005C7151 /* List */,
 				695035D2149B1578005C7151 /* Main */,
 				69339950149B141100DD4E53 /* Supporting Files */,
 			);
@@ -301,6 +307,30 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		693CA380149F73BF00DA7DC8 /* Folder & Subscription */ = {
+			isa = PBXGroup;
+			children = (
+				695035DD149B181D005C7151 /* TopViewController.h */,
+				695035DE149B181D005C7151 /* TopViewController.m */,
+				6950362C149B3B8B005C7151 /* TopViewCell.h */,
+				6950362D149B3B8B005C7151 /* TopViewCell.m */,
+				69142941149DC8550096C5AE /* PreviewFeed.h */,
+				69142942149DC8550096C5AE /* PreviewFeed.m */,
+			);
+			name = "Folder & Subscription";
+			sourceTree = "<group>";
+		};
+		693CA381149F73D500DA7DC8 /* Feeds */ = {
+			isa = PBXGroup;
+			children = (
+				693CA382149F740300DA7DC8 /* FeedsViewController.h */,
+				693CA383149F740300DA7DC8 /* FeedsViewController.m */,
+				693CA385149F774E00DA7DC8 /* FeedsViewCell.h */,
+				693CA386149F774F00DA7DC8 /* FeedsViewCell.m */,
+			);
+			name = Feeds;
+			sourceTree = "<group>";
+		};
 		695035D2149B1578005C7151 /* Main */ = {
 			isa = PBXGroup;
 			children = (
@@ -315,17 +345,13 @@
 			name = Main;
 			sourceTree = "<group>";
 		};
-		695035D8149B172A005C7151 /* Folder & Subscription List */ = {
+		695035D8149B172A005C7151 /* List */ = {
 			isa = PBXGroup;
 			children = (
-				695035DD149B181D005C7151 /* TopViewController.h */,
-				695035DE149B181D005C7151 /* TopViewController.m */,
-				6950362C149B3B8B005C7151 /* TopViewCell.h */,
-				6950362D149B3B8B005C7151 /* TopViewCell.m */,
-				69142941149DC8550096C5AE /* PreviewFeed.h */,
-				69142942149DC8550096C5AE /* PreviewFeed.m */,
+				693CA381149F73D500DA7DC8 /* Feeds */,
+				693CA380149F73BF00DA7DC8 /* Folder & Subscription */,
 			);
-			name = "Folder & Subscription List";
+			name = List;
 			sourceTree = "<group>";
 		};
 		695035E7149B18ED005C7151 /* Engine */ = {
@@ -530,6 +556,8 @@
 				6914293F149DAF010096C5AE /* TxtChunk.m in Sources */,
 				69142940149DAF010096C5AE /* URLParser.m in Sources */,
 				69142943149DC8550096C5AE /* PreviewFeed.m in Sources */,
+				693CA384149F740300DA7DC8 /* FeedsViewController.m in Sources */,
+				693CA387149F774F00DA7DC8 /* FeedsViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

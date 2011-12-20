@@ -30,10 +30,8 @@
         <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" inverseName="feeds" inverseEntity="Tag" syncable="YES"/>
     </entity>
     <entity name="Subscription" representedClassName="Subscription" syncable="YES">
-        <attribute name="appleTouchIcon" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="htmlUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="keyId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="shortcutIcon" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sortid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="starredCount" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
@@ -50,7 +48,7 @@
         <element name="Category" positionX="-270" positionY="274" width="128" height="128"/>
         <element name="Content" positionX="358" positionY="450" width="128" height="83"/>
         <element name="Feed" positionX="88" positionY="391" width="128" height="218"/>
-        <element name="Subscription" positionX="-99" positionY="313" width="128" height="203"/>
+        <element name="Subscription" positionX="-99" positionY="313" width="128" height="173"/>
         <element name="Tag" positionX="268" positionY="697" width="128" height="83"/>
     </elements>
 </model>

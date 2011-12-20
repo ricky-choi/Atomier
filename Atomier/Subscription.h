@@ -27,6 +27,8 @@
 - (void)refreshUnreadCountWithCategory;
 - (void)refreshStarredCountWithCategory;
 
+- (NSUInteger)allCount;
+
 - (NSArray *)feedsByDate:(BOOL)ascending;
 - (Feed *)latestFeed;
 

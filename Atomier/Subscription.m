@@ -62,6 +62,10 @@
 	}];
 }
 
+- (NSUInteger)allCount {
+	return [self.feeds count];
+}
+
 - (NSArray *)feedsByDate:(BOOL)ascending {
 	NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"updatedDate" ascending:ascending];
 	return [self.feeds sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
@@ -92,5 +96,6 @@
 - (Feed *)starredLatestFeed {
 	return [[self starredFeedsByDate:YES] lastObject];
 }
+
 
 @end
