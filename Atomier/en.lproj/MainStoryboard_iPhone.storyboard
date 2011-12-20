@@ -192,6 +192,64 @@
             </objects>
             <point key="canvasLocation" x="549" y="638"/>
         </scene>
+        <scene sceneID="Tcp-s2-556">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Mpu-Yk-CYV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController storyboardIdentifier="WebViewController" id="Mb6-9D-5LH" customClass="WebViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="jSa-zF-x2v">
+                        <rect key="frame" x="0.0" y="64" width="320" height="372"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" scalesPageToFit="YES" id="l3g-Li-7lS">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="372"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES" calendarEvent="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="Mb6-9D-5LH" id="dCN-y0-pl3"/>
+                                </connections>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <toolbarItems>
+                        <barButtonItem style="plain" systemItem="stop" id="Yjg-bf-KxZ">
+                            <connections>
+                                <action selector="stopLoading" destination="l3g-Li-7lS" id="Gog-Wg-8ZG"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="O5T-PH-wAU"/>
+                        <barButtonItem image="Back.png" style="plain" id="Nfv-Gq-fdH">
+                            <connections>
+                                <action selector="goBack" destination="l3g-Li-7lS" id="J3k-la-JO4"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="PE1-gm-XZH"/>
+                        <barButtonItem image="Forward.png" style="plain" id="BKL-C4-16d">
+                            <connections>
+                                <action selector="goForward" destination="l3g-Li-7lS" id="sJ2-H5-0zw"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="vKO-qB-zB8"/>
+                        <barButtonItem style="plain" systemItem="refresh" id="j4P-zd-klA">
+                            <connections>
+                                <action selector="reload" destination="l3g-Li-7lS" id="Mc2-4P-lXQ"/>
+                            </connections>
+                        </barButtonItem>
+                    </toolbarItems>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="backItem" destination="Nfv-Gq-fdH" id="ofD-u8-POU"/>
+                        <outlet property="forwardItem" destination="BKL-C4-16d" id="FVx-gP-lL1"/>
+                        <outlet property="refreshItem" destination="j4P-zd-klA" id="IkP-A7-23j"/>
+                        <outlet property="stopItem" destination="Yjg-bf-KxZ" id="ake-bt-oh0"/>
+                        <outlet property="webView" destination="l3g-Li-7lS" id="hHG-El-wK8"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="992" y="43"/>
+        </scene>
         <scene sceneID="pFU-HE-5fc">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Z6e-Js-UhA" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -305,6 +363,10 @@
             <point key="canvasLocation" x="112" y="638"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Back.png" width="20" height="21"/>
+        <image name="Forward.png" width="20" height="21"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

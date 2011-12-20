@@ -72,6 +72,11 @@
 		69503655149B65F9005C7151 /* Subscription.m in Sources */ = {isa = PBXBuildFile; fileRef = 6950364C149B65F8005C7151 /* Subscription.m */; };
 		69503657149B65F9005C7151 /* Feed.m in Sources */ = {isa = PBXBuildFile; fileRef = 69503650149B65F9005C7151 /* Feed.m */; };
 		69503658149B6B9D005C7151 /* Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 6950364E149B65F9005C7151 /* Category.m */; };
+		696ECEA614A0B6A300FE5706 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 696ECEA514A0B6A300FE5706 /* WebViewController.m */; };
+		696ECEAC14A0B93400FE5706 /* Back.png in Resources */ = {isa = PBXBuildFile; fileRef = 696ECEA814A0B93400FE5706 /* Back.png */; };
+		696ECEAD14A0B93400FE5706 /* Back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 696ECEA914A0B93400FE5706 /* Back@2x.png */; };
+		696ECEAE14A0B93400FE5706 /* Forward.png in Resources */ = {isa = PBXBuildFile; fileRef = 696ECEAA14A0B93400FE5706 /* Forward.png */; };
+		696ECEAF14A0B93400FE5706 /* Forward@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 696ECEAB14A0B93400FE5706 /* Forward@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -188,6 +193,12 @@
 		6950364E149B65F9005C7151 /* Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Category.m; sourceTree = "<group>"; };
 		6950364F149B65F9005C7151 /* Feed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Feed.h; sourceTree = "<group>"; };
 		69503650149B65F9005C7151 /* Feed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Feed.m; sourceTree = "<group>"; };
+		696ECEA414A0B6A300FE5706 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
+		696ECEA514A0B6A300FE5706 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
+		696ECEA814A0B93400FE5706 /* Back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Back.png; sourceTree = "<group>"; };
+		696ECEA914A0B93400FE5706 /* Back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Back@2x.png"; sourceTree = "<group>"; };
+		696ECEAA14A0B93400FE5706 /* Forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Forward.png; sourceTree = "<group>"; };
+		696ECEAB14A0B93400FE5706 /* Forward@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Forward@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -297,6 +308,7 @@
 		69339950149B141100DD4E53 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				696ECEA714A0B92500FE5706 /* images */,
 				6950362F149B53A5005C7151 /* temp image */,
 				69339951149B141100DD4E53 /* Atomier-Info.plist */,
 				693CA341149F0A5B00DA7DC8 /* Localizable.strings */,
@@ -348,6 +360,7 @@
 		695035D8149B172A005C7151 /* List */ = {
 			isa = PBXGroup;
 			children = (
+				696ECEA214A0B68800FE5706 /* Content */,
 				693CA381149F73D500DA7DC8 /* Feeds */,
 				693CA380149F73BF00DA7DC8 /* Folder & Subscription */,
 			);
@@ -440,6 +453,26 @@
 			name = "temp image";
 			sourceTree = "<group>";
 		};
+		696ECEA214A0B68800FE5706 /* Content */ = {
+			isa = PBXGroup;
+			children = (
+				696ECEA414A0B6A300FE5706 /* WebViewController.h */,
+				696ECEA514A0B6A300FE5706 /* WebViewController.m */,
+			);
+			name = Content;
+			sourceTree = "<group>";
+		};
+		696ECEA714A0B92500FE5706 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				696ECEA814A0B93400FE5706 /* Back.png */,
+				696ECEA914A0B93400FE5706 /* Back@2x.png */,
+				696ECEAA14A0B93400FE5706 /* Forward.png */,
+				696ECEAB14A0B93400FE5706 /* Forward@2x.png */,
+			);
+			name = images;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -505,6 +538,10 @@
 				69503642149B53B4005C7151 /* Folder.png in Resources */,
 				69503643149B53B4005C7151 /* Folder@2x.png in Resources */,
 				693CA342149F0A5B00DA7DC8 /* Localizable.strings in Resources */,
+				696ECEAC14A0B93400FE5706 /* Back.png in Resources */,
+				696ECEAD14A0B93400FE5706 /* Back@2x.png in Resources */,
+				696ECEAE14A0B93400FE5706 /* Forward.png in Resources */,
+				696ECEAF14A0B93400FE5706 /* Forward@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -558,6 +595,7 @@
 				69142943149DC8550096C5AE /* PreviewFeed.m in Sources */,
 				693CA384149F740300DA7DC8 /* FeedsViewController.m in Sources */,
 				693CA387149F774F00DA7DC8 /* FeedsViewCell.m in Sources */,
+				696ECEA614A0B6A300FE5706 /* WebViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

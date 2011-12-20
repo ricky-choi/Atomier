@@ -6,6 +6,9 @@
   Copyright (c) 2011 Appcid. All rights reserved.
 */
 
+"Cancel" = "취소";
+"OK" = "확인";
+
 "Unread" = "안 읽은 글";
 "Starred" = "별표한 글";
 "All Items" = "모든 글";
@@ -14,3 +17,4 @@
 "Unsubscribe" = "구독 해지";
 
 "Mark all as read" = "모두 읽음으로 표시";
+"Mark all items from this list as read?" = "이 리스트의 모든 글들을 읽음으로 표시할까요?";

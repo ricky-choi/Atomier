@@ -13,6 +13,7 @@
 #import "ContentOrganizer.h"
 #import "AppDelegate.h"
 #import "FeedsViewCell.h"
+#import "WebViewController.h"
 
 @interface FeedsViewController ()
 
@@ -66,6 +67,14 @@
 {
     [super viewDidLoad];
 	
+	if (self.subscription.htmlUrl) {
+		UIBarButtonItem *siteItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Homepage", nil)
+																	 style:UIBarButtonItemStyleBordered
+																	target:self
+																	action:@selector(goSourceOfSubscription)];
+		self.navigationItem.rightBarButtonItem = siteItem;
+	}
+	
 	UIBarButtonItem *markAll = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Mark all as read", nil) 
 																style:UIBarButtonItemStyleBordered 
 															   target:self
@@ -73,13 +82,28 @@
 	self.toolbarItems = [NSArray arrayWithObjects:markAll, nil];
 }
 
+- (void)goSourceOfSubscription {
+	WebViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"WebViewController"];
+	viewController.siteURL = self.subscription.htmlUrl;
+	[self.navigationController pushViewController:viewController animated:YES];
+}
+
 - (void)markAllAsRead {
-	NSArray *feeds = [self.fetchedResultsController fetchedObjects];
-	
-	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	[appDelegate markAsAllRead:feeds];
-	
-	[self.navigationController popViewControllerAnimated:YES];
+	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Mark all items from this list as read?", nil)
+															 delegate:self
+													cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+											   destructiveButtonTitle:NSLocalizedString(@"Mark all as read", nil)
+													otherButtonTitles:nil];
+	[actionSheet showFromToolbar:self.navigationController.toolbar];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if (buttonIndex == actionSheet.destructiveButtonIndex) {
+		NSArray *feeds = [self.fetchedResultsController fetchedObjects];
+		
+		AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		[appDelegate markAsAllRead:feeds];
+	}
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -220,13 +244,13 @@
 
 	if (self.subscription) {
 		if (self.currentSegment == 0) {
-			predicate = [NSPredicate predicateWithFormat:@"(ANY subscription.keyId == %@) AND (unread = 1)", self.subscription.keyId];
+			predicate = [NSPredicate predicateWithFormat:@"(subscription.keyId == %@) AND (unread = 1)", self.subscription.keyId];
 		}
 		else if (self.currentSegment == 1) {
-			predicate = [NSPredicate predicateWithFormat:@"(ANY subscription.keyId == %@) AND (starred = 1)", self.subscription.keyId];
+			predicate = [NSPredicate predicateWithFormat:@"(subscription.keyId == %@) AND (starred = 1)", self.subscription.keyId];
 		}
 		else if (self.currentSegment == 2) {
-			predicate = [NSPredicate predicateWithFormat:@"ANY subscription.keyId == %@", self.subscription.keyId];
+			predicate = [NSPredicate predicateWithFormat:@"subscription.keyId == %@", self.subscription.keyId];
 		}
 	}
 	else if (self.category) {
@@ -281,6 +305,11 @@
 	// In the simplest, most efficient, case, reload the table view.
 	NSLog(@"controllerDidChangeContent: %@", controller);
 	[self.tableView reloadData];
+	
+	NSArray *feeds = [self.fetchedResultsController fetchedObjects];
+	if (feeds == nil || [feeds count] == 0) {
+		[self.navigationController popViewControllerAnimated:YES];
+	}
 }
 
 @end
