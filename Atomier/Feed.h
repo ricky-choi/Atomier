@@ -18,13 +18,17 @@
 @property (nonatomic, retain) NSString * keyId;
 @property (nonatomic, retain) NSDate * publishedDate;
 @property (nonatomic, retain) NSString * title;
-@property (nonatomic, retain) NSDate * updatedDate;
 @property (nonatomic, retain) NSNumber * unread;
 @property (nonatomic, retain) NSNumber * starred;
 @property (nonatomic, retain) NSSet *alternates;
 @property (nonatomic, retain) NSSet *tags;
 @property (nonatomic, retain) Content *content;
 @property (nonatomic, retain) Subscription *subscription;
+
+@property (nonatomic, retain) NSDate * updatedDate;
+@property (nonatomic, retain) NSDate * primitiveUpdatedDate;
+@property (nonatomic, retain) NSString *sectionIdentifier;
+@property (nonatomic, retain) NSString *primitiveSectionIdentifier;
 
 @end
 

@@ -13,6 +13,7 @@
 #import "Subscription.h"
 #import "Feed.h"
 #import "ContentOrganizer.h"
+#import "FeedsViewController.h"
 
 @interface TopViewController ()
 
@@ -32,8 +33,6 @@
 @synthesize fetchedResultsControllerForCategory = __fetchedResultsControllerForCategory;
 @synthesize fetchedResultsControllerForSubscription = __fetchedResultsControllerForSubscription;
 @synthesize currentSegment = _currentSegment;
-@synthesize currentCacheNameForCategory = _currentCacheNameForCategory;
-@synthesize currentCacheNameForSubscription = _currentCacheNameForSubscription;
 @synthesize previewFeed = _previewFeed;
 @synthesize tempPreviewFeed = _tempPreviewFeed;
 @synthesize category = _category;
@@ -462,7 +461,45 @@
 #endif
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-	
+	if ([segue.identifier isEqualToString:@"FeedList"]) {
+		FeedsViewController *viewController = (FeedsViewController *)segue.destinationViewController;
+		viewController.currentSegment = self.currentSegment;
+		viewController.category = self.category;
+		if (self.currentSegment == 0) {
+			viewController.title = NSLocalizedString(@"Unread", nil);
+		}
+		else if (self.currentSegment == 1) {
+			viewController.title = NSLocalizedString(@"Starred", nil);
+		}
+		else if (self.currentSegment == 2) {
+			viewController.title = NSLocalizedString(@"All Items", nil);
+		}
+	}
+	else if ([segue.identifier isEqualToString:@"FeedListFromFolder"]) {
+		FeedsViewController *viewController = (FeedsViewController *)segue.destinationViewController;
+		viewController.currentSegment = self.currentSegment;
+		
+		TopViewCell *cell = (TopViewCell *)sender;
+		NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+		
+		id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:0];
+		NSUInteger subscriptionCount = [subscriptionSectionInfo numberOfObjects];
+		if (indexPath.row < subscriptionCount) {
+			// Subscriptions
+			// title
+			NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
+			Subscription *subscription = [self.fetchedResultsControllerForSubscription objectAtIndexPath:newIndexPath];
+			viewController.subscription = subscription;
+			viewController.title = subscription.title;
+		} else {
+			// Folders (Categories)
+			// title
+			NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row - subscriptionCount inSection:0];
+			Category *category = [self.fetchedResultsControllerForCategory objectAtIndexPath:newIndexPath];
+			viewController.category = category;
+			viewController.title = category.label;
+		}
+	}
 }
 
 #pragma mark - Fetched results controller
@@ -493,21 +530,16 @@
     
     [fetchRequest setSortDescriptors:sortDescriptors];
 	
-	NSString *cacheName = nil;
 	NSPredicate *existUnreadPredicate = nil;
 	if (self.currentSegment == 0) {
-		//cacheName = @"CategoryUnread";
 		existUnreadPredicate = [NSPredicate predicateWithFormat:@"unreadCount > 0"];
 	}
 	else if (self.currentSegment == 1) {
-		//cacheName = @"CategoryStarred";
 		existUnreadPredicate = [NSPredicate predicateWithFormat:@"starredCount > 0"];
 	}
 	else if (self.currentSegment == 2) {
-		//cacheName = @"CategoryAll";
+
 	}
-	
-	self.currentCacheNameForCategory = cacheName;
 	
 	if (existUnreadPredicate) {
 		[fetchRequest setPredicate:existUnreadPredicate];
@@ -515,7 +547,7 @@
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:cacheName];
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
     aFetchedResultsController.delegate = self;
     self.fetchedResultsControllerForCategory = aFetchedResultsController;
     
@@ -555,10 +587,8 @@
     
     [fetchRequest setSortDescriptors:sortDescriptors];
 	
-	NSString *cacheName = nil;
 	NSPredicate *noCategoryPredicate = nil;
 	if (self.currentSegment == 0) {
-		//cacheName = @"SubscriptionUnread";
 		if (self.category) {
 			noCategoryPredicate = [NSPredicate predicateWithFormat:@"(ANY categories.keyId == %@) AND (unreadCount > 0)", self.category.keyId];
 		} else {
@@ -567,7 +597,6 @@
 		
 	}
 	else if (self.currentSegment == 1) {
-		//cacheName = @"SubscriptionStarred";
 		if (self.category) {
 			noCategoryPredicate = [NSPredicate predicateWithFormat:@"(ANY categories.keyId == %@) AND (starredCount > 0)", self.category.keyId];
 		} else {
@@ -576,7 +605,6 @@
 		
 	}
 	else if (self.currentSegment == 2) {
-		//cacheName = @"SubscriptionAll";
 		if (self.category) {
 			noCategoryPredicate = [NSPredicate predicateWithFormat:@"ANY categories.keyId == %@", self.category.keyId];
 		} else {
@@ -584,8 +612,6 @@
 		}
 		
 	}
-	
-	self.currentCacheNameForSubscription = cacheName;
 
 	if (noCategoryPredicate) {
 		[fetchRequest setPredicate:noCategoryPredicate];
@@ -593,7 +619,7 @@
 	    
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:cacheName];
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
     aFetchedResultsController.delegate = self;
     self.fetchedResultsControllerForSubscription = aFetchedResultsController;
     
@@ -653,9 +679,6 @@
 	UISegmentedControl *segmentedControl = (UISegmentedControl *)sender;
 	NSInteger segment = [segmentedControl selectedSegmentIndex];
 	_currentSegment = segment;
-	
-	[NSFetchedResultsController deleteCacheWithName:self.currentCacheNameForCategory];
-	[NSFetchedResultsController deleteCacheWithName:self.currentCacheNameForSubscription];
 	
 	self.fetchedResultsControllerForCategory = nil;
 	self.fetchedResultsControllerForSubscription = nil;

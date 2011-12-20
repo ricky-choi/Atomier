@@ -38,4 +38,7 @@
 - (void)refresh;
 - (void)unsubscribe:(Subscription *)subscription;
 
+- (void)markAsRead:(Feed *)feed;
+- (void)markAsAllRead:(NSArray *)feeds;
+
 @end

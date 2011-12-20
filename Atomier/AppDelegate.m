@@ -119,6 +119,7 @@
 	 Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
 	 If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 	 */
+	[self saveContext];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -553,6 +554,48 @@
 	loadingForStarreds = YES;
 }
 
+- (void)refreshUnreadAndStarred:(int)state {
+	// state 0: all
+	// state 1: unread only
+	// state 2: star only
+	NSLog(@"refresh count all");
+	
+	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+	NSEntityDescription *entity = [NSEntityDescription entityForName:@"Subscription" inManagedObjectContext:self.managedObjectContext];
+	[fetchRequest setEntity:entity];
+	NSArray *allSubscriptions = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
+	for (Subscription *aSubscription in allSubscriptions) {
+		if (state == 1) {
+			[aSubscription refreshUnreadCount];
+		}
+		else if (state == 2) {
+			[aSubscription refreshStarredCount];
+		}
+		else {
+			[aSubscription refreshUnreadCount];
+			[aSubscription refreshStarredCount];
+		}
+		
+	}
+	
+	entity = [NSEntityDescription entityForName:@"Category" inManagedObjectContext:self.managedObjectContext];
+	[fetchRequest setEntity:entity];
+	NSArray *allCategories = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
+	for (Category *aCategory in allCategories) {
+		if (state == 1) {
+			[aCategory refreshUnreadCount];
+		}
+		else if (state == 2) {
+			[aCategory refreshStarredCount];
+		}
+		else {
+			[aCategory refreshUnreadCount];
+			[aCategory refreshStarredCount];
+		}
+		
+	}
+}
+
 - (void)checkLoadDone {
 	NSLog(@"check load done: %@, %@, %@", loadingForSubscriptions ? @"YES" : @"NO", loadingForUnreads ? @"YES" : @"NO", loadingForStarreds ? @"YES" : @"NO");
 	if (loadingForSubscriptions == NO && loadingForUnreads == NO && loadingForStarreds == NO) {
@@ -562,24 +605,7 @@
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		
 #if (REFRESH_COUNT_IMMEDIATE == 0)
-		NSLog(@"refresh count all");
-		
-		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-		NSEntityDescription *entity = [NSEntityDescription entityForName:@"Subscription" inManagedObjectContext:self.managedObjectContext];
-		[fetchRequest setEntity:entity];
-		NSArray *allSubscriptions = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
-		for (Subscription *aSubscription in allSubscriptions) {
-			[aSubscription refreshUnreadCount];
-			[aSubscription refreshStarredCount];
-		}
-		
-		entity = [NSEntityDescription entityForName:@"Category" inManagedObjectContext:self.managedObjectContext];
-		[fetchRequest setEntity:entity];
-		NSArray *allCategories = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
-		for (Category *aCategory in allCategories) {
-			[aCategory refreshUnreadCount];
-			[aCategory refreshStarredCount];
-		}
+		[self refreshUnreadAndStarred:0];
 #endif		
 		
 		[self saveContext];
@@ -662,6 +688,21 @@
 	[self.managedObjectContext deleteObject:subscription];
 	
 	[self saveContext];
+}
+
+- (void)markAsRead:(Feed *)feed {
+	if ([feed.unread boolValue] == YES) {
+		feed.unread = [NSNumber numberWithBool:NO];
+		[[GoogleReader sharedInstance] markReadAtFeedID:feed.keyId forFeed:feed.subscription.keyId];
+	}
+}
+
+- (void)markAsAllRead:(NSArray *)feeds {
+	for (Feed *feed in feeds) {
+		[self markAsRead:feed];
+	}
+	
+	[self refreshUnreadAndStarred:1];
 }
 
 #pragma mark - Core Data stack

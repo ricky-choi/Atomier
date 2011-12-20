@@ -7,7 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreData/CoreData.h>
 
-@interface FeedsViewController : UIViewController
+@class Category;
+@class Subscription;
+
+@interface FeedsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate>
+
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
+
+@property (assign, nonatomic) NSInteger currentSegment;
+@property (strong, nonatomic) Category *category;
+@property (strong, nonatomic) Subscription *subscription;
 
 @end

@@ -11,6 +11,9 @@
 @interface FeedsViewCell : UITableViewCell
 
 @property (nonatomic, weak) IBOutlet UIImageView *iconImageView;
+@property (nonatomic, weak) IBOutlet UIImageView *unreadImageView;
+@property (nonatomic, weak) IBOutlet UIImageView *starredImageView;
+
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *descriptionLabel;
 @property (nonatomic, weak) IBOutlet UILabel *subtitleLabel;

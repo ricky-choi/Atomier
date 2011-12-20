@@ -15,6 +15,8 @@
 @synthesize descriptionLabel = _descriptionLabel;
 @synthesize subtitleLabel = _subtitleLabel;
 @synthesize dateLabel = _dateLabel;
+@synthesize unreadImageView = _unreadImageView;
+@synthesize starredImageView = _starredImageView;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

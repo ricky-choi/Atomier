@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 #import "PreviewFeed.h"
-#import "Category.h"
+
+@class Category;
 
 @interface TopViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, PreviewFeedDelegate>
 
@@ -18,8 +19,6 @@
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsControllerForCategory;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsControllerForSubscription;
 @property (assign, nonatomic) NSInteger currentSegment;
-@property (strong, nonatomic) NSString *currentCacheNameForCategory;
-@property (strong, nonatomic) NSString *currentCacheNameForSubscription;
 @property (strong, nonatomic) PreviewFeed *previewFeed;
 @property (strong, nonatomic) PreviewFeed *tempPreviewFeed;
 
