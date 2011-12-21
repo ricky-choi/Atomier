@@ -11,6 +11,7 @@
 @implementation WebViewController
 @synthesize webView = _webView;
 @synthesize siteURL = _siteURL;
+@synthesize siteRequest = _siteRequest;
 @synthesize stopItem = _stopItem;
 @synthesize backItem = _backItem;
 @synthesize forwardItem = _forwardItem;
@@ -63,7 +64,12 @@
 {
     [super viewDidLoad];
 	
-	if (self.siteURL) {
+	self.wantsFullScreenLayout = YES;
+	
+	if (self.siteRequest) {
+		[self.webView loadRequest:self.siteRequest];
+	}
+	else if (self.siteURL) {
 		[self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.siteURL]]];
 	}
 	

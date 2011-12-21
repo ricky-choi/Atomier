@@ -77,6 +77,8 @@
 		696ECEAD14A0B93400FE5706 /* Back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 696ECEA914A0B93400FE5706 /* Back@2x.png */; };
 		696ECEAE14A0B93400FE5706 /* Forward.png in Resources */ = {isa = PBXBuildFile; fileRef = 696ECEAA14A0B93400FE5706 /* Forward.png */; };
 		696ECEAF14A0B93400FE5706 /* Forward@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 696ECEAB14A0B93400FE5706 /* Forward@2x.png */; };
+		696ECEB214A0C8C200FE5706 /* FeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 696ECEB114A0C8C200FE5706 /* FeedViewController.m */; };
+		696ECEB814A0CAE300FE5706 /* main.css in Resources */ = {isa = PBXBuildFile; fileRef = 696ECEB714A0CAE300FE5706 /* main.css */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -199,6 +201,9 @@
 		696ECEA914A0B93400FE5706 /* Back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Back@2x.png"; sourceTree = "<group>"; };
 		696ECEAA14A0B93400FE5706 /* Forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Forward.png; sourceTree = "<group>"; };
 		696ECEAB14A0B93400FE5706 /* Forward@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Forward@2x.png"; sourceTree = "<group>"; };
+		696ECEB014A0C8C200FE5706 /* FeedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedViewController.h; sourceTree = "<group>"; };
+		696ECEB114A0C8C200FE5706 /* FeedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedViewController.m; sourceTree = "<group>"; };
+		696ECEB714A0CAE300FE5706 /* main.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; name = main.css; path = ../../iPhoneReaderCSS/main.css; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -308,6 +313,7 @@
 		69339950149B141100DD4E53 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				696ECEB714A0CAE300FE5706 /* main.css */,
 				696ECEA714A0B92500FE5706 /* images */,
 				6950362F149B53A5005C7151 /* temp image */,
 				69339951149B141100DD4E53 /* Atomier-Info.plist */,
@@ -458,6 +464,8 @@
 			children = (
 				696ECEA414A0B6A300FE5706 /* WebViewController.h */,
 				696ECEA514A0B6A300FE5706 /* WebViewController.m */,
+				696ECEB014A0C8C200FE5706 /* FeedViewController.h */,
+				696ECEB114A0C8C200FE5706 /* FeedViewController.m */,
 			);
 			name = Content;
 			sourceTree = "<group>";
@@ -542,6 +550,7 @@
 				696ECEAD14A0B93400FE5706 /* Back@2x.png in Resources */,
 				696ECEAE14A0B93400FE5706 /* Forward.png in Resources */,
 				696ECEAF14A0B93400FE5706 /* Forward@2x.png in Resources */,
+				696ECEB814A0CAE300FE5706 /* main.css in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -596,6 +605,7 @@
 				693CA384149F740300DA7DC8 /* FeedsViewController.m in Sources */,
 				693CA387149F774F00DA7DC8 /* FeedsViewCell.m in Sources */,
 				696ECEA614A0B6A300FE5706 /* WebViewController.m in Sources */,
+				696ECEB214A0C8C200FE5706 /* FeedViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

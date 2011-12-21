@@ -14,6 +14,7 @@
 #import "AppDelegate.h"
 #import "FeedsViewCell.h"
 #import "WebViewController.h"
+#import "FeedViewController.h"
 
 @interface FeedsViewController ()
 
@@ -79,7 +80,23 @@
 																style:UIBarButtonItemStyleBordered 
 															   target:self
 															   action:@selector(markAllAsRead)];
-	self.toolbarItems = [NSArray arrayWithObjects:markAll, nil];
+	UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+	UIBarButtonItem *showOldest = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward
+																				target:self
+																				action:@selector(showOldestFeed)];
+	self.toolbarItems = [NSArray arrayWithObjects:markAll, flexibleSpace, showOldest, nil];
+}
+
+- (void)showOldestFeed {
+	NSUInteger sectionCount = [[self.fetchedResultsController sections] count];
+	if (sectionCount > 0) {
+		id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:sectionCount-1];
+		NSUInteger rowCount = [sectionInfo numberOfObjects];
+		
+		if (rowCount > 0) {
+			[self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:rowCount-1 inSection:sectionCount-1] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+		}
+	}
 }
 
 - (void)goSourceOfSubscription {
@@ -204,12 +221,26 @@
 	[comps setDay:day];
 	NSDate *date = [[NSCalendar currentCalendar] dateFromComponents:comps];
 	
-	NSString *titleString = [NSDateFormatter localizedStringFromDate:date
-														   dateStyle:NSDateFormatterFullStyle
-														   timeStyle:NSDateFormatterNoStyle];
+	static NSDateFormatter *dateFormatter = nil;
+	if (dateFormatter == nil) {
+		dateFormatter = [[NSDateFormatter alloc] init];
+		[dateFormatter setDoesRelativeDateFormatting:YES];
+		[dateFormatter setDateStyle:NSDateFormatterFullStyle];
+		[dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+	}
+	
+	NSString *titleString = [dateFormatter stringFromDate:date];
 	
 	return titleString;
 #endif
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	Feed *feed = [self.fetchedResultsController objectAtIndexPath:indexPath];
+	FeedViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"FeedViewController"];
+	viewController.feed = feed;
+	viewController.title = feed.title;
+	[self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

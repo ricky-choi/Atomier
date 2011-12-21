@@ -17,5 +17,6 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshItem;
 
 @property (strong, nonatomic) NSString *siteURL;
+@property (strong, nonatomic) NSURLRequest *siteRequest;
 
 @end
