@@ -7,14 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WebViewController.h"
 
 @class Feed;
 
-@interface FeedViewController : UIViewController <UIWebViewDelegate, UIScrollViewDelegate>
-
-@property (weak, nonatomic) IBOutlet UIWebView *webView;
+@interface FeedViewController : WebViewController <UIWebViewDelegate, UIScrollViewDelegate>
 
 @property (strong, nonatomic) NSArray *feeds;
 @property (strong, nonatomic) Feed *feed;
+
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *previousButtonItem;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *nextButtonItem;
+
+- (IBAction)previousFeed:(id)sender;
+- (IBAction)nextFeed:(id)sender;
+
 
 @end

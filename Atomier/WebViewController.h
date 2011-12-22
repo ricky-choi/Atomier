@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface WebViewController : UIViewController <UIWebViewDelegate>
+@interface WebViewController : UIViewController <UIWebViewDelegate, UIScrollViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *stopItem;
@@ -18,5 +18,8 @@
 
 @property (strong, nonatomic) NSString *siteURL;
 @property (strong, nonatomic) NSURLRequest *siteRequest;
+
+- (void)invalidateWebViewInsets;
+- (void)resetNavigationBarForScrollView:(UIScrollView *)scrollView;
 
 @end

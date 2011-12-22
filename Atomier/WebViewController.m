@@ -9,6 +9,7 @@
 #import "WebViewController.h"
 
 @implementation WebViewController
+
 @synthesize webView = _webView;
 @synthesize siteURL = _siteURL;
 @synthesize siteRequest = _siteRequest;
@@ -58,27 +59,72 @@
 	self.title = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
 }
 
+- (void)invalidateWebViewInsets {
+	UIScrollView *scrollView = self.webView.scrollView;
+	
+	CGFloat barHeight;
+
+	if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+		barHeight = 44.0f;
+	} else {
+		barHeight = 32.0f;
+	}
+	scrollView.contentInset = UIEdgeInsetsMake(barHeight, 0, 0, 0);
+	
+	self.webView.frame = CGRectMake(0, - barHeight, self.view.frame.size.width, self.view.frame.size.height + barHeight);
+}
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	
-	self.wantsFullScreenLayout = YES;
+	if ([[self.navigationController viewControllers] count] == 1) {
+		UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done)];
+		self.navigationItem.leftBarButtonItem = doneItem;
+	}
 	
 	if (self.siteRequest) {
 		[self.webView loadRequest:self.siteRequest];
+		[self invalidateControls];
 	}
 	else if (self.siteURL) {
 		[self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.siteURL]]];
+		[self invalidateControls];
 	}
 	
-	[self invalidateControls];
+	UIScrollView *scrollView = self.webView.scrollView;
+	scrollView.delegate = self;
+	
+	[self invalidateWebViewInsets];
+	
+	
 }
 
+- (void)done {
+	[self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	
+	[self resetNavigationBarForScrollView:self.webView.scrollView];
+	
+	if (self.navigationController.toolbarHidden == YES) {
+		[self.navigationController setToolbarHidden:NO animated:YES];
+	}
+}
+
+- (void)willMoveToParentViewController:(UIViewController *)parent {
+	CGFloat barHeight = self.navigationController.navigationBar.frame.size.height;
+	CGFloat barWidth = self.webView.frame.size.width;
+	CGFloat statusBarHeight = 20.0;
+	self.navigationController.navigationBar.frame = CGRectMake(0, statusBarHeight, barWidth, barHeight);
+}
 
 - (void)viewDidUnload
 {
+	self.webView.delegate = nil;
 	[self setWebView:nil];
 	[self setStopItem:nil];
 	[self setBackItem:nil];
@@ -99,6 +145,11 @@
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+	[self resetNavigationBarForScrollView:self.webView.scrollView];
+	[self invalidateWebViewInsets];
+}
+
 #pragma mark - UIWebViewDelegate
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
@@ -116,5 +167,40 @@
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
 	[self invalidateControls];
 }
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)resetNavigationBarForScrollView:(UIScrollView *)scrollView {
+	CGPoint offset = scrollView.contentOffset;
+	CGFloat barHeight = self.navigationController.navigationBar.frame.size.height;
+	CGFloat barWidth = self.webView.frame.size.width;
+	CGFloat statusBarHeight = 20.0;
+	if (offset.y > -(scrollView.contentInset.top)) {
+		CGFloat newY = -offset.y - barHeight + statusBarHeight;
+		self.navigationController.navigationBar.frame = CGRectMake(0, newY, barWidth, barHeight);
+	}
+	else {
+		self.navigationController.navigationBar.frame = CGRectMake(0, statusBarHeight, barWidth, barHeight);
+	}
+	
+	float scrollInset = -offset.y;
+	if (scrollInset < 0) {
+		scrollInset = 0;
+	}
+	else if (scrollInset > barHeight) {
+		scrollInset = barHeight;
+	}
+	
+	scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(scrollInset, 0, 0, 0);
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView                                               // any offset changes
+{
+	//NSLog(@"scrollViewDidScroll: %@", scrollView);
+	
+	[self resetNavigationBarForScrollView:scrollView];
+}
+
+
 
 @end

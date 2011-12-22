@@ -17,7 +17,7 @@
 
 #import "ContentOrganizer.h"
 
-#define REFRESH_COUNT_IMMEDIATE 0
+#define REFRESH_COUNT_IMMEDIATE 1
 
 #define DEFAULT_KEY_SYNCDATE @"DEFAULT_KEY_SYNCDATE"
 
@@ -119,7 +119,7 @@
 	 Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
 	 If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 	 */
-	[self saveContext];
+	//[self saveContext];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -703,6 +703,8 @@
 	}
 	
 	[self refreshUnreadAndStarred:1];
+	
+	[self saveContext];
 }
 
 #pragma mark - Core Data stack

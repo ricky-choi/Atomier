@@ -239,6 +239,7 @@
 	Feed *feed = [self.fetchedResultsController objectAtIndexPath:indexPath];
 	FeedViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"FeedViewController"];
 	viewController.feed = feed;
+	viewController.feeds = [self.fetchedResultsController fetchedObjects];
 	viewController.title = feed.title;
 	[self.navigationController pushViewController:viewController animated:YES];
 }

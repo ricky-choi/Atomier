@@ -9,19 +9,15 @@
 #import "FeedViewController.h"
 #import "Feed.h"
 #import "ContentOrganizer.h"
-#import "WebViewController.h"
 
-@interface FeedViewController ()
+@implementation FeedViewController {
+	BOOL animating;
+}
 
-- (void)toggleHiddenBars;
-- (void)invalidateWebViewInsets;
-
-@end
-
-@implementation FeedViewController
-@synthesize webView = _webView;
 @synthesize feeds = _feeds;
 @synthesize feed = _feed;
+@synthesize previousButtonItem = _previousButtonItem;
+@synthesize nextButtonItem = _nextButtonItem;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -49,35 +45,34 @@
 }
 */
 
-- (void)invalidateWebViewInsets {
-	BOOL hidden = self.navigationController.navigationBar.hidden;
-	UIScrollView *scrollView = self.webView.scrollView;
-	
-	if (hidden) {
-		scrollView.contentInset = UIEdgeInsetsZero;
-		scrollView.scrollIndicatorInsets = UIEdgeInsetsZero;
-	} else {
-		float statusBarHeight = 0;
-		if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
-			statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
-		} else {
-			statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.width;
+- (void)invalidateFeedNavigateButtons {
+	if ([self.feeds count] > 1) {
+		NSUInteger index = [self.feeds indexOfObject:self.feed];
+		if (index == 0) {
+			self.previousButtonItem.enabled = NO;
+			self.nextButtonItem.enabled = YES;
 		}
-		UIEdgeInsets insets = UIEdgeInsetsMake(statusBarHeight + self.navigationController.navigationBar.frame.size.height, 0, self.navigationController.toolbar.frame.size.height, 0);
-		NSLog(@"insets: %@", NSStringFromUIEdgeInsets(insets));
-		scrollView.contentInset = insets;
-		scrollView.scrollIndicatorInsets = insets;
+		else if (index == [self.feeds count] - 1) {
+			self.previousButtonItem.enabled = YES;
+			self.nextButtonItem.enabled = NO;
+		}
+		else {
+			self.previousButtonItem.enabled = YES;
+			self.nextButtonItem.enabled = YES;
+		}
+	} else {
+		self.previousButtonItem.enabled = NO;
+		self.nextButtonItem.enabled = NO;
 	}
 }
 
-- (void)toggleHiddenBars {
-	BOOL hidden = self.navigationController.navigationBar.hidden;
+- (void)showFeed:(Feed *)feed toView:(UIWebView *)webView {
+	NSString *content = [[ContentOrganizer sharedInstance] contentForID:[feed.keyId lastPathComponent]];
 	
-	self.navigationController.navigationBar.hidden = !hidden;
-	self.navigationController.toolbar.hidden = !hidden;
-	[[UIApplication sharedApplication] setStatusBarHidden:!hidden withAnimation:UIStatusBarAnimationNone];
+	NSString *template = [NSString stringWithFormat:@"<meta name = \"viewport\" content = \"width = device-width, user-scalable = no, initial-scale = 1.0\" /><link href=\"main.css\" rel=\"stylesheet\" type=\"text/css\" /><body>%@</body>", content];
 	
-	[self invalidateWebViewInsets];
+	NSURL *baseURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
+	[webView loadHTMLString:template baseURL:baseURL];
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -85,52 +80,18 @@
 {
     [super viewDidLoad];
 	
-	UIBarButtonItem *fullscreenItem = [[UIBarButtonItem alloc] initWithTitle:@"Full" style:UIBarButtonItemStyleBordered target:self action:@selector(fullscreen)];
-	self.navigationItem.rightBarButtonItem = fullscreenItem;
-	
-	if (self.feed) {
-		self.wantsFullScreenLayout = YES;
+	if (self.feed) {		
+		[self showFeed:self.feed toView:self.webView];
 		
-		NSString *content = [[ContentOrganizer sharedInstance] contentForID:[self.feed.keyId lastPathComponent]];
-		
-		NSString *template = [NSString stringWithFormat:@"<meta name = \"viewport\" content = \"width = device-width, user-scalable = no, initial-scale = 1.0\" /><link href=\"main.css\" rel=\"stylesheet\" type=\"text/css\" /><body>%@</body>", content];
-		
-		NSURL *baseURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
-		
-		self.webView.delegate = self;
-		[self.webView loadHTMLString:template baseURL:baseURL];
-		
-		UIScrollView *scrollView = self.webView.scrollView;
-		scrollView.delegate = self;
-		
-		[self invalidateWebViewInsets];
+		[self invalidateFeedNavigateButtons];
 	} 
-}
-
-- (void)fullscreen {
-	[self toggleHiddenBars];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-	[super viewWillAppear:animated];
-	
-	self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-	self.navigationController.toolbar.barStyle = self.navigationController.navigationBar.barStyle;
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-	[super viewWillDisappear:animated];
-	
-	self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
-	self.navigationController.toolbar.barStyle = self.navigationController.navigationBar.barStyle;
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:animated];
 }
 
 - (void)viewDidUnload
 {
-	self.webView.delegate = nil;
-	[self setWebView:nil];
+    [self setPreviousButtonItem:nil];
+    [self setNextButtonItem:nil];
+
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -145,17 +106,15 @@
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	[self invalidateWebViewInsets];
-}
-
 #pragma mark - UIWebViewDelegate
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
 	if (navigationType == UIWebViewNavigationTypeLinkClicked) {
 		WebViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"WebViewController"];
 		viewController.siteRequest = request;
-		[self.navigationController pushViewController:viewController animated:YES];
+		UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+		[self presentViewController:navigationController animated:YES completion:nil];
+		
 		return NO;
 	}
 	
@@ -174,43 +133,89 @@
 	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 }
 
-#pragma mark - UIScrollViewDelegate
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView                                               // any offset changes
-{
+- (void)replaceWithNewFeed:(Feed *)newFeed direction:(BOOL)up {
+	animating = YES;
 	
+	CGRect rightFrame = self.webView.frame;
+	CGRect beforeFrame = rightFrame;
+	CGRect afterFrame = rightFrame;
+	
+	if (up) {
+		beforeFrame.origin.y -= rightFrame.size.height;
+		afterFrame.origin.y += rightFrame.size.height;
+	} else {
+		beforeFrame.origin.y += rightFrame.size.height;
+		afterFrame.origin.y -= rightFrame.size.height;
+	}
+	
+	UIWebView *newWebView = [[UIWebView alloc] initWithFrame:beforeFrame];
+	newWebView.autoresizingMask = self.webView.autoresizingMask;
+	newWebView.backgroundColor = self.webView.backgroundColor;
+	newWebView.scalesPageToFit = self.webView.scalesPageToFit;
+	newWebView.dataDetectorTypes = self.webView.dataDetectorTypes;
+	newWebView.allowsInlineMediaPlayback = self.webView.allowsInlineMediaPlayback;
+	newWebView.mediaPlaybackAllowsAirPlay = self.webView.mediaPlaybackAllowsAirPlay;
+	newWebView.mediaPlaybackRequiresUserAction = self.webView.mediaPlaybackRequiresUserAction;
+	
+	UIScrollView *scrollView = newWebView.scrollView;
+	
+	CGFloat barHeight;
+	
+	if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+		barHeight = 44.0f;
+	} else {
+		barHeight = 32.0f;
+	}
+	scrollView.contentInset = UIEdgeInsetsMake(barHeight, 0, 0, 0);
+	
+	[self showFeed:newFeed toView:newWebView];
+	[self.view addSubview:newWebView];
+	
+	[UIView transitionWithView:self.view
+					  duration:0.3
+					   options:UIViewAnimationOptionCurveEaseInOut
+					animations:^ {
+						self.webView.frame = afterFrame;
+						newWebView.frame = rightFrame;
+					}
+					completion:^(BOOL finished) {
+						if (finished) {
+							[self.webView setDelegate:nil];
+							[self.webView.scrollView setDelegate:nil];
+							[self.webView removeFromSuperview];
+							
+							self.webView = newWebView;
+							self.webView.scrollView.delegate = self;
+							self.feed = newFeed;
+							self.webView.delegate = self;
+							
+							[self invalidateFeedNavigateButtons];							
+							[self resetNavigationBarForScrollView:self.webView.scrollView];
+							
+							self.title = self.feed.title;
+							
+							animating = NO;
+						}
+					}];
 }
 
-// called on start of dragging (may require some time and or distance to move)
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-	
-}
-// called on finger up if the user dragged. velocity is in points/second. targetContentOffset may be changed to adjust where the scroll view comes to rest. not called when pagingEnabled is YES
-- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_5_0) {
-	
-}
-// called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-	
+- (IBAction)previousFeed:(id)sender {
+	if (!animating && self.feeds && self.feed) {
+		NSUInteger index = [self.feeds indexOfObject:self.feed];
+		if (index > 0) {
+			Feed *newFeed = [self.feeds objectAtIndex:index-1];
+			[self replaceWithNewFeed:newFeed direction:YES];
+		}
+	}
 }
 
-- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView   // called on finger up as we are moving
-{
-	
+- (IBAction)nextFeed:(id)sender {
+	if (!animating && self.feeds && self.feed) {
+		NSUInteger index = [self.feeds indexOfObject:self.feed];
+		if (index < [self.feeds count] - 1) {
+			Feed *newFeed = [self.feeds objectAtIndex:index+1];
+			[self replaceWithNewFeed:newFeed direction:NO];
+		}
+	}
 }
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView      // called when scroll view grinds to a halt
-{
-	
-}
-
-- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView // called when setContentOffset/scrollRectVisible:animated: finishes. not called if not animating
-{
-	
-}
-
-- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView      // called when scrolling animation finished. may be called immediately if already at top
-{
-	
-}
-
 @end
