@@ -9,10 +9,15 @@
 #import "FeedViewController.h"
 #import "Feed.h"
 #import "ContentOrganizer.h"
+#import "Subscription.h"
+
+#define HELPERVIEW_HEIGHT 60.0f
 
 @interface FeedViewController ()
 
+- (void)invalidateFeedNavigateButtons;
 - (void)resetTopAndBottomView:(UIScrollView *)scrollView;
+- (void)setHelperViewTitle:(NSString *)title description:(NSString *)description top:(BOOL)top;
 
 @end
 
@@ -53,11 +58,47 @@
 }
 */
 
+- (void)setHelperViewTitle:(NSString *)title description:(NSString *)description top:(BOOL)top {
+	UILabel *titleLabel, *descriptionLabel;
+	if (top) {
+		titleLabel = (UILabel *)[self.topView viewWithTag:101];
+		descriptionLabel = (UILabel *)[self.topView viewWithTag:102];
+	} else {
+		titleLabel = (UILabel *)[self.bottomView viewWithTag:201];
+		descriptionLabel = (UILabel *)[self.bottomView viewWithTag:202];
+	}
+	
+	if (titleLabel) {
+		titleLabel.text = title;
+	}
+	
+	if (descriptionLabel) {
+		descriptionLabel.text = description;
+	}
+}
+
 - (UIView *)topView {
 	if (_topView == nil) {
-		_topView = [[UIView alloc] init];
-		// #E6E3DE
-		_topView.backgroundColor = [UIColor colorWithRed:230 green:227 blue:222 alpha:1];
+		_topView = [[UIView alloc] initWithFrame:CGRectMake(0, -HELPERVIEW_HEIGHT, self.webView.frame.size.width, HELPERVIEW_HEIGHT)];
+		_topView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		_topView.backgroundColor = [UIColor clearColor];
+		
+		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, _topView.frame.size.width - 20, 20)];
+		titleLabel.tag = 101;
+		titleLabel.font = [UIFont boldSystemFontOfSize:14.0];
+		titleLabel.backgroundColor = [UIColor clearColor];
+		titleLabel.textAlignment = UITextAlignmentCenter;
+		titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		[_topView addSubview:titleLabel];
+		
+		UILabel *descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 30, titleLabel.frame.size.width, 20)];
+		descriptionLabel.tag = 102;
+		descriptionLabel.font = [UIFont systemFontOfSize:12.0];
+		descriptionLabel.textColor = [UIColor lightGrayColor];
+		descriptionLabel.backgroundColor = [UIColor clearColor];
+		descriptionLabel.textAlignment = UITextAlignmentCenter;
+		descriptionLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		[_topView addSubview:descriptionLabel];
 	}
 	
 	return _topView;
@@ -65,35 +106,29 @@
 
 - (UIView *)bottomView {
 	if (_bottomView == nil) {
-		_bottomView = [[UIView alloc] init];
-		_bottomView.backgroundColor = [UIColor whiteColor];
+		_bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, -HELPERVIEW_HEIGHT, self.webView.frame.size.width, HELPERVIEW_HEIGHT)];
+		_topView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		_bottomView.backgroundColor = [UIColor clearColor];
+		
+		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, _topView.frame.size.width - 20, 20)];
+		titleLabel.tag = 201;
+		titleLabel.font = [UIFont boldSystemFontOfSize:15.0];
+		titleLabel.backgroundColor = [UIColor clearColor];
+		titleLabel.textAlignment = UITextAlignmentCenter;
+		titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		[_bottomView addSubview:titleLabel];
+		
+		UILabel *descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 30, titleLabel.frame.size.width, 20)];
+		descriptionLabel.tag = 202;
+		descriptionLabel.font = [UIFont systemFontOfSize:13.0];
+		descriptionLabel.textColor = [UIColor lightGrayColor];
+		descriptionLabel.backgroundColor = [UIColor clearColor];
+		descriptionLabel.textAlignment = UITextAlignmentCenter;
+		descriptionLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		[_bottomView addSubview:descriptionLabel];
 	}
 	
 	return _bottomView;
-}
-
-- (void)invalidateFeedNavigateButtons {
-	if ([self.feeds count] > 1) {
-		NSUInteger index = [self.feeds indexOfObject:self.feed];
-		if (index == 0) {
-			self.previousButtonItem.enabled = NO;
-			self.nextButtonItem.enabled = YES;
-		}
-		else if (index == [self.feeds count] - 1) {
-			self.previousButtonItem.enabled = YES;
-			self.nextButtonItem.enabled = NO;
-		}
-		else {
-			self.previousButtonItem.enabled = YES;
-			self.nextButtonItem.enabled = YES;
-		}
-	} else {
-		self.previousButtonItem.enabled = NO;
-		self.nextButtonItem.enabled = NO;
-	}
-	
-	self.topView.hidden = !self.previousButtonItem.enabled;
-	self.bottomView.hidden = !self.nextButtonItem.enabled;
 }
 
 - (void)showFeed:(Feed *)feed toView:(UIWebView *)webView {
@@ -234,6 +269,45 @@
 					}];
 }
 
+- (void)invalidateFeedNavigateButtons {
+	if ([self.feeds count] > 1) {
+		NSUInteger index = [self.feeds indexOfObject:self.feed];
+		if (index == 0) {
+			self.previousButtonItem.enabled = NO;
+			self.nextButtonItem.enabled = YES;
+		}
+		else if (index == [self.feeds count] - 1) {
+			self.previousButtonItem.enabled = YES;
+			self.nextButtonItem.enabled = NO;
+		}
+		else {
+			self.previousButtonItem.enabled = YES;
+			self.nextButtonItem.enabled = YES;
+		}
+	} else {
+		self.previousButtonItem.enabled = NO;
+		self.nextButtonItem.enabled = NO;
+	}
+	
+	self.topView.hidden = !self.previousButtonItem.enabled;
+	self.bottomView.hidden = !self.nextButtonItem.enabled;
+	
+	if (self.topView.hidden == NO) {
+		NSUInteger index = [self.feeds indexOfObject:self.feed];
+		if (index > 0) {
+			Feed *newFeed = [self.feeds objectAtIndex:index-1];
+			[self setHelperViewTitle:newFeed.title description:newFeed.subscription.title top:YES];
+		}
+	}
+	if (self.bottomView.hidden == NO) {
+		NSUInteger index = [self.feeds indexOfObject:self.feed];
+		if (index < [self.feeds count] - 1) {
+			Feed *newFeed = [self.feeds objectAtIndex:index+1];
+			[self setHelperViewTitle:newFeed.title description:newFeed.subscription.title top:NO];
+		}
+	}
+}
+
 - (IBAction)previousFeed:(id)sender {
 	if (!animating && self.feeds && self.feed) {
 		NSUInteger index = [self.feeds indexOfObject:self.feed];
@@ -256,7 +330,7 @@
 
 - (void)resetTopAndBottomView:(UIScrollView *)scrollView {
 	CGPoint offset = scrollView.contentOffset;
-	CGFloat barHeight = 60.0f;
+	CGFloat barHeight = HELPERVIEW_HEIGHT;
 	CGFloat barWidth = self.webView.frame.size.width;
 	CGFloat newTopY = -offset.y - scrollView.contentInset.top - barHeight;
 	self.topView.frame = CGRectMake(0, newTopY, barWidth, barHeight);
