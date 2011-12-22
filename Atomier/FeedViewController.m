@@ -10,6 +10,12 @@
 #import "Feed.h"
 #import "ContentOrganizer.h"
 
+@interface FeedViewController ()
+
+- (void)resetTopAndBottomView:(UIScrollView *)scrollView;
+
+@end
+
 @implementation FeedViewController {
 	BOOL animating;
 }
@@ -18,6 +24,8 @@
 @synthesize feed = _feed;
 @synthesize previousButtonItem = _previousButtonItem;
 @synthesize nextButtonItem = _nextButtonItem;
+@synthesize topView = _topView;
+@synthesize bottomView = _bottomView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -45,6 +53,25 @@
 }
 */
 
+- (UIView *)topView {
+	if (_topView == nil) {
+		_topView = [[UIView alloc] init];
+		// #E6E3DE
+		_topView.backgroundColor = [UIColor colorWithRed:230 green:227 blue:222 alpha:1];
+	}
+	
+	return _topView;
+}
+
+- (UIView *)bottomView {
+	if (_bottomView == nil) {
+		_bottomView = [[UIView alloc] init];
+		_bottomView.backgroundColor = [UIColor whiteColor];
+	}
+	
+	return _bottomView;
+}
+
 - (void)invalidateFeedNavigateButtons {
 	if ([self.feeds count] > 1) {
 		NSUInteger index = [self.feeds indexOfObject:self.feed];
@@ -64,6 +91,9 @@
 		self.previousButtonItem.enabled = NO;
 		self.nextButtonItem.enabled = NO;
 	}
+	
+	self.topView.hidden = !self.previousButtonItem.enabled;
+	self.bottomView.hidden = !self.nextButtonItem.enabled;
 }
 
 - (void)showFeed:(Feed *)feed toView:(UIWebView *)webView {
@@ -84,6 +114,9 @@
 		[self showFeed:self.feed toView:self.webView];
 		
 		[self invalidateFeedNavigateButtons];
+		
+		[self.view addSubview:self.topView];
+		[self.view addSubview:self.bottomView];
 	} 
 }
 
@@ -169,7 +202,7 @@
 	scrollView.contentInset = UIEdgeInsetsMake(barHeight, 0, 0, 0);
 	
 	[self showFeed:newFeed toView:newWebView];
-	[self.view addSubview:newWebView];
+	[self.view insertSubview:newWebView atIndex:0];
 	
 	[UIView transitionWithView:self.view
 					  duration:0.3
@@ -195,6 +228,8 @@
 							self.title = self.feed.title;
 							
 							animating = NO;
+							
+							[self resetTopAndBottomView:scrollView];
 						}
 					}];
 }
@@ -218,4 +253,33 @@
 		}
 	}
 }
+
+- (void)resetTopAndBottomView:(UIScrollView *)scrollView {
+	CGPoint offset = scrollView.contentOffset;
+	CGFloat barHeight = 60.0f;
+	CGFloat barWidth = self.webView.frame.size.width;
+	CGFloat newTopY = -offset.y - scrollView.contentInset.top - barHeight;
+	self.topView.frame = CGRectMake(0, newTopY, barWidth, barHeight);
+	
+	CGFloat newBottomY = newTopY + scrollView.contentSize.height + barHeight;
+	self.bottomView.frame = CGRectMake(0, newBottomY, barWidth, barHeight);
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+	[super scrollViewDidScroll:scrollView];
+	
+	[self resetTopAndBottomView:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+	
+	if (self.topView.frame.origin.y > 0) {
+		[self previousFeed:nil];
+	}
+	else if (self.bottomView.frame.origin.y < self.view.frame.size.height - self.bottomView.frame.size.height) {
+		[self nextFeed:nil];
+	}
+}
+
 @end

@@ -194,13 +194,10 @@
 	scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(scrollInset, 0, 0, 0);
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView                                               // any offset changes
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
 	//NSLog(@"scrollViewDidScroll: %@", scrollView);
 	
 	[self resetNavigationBarForScrollView:scrollView];
 }
-
-
-
 @end

@@ -19,6 +19,9 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *previousButtonItem;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *nextButtonItem;
 
+@property (strong, nonatomic) UIView *topView;
+@property (strong, nonatomic) UIView *bottomView;
+
 - (IBAction)previousFeed:(id)sender;
 - (IBAction)nextFeed:(id)sender;
 
