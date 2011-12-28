@@ -6,10 +6,13 @@
 //  Copyright (c) 2011 Appcid. All rights reserved.
 //
 
+#import <Twitter/Twitter.h>
 #import "FeedViewController.h"
 #import "Feed.h"
 #import "ContentOrganizer.h"
 #import "Subscription.h"
+#import "AppDelegate.h"
+#import "Alternate.h"
 
 #define HELPERVIEW_HEIGHT 60.0f
 
@@ -29,6 +32,9 @@
 @synthesize feed = _feed;
 @synthesize previousButtonItem = _previousButtonItem;
 @synthesize nextButtonItem = _nextButtonItem;
+@synthesize unreadItem = _unreadItem;
+@synthesize starredItem = _starredItem;
+@synthesize actionItem = _actionItem;
 @synthesize topView = _topView;
 @synthesize bottomView = _bottomView;
 
@@ -138,6 +144,12 @@
 	
 	NSURL *baseURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
 	[webView loadHTMLString:template baseURL:baseURL];
+	
+	if ([feed.unread boolValue] == YES) {
+		AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		[appDelegate markAsRead:feed];
+		[appDelegate saveContext];
+	}
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -160,6 +172,9 @@
     [self setPreviousButtonItem:nil];
     [self setNextButtonItem:nil];
 
+    [self setUnreadItem:nil];
+    [self setStarredItem:nil];
+    [self setActionItem:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -306,6 +321,18 @@
 			[self setHelperViewTitle:newFeed.title description:newFeed.subscription.title top:NO];
 		}
 	}
+	
+	if ([self.feed.unread boolValue]) {
+		[self.unreadItem setImage:[UIImage imageNamed:@"UnreadOn"]];
+	} else {
+		[self.unreadItem setImage:[UIImage imageNamed:@"UnreadOff"]];
+	}
+	
+	if ([self.feed.starred boolValue]) {
+		[self.starredItem setImage:[UIImage imageNamed:@"StarredOn"]];
+	} else {
+		[self.starredItem setImage:[UIImage imageNamed:@"StarredOff"]];
+	}
 }
 
 - (IBAction)previousFeed:(id)sender {
@@ -325,6 +352,196 @@
 			Feed *newFeed = [self.feeds objectAtIndex:index+1];
 			[self replaceWithNewFeed:newFeed direction:NO];
 		}
+	}
+}
+
+- (IBAction)toggleUnread:(id)sender {
+	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	
+	if ([self.feed.unread boolValue]) {
+		[appDelegate markAsRead:self.feed];
+	} else {
+		[appDelegate markAsUnread:self.feed];
+	}
+	[appDelegate saveContext];
+	
+	[self invalidateFeedNavigateButtons];
+}
+
+- (IBAction)toggleStarred:(id)sender {
+	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	
+	if ([self.feed.starred boolValue]) {
+		[appDelegate markAsUnstarred:self.feed];
+	} else {
+		[appDelegate markAsStarred:self.feed];
+	}
+	
+	[self invalidateFeedNavigateButtons];
+}
+
+- (IBAction)shareAction:(id)sender {
+	Alternate *alternate = [self.feed.alternates anyObject];
+	NSURL *sourceURL = [NSURL URLWithString:alternate.href];
+	if (sourceURL) {
+		
+		UIActionSheet *actionSheet;
+		
+		if ([TWTweetComposeViewController canSendTweet]) {
+			actionSheet = [[UIActionSheet alloc] initWithTitle:alternate.href 
+													  delegate:self
+											 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+										destructiveButtonTitle:nil
+											 otherButtonTitles:NSLocalizedString(@"Open in Safari", nil)
+						   , NSLocalizedString(@"Copy Link", nil)
+						   , NSLocalizedString(@"Mail Link", nil)
+						   , NSLocalizedString(@"Mail Article", nil)
+						   , NSLocalizedString(@"Send to Twitter", nil)
+						   , nil];
+		}
+		else {
+			actionSheet = [[UIActionSheet alloc] initWithTitle:alternate.href 
+													  delegate:self
+											 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+										destructiveButtonTitle:nil
+											 otherButtonTitles:NSLocalizedString(@"Open in Safari", nil)
+						   , NSLocalizedString(@"Copy Link", nil)
+						   , NSLocalizedString(@"Mail Link", nil)
+						   , NSLocalizedString(@"Mail Article", nil)
+						   , nil];
+		}
+		[actionSheet showFromToolbar:self.navigationController.toolbar];		 
+	}	
+}
+
+-(void)launchMailAppOnDevice:(NSString *)title body:(NSString *)body
+{
+	NSString *email = [[NSString stringWithFormat:@"mailto:?subject=%@&body=%@", title, body] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:email]];
+}
+
+-(void)displayComposerSheet:(NSString *)title body:(NSString *)body
+{
+	MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
+	picker.mailComposeDelegate = self;
+	
+	[picker setSubject:title];
+	[picker setMessageBody:body isHTML:YES];
+	
+	[self presentModalViewController:picker animated:YES];
+}
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error 
+{	
+	// Notifies users about errors associated with the interface
+	switch (result)
+	{
+		case MFMailComposeResultCancelled:
+			//message.text = @"Result: canceled";
+			break;
+		case MFMailComposeResultSaved:
+			//message.text = @"Result: saved";
+			break;
+		case MFMailComposeResultSent:
+			//message.text = @"Result: sent";
+			break;
+		case MFMailComposeResultFailed:
+			//message.text = @"Result: failed";
+			break;
+		default:
+			//message.text = @"Result: not sent";
+			break;
+	}
+	[self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)mail:(NSString *)title body:(NSString *)body 
+{
+	Class mailClass = (NSClassFromString(@"MFMailComposeViewController"));
+	if (mailClass != nil)
+	{
+		// We must always check whether the current device is configured for sending emails
+		if ([mailClass canSendMail])
+		{
+			[self displayComposerSheet:title body:body];
+		}
+		else
+		{
+			[self launchMailAppOnDevice:title body:body];
+		}
+	}
+	else
+	{
+		[self launchMailAppOnDevice:title body:body];
+	}
+}
+									  
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if (buttonIndex == actionSheet.cancelButtonIndex) {
+		return;
+	}
+	
+	Alternate *alternate = [self.feed.alternates anyObject];
+	NSURL *sourceURL = [NSURL URLWithString:alternate.href];
+	
+	UIApplication *app = [UIApplication sharedApplication];
+	
+	if (buttonIndex == actionSheet.firstOtherButtonIndex) {
+		// Open in Safari
+		if ([app canOpenURL:sourceURL]) {
+			[app openURL:sourceURL];
+		}
+	}
+	else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
+		// Copy Link
+		UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+		pasteboard.URL = sourceURL;
+	}
+	else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2) {
+		// Mail Link
+		NSString *link = [NSString stringWithFormat:@"<a href=\"%@\">%@</a>", alternate.href, alternate.href];
+		[self mail:self.feed.title body:link];
+	}
+	else if (buttonIndex == actionSheet.firstOtherButtonIndex + 3) {
+		// Mail Article
+		[self mail:self.feed.title body:[[ContentOrganizer sharedInstance] contentForID:[self.feed.keyId lastPathComponent]]];
+	}
+	else if (buttonIndex == actionSheet.firstOtherButtonIndex + 4) {
+		// Send to Twitter
+		// Set up the built-in twitter composition view controller.
+		TWTweetComposeViewController *tweetViewController = [[TWTweetComposeViewController alloc] init];
+		
+		// Set the initial tweet text. See the framework for additional properties that can be set.
+		[tweetViewController setInitialText:self.feed.title];
+		[tweetViewController addURL:sourceURL];
+		
+		// Create the completion handler block.
+		[tweetViewController setCompletionHandler:^(TWTweetComposeViewControllerResult result) {
+			//NSString *output;
+			
+			switch (result) {
+				case TWTweetComposeViewControllerResultCancelled:
+					// The cancel button was tapped.
+					//output = @"Tweet cancelled.";
+					break;
+				case TWTweetComposeViewControllerResultDone:
+					// The tweet was sent.
+					//output = @"Tweet done.";
+					break;
+				default:
+					break;
+			}
+			
+			//[self performSelectorOnMainThread:@selector(displayText:) withObject:output waitUntilDone:NO];
+			
+			// Dismiss the tweet composition view controller.
+			[self dismissModalViewControllerAnimated:YES];
+		}];
+		
+		// Present the tweet composition view controller modally.
+		[self presentModalViewController:tweetViewController animated:YES];
+		
 	}
 }
 

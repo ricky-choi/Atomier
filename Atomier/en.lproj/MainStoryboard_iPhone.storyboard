@@ -184,7 +184,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Atomier" id="lLh-GT-8fJ"/>
+                    <navigationItem key="navigationItem" title="Syndi" id="lLh-GT-8fJ"/>
                     <connections>
                         <outlet property="tableView" destination="77b-Fz-tdM" id="Cvj-U2-Pcq"/>
                     </connections>
@@ -213,25 +213,44 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <toolbarItems>
+                        <barButtonItem id="gLj-hg-h9X">
+                            <connections>
+                                <action selector="toggleUnread:" destination="Yfp-Y5-ehB" id="K85-wI-qp0"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="0pD-5O-QuS"/>
-                        <barButtonItem title="Previous" id="5LQ-j4-jXf">
+                        <barButtonItem id="3E1-oB-EcN">
+                            <connections>
+                                <action selector="toggleStarred:" destination="Yfp-Y5-ehB" id="7Kh-RA-TPH"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="TqS-U0-IgM"/>
+                        <barButtonItem systemItem="rewind" id="5LQ-j4-jXf">
                             <connections>
                                 <action selector="previousFeed:" destination="Yfp-Y5-ehB" id="aRm-n9-AFQ"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="Qbc-qt-aix"/>
-                        <barButtonItem title="Next" id="Q7I-q8-TM9">
+                        <barButtonItem systemItem="fastForward" id="Q7I-q8-TM9">
                             <connections>
                                 <action selector="nextFeed:" destination="Yfp-Y5-ehB" id="RLU-oc-T1B"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="NVV-Ms-8sS"/>
+                        <barButtonItem systemItem="action" id="5g2-hv-qpD">
+                            <connections>
+                                <action selector="shareAction:" destination="Yfp-Y5-ehB" id="CdB-bM-f5y"/>
+                            </connections>
+                        </barButtonItem>
                     </toolbarItems>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="actionItem" destination="5g2-hv-qpD" id="nW5-lO-K9G"/>
                         <outlet property="nextButtonItem" destination="Q7I-q8-TM9" id="xQG-dy-EGO"/>
                         <outlet property="previousButtonItem" destination="5LQ-j4-jXf" id="d5k-BQ-XuN"/>
+                        <outlet property="starredItem" destination="3E1-oB-EcN" id="hSj-nj-Ncl"/>
+                        <outlet property="unreadItem" destination="gLj-hg-h9X" id="c2p-VN-vmk"/>
                         <outlet property="webView" destination="Ktn-RF-pFU" id="g8X-4v-aKe"/>
                     </connections>
                 </viewController>
@@ -413,6 +432,78 @@
         <image name="Back.png" width="20" height="21"/>
         <image name="Forward.png" width="20" height="21"/>
     </resources>
+    <classes>
+        <class className="FeedViewController" superclassName="WebViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FeedViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="nextFeed:"/>
+                <relationship kind="action" name="previousFeed:"/>
+                <relationship kind="action" name="shareAction:"/>
+                <relationship kind="action" name="toggleStarred:"/>
+                <relationship kind="action" name="toggleUnread:"/>
+                <relationship kind="outlet" name="actionItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="nextButtonItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="previousButtonItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="starredItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="unreadItem" candidateClass="UIBarButtonItem"/>
+            </relationships>
+        </class>
+        <class className="FeedsViewCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FeedsViewCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="dateLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="descriptionLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="iconImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="starredImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="subtitleLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="titleLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="unreadImageView" candidateClass="UIImageView"/>
+            </relationships>
+        </class>
+        <class className="FeedsViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FeedsViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="TopViewCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TopViewCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="countLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="descriptionLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="iconImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="titleLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="TopViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TopViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="changeMode:"/>
+                <relationship kind="action" name="refresh:"/>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="ViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="login:"/>
+                <relationship kind="outlet" name="alertField" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="emailField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="passwordField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="spinner" candidateClass="UIActivityIndicatorView"/>
+            </relationships>
+        </class>
+        <class className="WebViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/WebViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="backItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="forwardItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="refreshItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="stopItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

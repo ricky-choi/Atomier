@@ -202,7 +202,7 @@
 	if (lastSyncDate) {
 		NSDate *now = [NSDate date];
 		NSTimeInterval interval = [now timeIntervalSinceDate:lastSyncDate];
-		NSTimeInterval oneDay = 12 * 60 * 60;
+		NSTimeInterval oneDay = 6 * 60 * 60;
 		
 		if (interval > oneDay) {
 			[self refresh];
@@ -694,6 +694,17 @@
 	if ([feed.unread boolValue] == YES) {
 		feed.unread = [NSNumber numberWithBool:NO];
 		[[GoogleReader sharedInstance] markReadAtFeedID:feed.keyId forFeed:feed.subscription.keyId];
+		
+		[feed.subscription refreshUnreadCountWithCategory];
+	}
+}
+
+- (void)markAsUnread:(Feed *)feed {
+	if ([feed.unread boolValue] == NO) {
+		feed.unread = [NSNumber numberWithBool:YES];
+		[[GoogleReader sharedInstance] markUnreadAtFeedID:feed.keyId forFeed:feed.subscription.keyId];
+		
+		[feed.subscription refreshUnreadCountWithCategory];
 	}
 }
 
@@ -705,6 +716,24 @@
 	[self refreshUnreadAndStarred:1];
 	
 	[self saveContext];
+}
+
+- (void)markAsStarred:(Feed *)feed {
+	if ([feed.starred boolValue] == NO) {
+		feed.starred = [NSNumber numberWithBool:YES];
+		[[GoogleReader sharedInstance] addStarAtFeedID:feed.keyId forFeed:feed.subscription.keyId];
+		
+		[feed.subscription refreshStarredCountWithCategory];
+	}
+}
+
+- (void)markAsUnstarred:(Feed *)feed {
+	if ([feed.starred boolValue] == YES) {
+		feed.starred = [NSNumber numberWithBool:NO];
+		[[GoogleReader sharedInstance] removeStarAtFeedID:feed.keyId forFeed:feed.subscription.keyId];
+		
+		[feed.subscription refreshStarredCountWithCategory];
+	}
 }
 
 #pragma mark - Core Data stack

@@ -22,4 +22,6 @@
 @property (strong, nonatomic) Category *category;
 @property (strong, nonatomic) Subscription *subscription;
 
+@property (assign, nonatomic) BOOL sortDateAscending;
+
 @end

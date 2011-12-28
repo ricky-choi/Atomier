@@ -39,6 +39,10 @@
 - (void)unsubscribe:(Subscription *)subscription;
 
 - (void)markAsRead:(Feed *)feed;
+- (void)markAsUnread:(Feed *)feed;
 - (void)markAsAllRead:(NSArray *)feeds;
+
+- (void)markAsStarred:(Feed *)feed;
+- (void)markAsUnstarred:(Feed *)feed;
 
 @end

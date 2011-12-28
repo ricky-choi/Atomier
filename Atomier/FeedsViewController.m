@@ -16,6 +16,8 @@
 #import "WebViewController.h"
 #import "FeedViewController.h"
 
+#define SORT_DATE @"sortDateAscending"
+
 @interface FeedsViewController ()
 
 - (void)configureCell:(FeedsViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
@@ -30,10 +32,13 @@
 @synthesize currentSegment = _currentSegment;
 @synthesize category = _category;
 @synthesize subscription = _subscription;
+@synthesize sortDateAscending = _sortDateAscending;
 
 - (void)awakeFromNib {
 	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 	self.managedObjectContext = appDelegate.managedObjectContext;
+	
+	self.sortDateAscending = [[NSUserDefaults standardUserDefaults] boolForKey:SORT_DATE];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -84,7 +89,20 @@
 	UIBarButtonItem *showOldest = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward
 																				target:self
 																				action:@selector(showOldestFeed)];
-	self.toolbarItems = [NSArray arrayWithObjects:markAll, flexibleSpace, showOldest, nil];
+	UIBarButtonItem *sortItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Sort", nil)
+																 style:UIBarButtonItemStyleBordered
+																target:self
+																action:@selector(sort)];
+	self.toolbarItems = [NSArray arrayWithObjects:markAll, flexibleSpace, showOldest, flexibleSpace, sortItem, nil];
+}
+
+- (void)sort {
+	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Sort", nil)
+															 delegate:self
+													cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+											   destructiveButtonTitle:nil
+													otherButtonTitles:NSLocalizedString(@"Ascending", nil), NSLocalizedString(@"Descending", nil), nil];
+	[actionSheet showFromToolbar:self.navigationController.toolbar];
 }
 
 - (void)showOldestFeed {
@@ -114,12 +132,33 @@
 	[actionSheet showFromToolbar:self.navigationController.toolbar];
 }
 
+- (void)changeSortByDate:(BOOL)ascending {
+	self.sortDateAscending = ascending;
+	[[NSUserDefaults standardUserDefaults] setBool:ascending forKey:SORT_DATE];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	self.fetchedResultsController = nil;
+	[self.tableView reloadData];
+}
+
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if (buttonIndex == actionSheet.cancelButtonIndex) {
+		return;
+	}
+	
 	if (buttonIndex == actionSheet.destructiveButtonIndex) {
+		// Mark all as read
 		NSArray *feeds = [self.fetchedResultsController fetchedObjects];
 		
 		AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		[appDelegate markAsAllRead:feeds];
+	}
+	else if (buttonIndex == actionSheet.firstOtherButtonIndex) {
+		// Sort Ascending
+		[self changeSortByDate:YES];
+	}
+	else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
+		// Sort Descending
+		[self changeSortByDate:NO];
 	}
 }
 
@@ -267,7 +306,7 @@
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"updatedDate" ascending:NO];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"updatedDate" ascending:self.sortDateAscending];
     NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
@@ -338,10 +377,12 @@
 	NSLog(@"controllerDidChangeContent: %@", controller);
 	[self.tableView reloadData];
 	
-	NSArray *feeds = [self.fetchedResultsController fetchedObjects];
-	if (feeds == nil || [feeds count] == 0) {
-		[self.navigationController popViewControllerAnimated:YES];
-	}
+	if (self.navigationController.visibleViewController == self) {
+		NSArray *feeds = [self.fetchedResultsController fetchedObjects];
+		if (feeds == nil || [feeds count] == 0) {
+			[self.navigationController popViewControllerAnimated:YES];
+		}
+	}	
 }
 
 @end
