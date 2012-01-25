@@ -10,6 +10,8 @@
 #import "Subscription.h"
 #import "Feed.h"
 
+#define SORT_DATE @"sortDateAscending"
+
 @implementation Category
 
 @dynamic keyId;
@@ -47,12 +49,15 @@
 }
 
 - (Feed *)latestFeed {	
+	BOOL ascending = [[NSUserDefaults standardUserDefaults] boolForKey:SORT_DATE];
+	NSComparisonResult comparisonResult = ascending ? NSOrderedAscending : NSOrderedDescending;
+	
 	__block Subscription *returnSubscription = nil;
 	[self.subscriptions enumerateObjectsUsingBlock:^(id obj, BOOL *stop){
 		Subscription *subscription = (Subscription *)obj;
 		if (returnSubscription) {
 			if ([subscription latestFeed]) {
-				if ([subscription latestFeed].updatedDate > [returnSubscription latestFeed].updatedDate) {
+				if ([[subscription latestFeed].updatedDate compare:[returnSubscription latestFeed].updatedDate] == comparisonResult) {
 					returnSubscription = subscription;
 				}
 			}
@@ -65,12 +70,15 @@
 }
 
 - (Feed *)unreadLatestFeed {
+	BOOL ascending = [[NSUserDefaults standardUserDefaults] boolForKey:SORT_DATE];
+	NSComparisonResult comparisonResult = ascending ? NSOrderedAscending : NSOrderedDescending;
+	
 	__block Subscription *returnSubscription = nil;
 	[self.subscriptions enumerateObjectsUsingBlock:^(id obj, BOOL *stop){
 		Subscription *subscription = (Subscription *)obj;
 		if (returnSubscription) {
 			if ([subscription unreadLatestFeed]) {
-				if ([subscription unreadLatestFeed].updatedDate > [returnSubscription unreadLatestFeed].updatedDate) {
+				if ([[subscription unreadLatestFeed].updatedDate compare:[returnSubscription unreadLatestFeed].updatedDate] == comparisonResult) {
 					returnSubscription = subscription;
 				}
 			}
@@ -83,12 +91,15 @@
 }
 
 - (Feed *)starredLatestFeed {
+	BOOL ascending = [[NSUserDefaults standardUserDefaults] boolForKey:SORT_DATE];
+	NSComparisonResult comparisonResult = ascending ? NSOrderedAscending : NSOrderedDescending;
+	
 	__block Subscription *returnSubscription = nil;
 	[self.subscriptions enumerateObjectsUsingBlock:^(id obj, BOOL *stop){
 		Subscription *subscription = (Subscription *)obj;
 		if (returnSubscription) {
 			if ([subscription starredLatestFeed]) {
-				if ([subscription starredLatestFeed].updatedDate > [returnSubscription starredLatestFeed].updatedDate) {
+				if ([[subscription starredLatestFeed].updatedDate compare:[returnSubscription starredLatestFeed].updatedDate] == comparisonResult) {
 					returnSubscription = subscription;
 				}
 			}

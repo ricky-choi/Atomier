@@ -13,6 +13,8 @@
 #define kSectionIdentifier @"sectionIdentifier"
 #define kUpdatedDate @"updatedDate"
 
+
+
 @implementation Feed
 
 @dynamic author;
@@ -30,6 +32,8 @@
 @dynamic primitiveUpdatedDate;
 @dynamic sectionIdentifier;
 @dynamic primitiveSectionIdentifier;
+
+@dynamic stay;
 
 - (NSString *)sectionIdentifier {
 	[self willAccessValueForKey:kSectionIdentifier];

@@ -13,6 +13,8 @@
 @implementation Content
 
 @dynamic content;
+@dynamic summary;
+@dynamic offlineContent;
 @dynamic feed;
 
 @end

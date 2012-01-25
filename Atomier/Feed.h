@@ -30,6 +30,8 @@
 @property (nonatomic, retain) NSString *sectionIdentifier;
 @property (nonatomic, retain) NSString *primitiveSectionIdentifier;
 
+@property (nonatomic, retain) NSNumber * stay;
+
 @end
 
 @interface Feed (CoreDataGeneratedAccessors)

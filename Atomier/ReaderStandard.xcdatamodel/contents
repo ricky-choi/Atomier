@@ -14,6 +14,8 @@
     </entity>
     <entity name="Content" representedClassName="Content" syncable="YES">
         <attribute name="content" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="offlineContent" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="summary" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="feed" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Feed" inverseName="content" inverseEntity="Feed" syncable="YES"/>
     </entity>
     <entity name="Feed" representedClassName="Feed" syncable="YES">
@@ -22,6 +24,7 @@
         <attribute name="publishedDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="sectionIdentifier" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="starred" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="stay" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="unread" optional="YES" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
         <attribute name="updatedDate" optional="YES" attributeType="Date" syncable="YES"/>

@@ -10,11 +10,11 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="StandViewController" id="2" customClass="StandViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5">
-                        <rect key="frame" x="0.0" y="64" width="768" height="960"/>
+                        <rect key="frame" x="0.0" y="64" width="768" height="916"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Syndi" id="jZg-90-czi"/>
+                    <navigationItem key="navigationItem" title="SYNDI" id="jZg-90-czi"/>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="1003" y="-42"/>
@@ -22,13 +22,17 @@
         <scene sceneID="ozg-zU-fyF">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eLG-yN-ab8" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <navigationController id="BDJ-hH-0ba" sceneMemberID="viewController">
+                <navigationController toolbarHidden="NO" id="BDJ-hH-0ba" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="qz5-L5-9Tg">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="9zN-3R-00z">
+                        <rect key="frame" x="0.0" y="980" width="768" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
                     <connections>
                         <segue destination="2" kind="relationship" relationship="rootViewController" id="Gnn-E0-VLG"/>
                     </connections>
@@ -40,6 +44,10 @@
     <classes>
         <class className="StandViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/StandViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="changeMode:"/>
+                <relationship kind="action" name="refresh:"/>
+            </relationships>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

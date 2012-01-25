@@ -14,6 +14,8 @@
 @interface Content : NSManagedObject
 
 @property (nonatomic, retain) NSString * content;
+@property (nonatomic, retain) NSString *summary;
+@property (nonatomic, retain) NSString *offlineContent;
 @property (nonatomic, retain) Feed *feed;
 
 @end

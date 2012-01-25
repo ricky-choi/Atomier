@@ -10,6 +10,7 @@
 #import "Category.h"
 #import "Feed.h"
 
+#define SORT_DATE @"sortDateAscending"
 
 @implementation Subscription
 
@@ -72,7 +73,8 @@
 }
 
 - (Feed *)latestFeed {
-	return [[self feedsByDate:YES] lastObject];
+	BOOL ascending = [[NSUserDefaults standardUserDefaults] boolForKey:SORT_DATE];
+	return [[self feedsByDate:!ascending] lastObject];
 }
 
 - (NSArray *)unreadFeedsByDate:(BOOL)ascending {
@@ -83,7 +85,8 @@
 }
 
 - (Feed *)unreadLatestFeed {
-	return [[self unreadFeedsByDate:YES] lastObject];
+	BOOL ascending = [[NSUserDefaults standardUserDefaults] boolForKey:SORT_DATE];
+	return [[self unreadFeedsByDate:!ascending] lastObject];
 }
 
 - (NSArray *)starredFeedsByDate:(BOOL)ascending {
@@ -94,7 +97,8 @@
 }
 
 - (Feed *)starredLatestFeed {
-	return [[self starredFeedsByDate:YES] lastObject];
+	BOOL ascending = [[NSUserDefaults standardUserDefaults] boolForKey:SORT_DATE];
+	return [[self starredFeedsByDate:!ascending] lastObject];
 }
 
 

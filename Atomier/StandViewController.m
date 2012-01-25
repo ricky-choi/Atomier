@@ -130,6 +130,9 @@
 		NSArray *cateogries = [self.fetchedResultsControllerForCategory fetchedObjects];
 		
 		NSUInteger chipCount = [subscriptions count] + [cateogries count];
+		if (chipCount > 0) {
+			chipCount++;
+		}
 		
 		if (chipCount <= 1) {
 			if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {
@@ -168,9 +171,42 @@
 		int paddingInt = (int)padding;
 		CGPoint nextOrigin = CGPointMake(paddingInt, paddingInt);
 		
-			
-		
 		NSMutableDictionary *newChilds = [NSMutableDictionary dictionaryWithCapacity:chipCount];
+		
+		if (chipCount > 0) {
+			// all
+			UINavigationController *exist = [self.childs valueForKey:@"ALL"];
+			UINavigationController *navigationController;
+			FeedsViewController *feedsViewController;
+			if (exist) {
+				navigationController = exist;
+				feedsViewController = (FeedsViewController *)[navigationController topViewController];
+				feedsViewController.currentSegment = self.currentSegment;
+			}
+			else {
+				feedsViewController = [IPHONE_STORYBOARD instantiateViewControllerWithIdentifier:@"FeedsViewController"];
+				feedsViewController.currentSegment = self.currentSegment;
+				
+				navigationController = [[UINavigationController alloc] initWithRootViewController:feedsViewController];
+				navigationController.view.autoresizingMask = UIViewAutoresizingNone;
+				
+				[self addChildViewController:navigationController];
+				[self.scrollView addSubview:navigationController.view];
+			}
+			
+			[self.childs removeObjectForKey:@"ALL"];
+			[newChilds setValue:navigationController forKey:@"ALL"];
+			
+			navigationController.view.frame = CGRectMake(nextOrigin.x, nextOrigin.y, viewControllerSize.width, viewControllerSize.height);
+			
+			if ([navigationController.view superview] == nil) {
+				[self.scrollView addSubview:navigationController.view];
+			}
+			
+			[self addShadow:navigationController.view.layer];
+			
+			nextOrigin = [self nextOrigin:nextOrigin padding:(CGFloat)paddingInt scrollViewWidth:scrollViewWidth];
+		}
 		
 		int tag = 3;
 		for (Subscription *subscription in subscriptions) {
@@ -308,10 +344,20 @@
 	});
 }
 
+- (void)setNavigationBarAndToolbarBackgroundImage:(UIInterfaceOrientation)orientation {
+//	if (UIInterfaceOrientationIsPortrait(orientation)) {
+//		[self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"TSAToolbarPortraitBG~ipad"] forBarMetrics:UIBarMetricsDefault];
+//	} else {
+//		[self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"TSAToolbarLandscapeBG~ipad"] forBarMetrics:UIBarMetricsDefault];
+//	}
+}
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	
+	[self setNavigationBarAndToolbarBackgroundImage:self.interfaceOrientation];
 	
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	[self invalidateEditButton];
@@ -440,6 +486,7 @@
 	[UIView animateWithDuration:duration 
 					 animations:^{
 						 [self invalidateItemsForOrientation:toInterfaceOrientation]; 
+						 [self setNavigationBarAndToolbarBackgroundImage:toInterfaceOrientation];
 					 }
 					 completion:^(BOOL finished){
 						 
