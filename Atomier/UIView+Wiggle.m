@@ -14,8 +14,8 @@
 - (void)startWiggling {
 	
     CAKeyframeAnimation *anim = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation"];
-    anim.values = [NSArray arrayWithObjects:[NSNumber numberWithFloat:-0.05],
-				   [NSNumber numberWithFloat:0.05],
+    anim.values = [NSArray arrayWithObjects:[NSNumber numberWithFloat:-0.02],//0.05
+				   [NSNumber numberWithFloat:0.02],
 				   nil];
     anim.duration = 0.09f + ((self.tag % 10) * 0.01f);
     anim.autoreverses = YES;

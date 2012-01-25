@@ -117,14 +117,16 @@
 	
 	
 	
-	UIBarButtonItem *markAll = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Mark all as read", nil) 
-																style:UIBarButtonItemStyleBordered 
-															   target:self
-															   action:@selector(markAllAsRead:)];
+//	UIBarButtonItem *markAll = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Mark all as read", nil) 
+//																style:UIBarButtonItemStyleBordered 
+//															   target:self
+//															   action:@selector(markAllAsRead:)];
+	UIBarButtonItem *markAll = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"checkmark"] style:UIBarButtonItemStylePlain target:self action:@selector(markAllAsRead:)];
 	UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-	UIBarButtonItem *showOldest = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward
-																				target:self
-																				action:@selector(showOldestFeed)];
+//	UIBarButtonItem *showOldest = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward
+//																				target:self
+//																				action:@selector(showOldestFeed)];
+	UIBarButtonItem *showOldest = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"arrow_down"] style:UIBarButtonItemStylePlain target:self action:@selector(showOldestFeed)];
 	UIBarButtonItem *sortItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Sort", nil)
 																 style:UIBarButtonItemStyleBordered
 																target:self

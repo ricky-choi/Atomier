@@ -277,6 +277,90 @@
 
 - (void)configureCell:(TopViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
 	
+	if (indexPath.section == 1) {
+		NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
+		Subscription *subscription = [self.fetchedResultsControllerForSubscription objectAtIndexPath:newIndexPath];
+		cell.titleLabel.text = subscription.title;
+		
+		// inner feed
+		Feed *latestFeed = nil;
+		NSUInteger feedCount = 0;
+		if (self.currentSegment == 0) {
+			latestFeed = [subscription unreadLatestFeed];
+			feedCount = [subscription.unreadCount unsignedIntegerValue];
+		}
+		else if (self.currentSegment == 1) {
+			latestFeed = [subscription starredLatestFeed];
+			feedCount = [subscription.starredCount unsignedIntegerValue];
+		}
+		else {
+			latestFeed = [subscription latestFeed];
+			feedCount = [subscription allCount];
+		}
+		if (latestFeed) {
+			cell.descriptionLabel.text = latestFeed.title;
+		} else {
+			cell.descriptionLabel.text = @"";
+		}
+		
+		// count
+		if (feedCount > 0) {
+			cell.countLabel.text = [NSString stringWithFormat:@"%d", feedCount];
+		} else {
+			cell.countLabel.text = @"";
+		}
+		
+		// icon image
+		NSURL *sourceURL = [NSURL URLWithString:subscription.htmlUrl];
+		UIImage *icon = [[ContentOrganizer sharedInstance] iconForSubscription:[sourceURL host]];
+		if (icon) {
+			cell.iconImageView.image = icon;
+		} else {
+			cell.iconImageView.image = [UIImage imageNamed:@"FeedDefaultIcon"];
+		}	
+		
+		// accessory
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	} else {
+		NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
+		Category *category = [self.fetchedResultsControllerForCategory objectAtIndexPath:newIndexPath];
+		cell.titleLabel.text = category.label;
+		
+		// inner feed
+		Feed *latestFeed = nil;
+		NSUInteger feedCount = 0;
+		if (self.currentSegment == 0) {
+			latestFeed = [category unreadLatestFeed];
+			feedCount = [category.unreadCount unsignedIntegerValue];
+		}
+		else if (self.currentSegment == 1) {
+			latestFeed = [category starredLatestFeed];
+			feedCount = [category.starredCount unsignedIntegerValue];
+		}
+		else {
+			latestFeed = [category latestFeed];
+			feedCount = [category allCount];
+		}
+		if (latestFeed) {
+			cell.descriptionLabel.text = latestFeed.title;
+		} else {
+			cell.descriptionLabel.text = @"";
+		}
+		
+		// count
+		if (feedCount > 0) {
+			cell.countLabel.text = [NSString stringWithFormat:@"%d", feedCount];
+		} else {
+			cell.countLabel.text = @"";
+		}
+		
+		// icon image
+		cell.iconImageView.image = [UIImage imageNamed:@"Folder"];
+		
+		// accessory
+		cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+	}
+	/*
 	id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:0];
 	NSUInteger subscriptionCount = [subscriptionSectionInfo numberOfObjects];
 	if (indexPath.row < subscriptionCount) {
@@ -366,6 +450,7 @@
 		// accessory
 		cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 	}
+	 */
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -373,17 +458,23 @@
 		return NSLocalizedString(@"All", nil);
 	}
 	else if (section == 1) {
-		return NSLocalizedString(@"Subscription", nil);
+		id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:0];
+		if ([subscriptionSectionInfo numberOfObjects] > 0) {
+			return NSLocalizedString(@"Subscription", nil);
+		}		
 	}
 	else if (section == 2) {
-		return NSLocalizedString(@"Category", nil);
+		id <NSFetchedResultsSectionInfo> categorySectionInfo = [[self.fetchedResultsControllerForCategory sections] objectAtIndex:0];
+		if ([categorySectionInfo numberOfObjects] > 0) {
+			return NSLocalizedString(@"Category", nil);
+		}
 	}
 	
 	return nil;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 2;
+	return 3;
 }
 
 - (float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -403,19 +494,25 @@
 	id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:0];
 	id <NSFetchedResultsSectionInfo> categorySectionInfo = [[self.fetchedResultsControllerForCategory sections] objectAtIndex:0];
 	
-	return [subscriptionSectionInfo numberOfObjects] + [categorySectionInfo numberOfObjects];
+	//return [subscriptionSectionInfo numberOfObjects] + [categorySectionInfo numberOfObjects];
+	
+	if (section == 1) {
+		return [subscriptionSectionInfo numberOfObjects];
+	} else {
+		return [categorySectionInfo numberOfObjects];
+	}
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
 	
-	if (indexPath.section == 0) {
-		return NO;
-	}
-	
-	id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:0];
-	if (indexPath.row < [subscriptionSectionInfo numberOfObjects]) {
+	if (indexPath.section == 1) {
 		return YES;
 	}
+	
+//	id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:0];
+//	if (indexPath.row < [subscriptionSectionInfo numberOfObjects]) {
+//		return YES;
+//	}
 	
 	return NO;
 }
@@ -438,10 +535,11 @@
 }
 
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-	id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:0];
-	NSUInteger subscriptionCount = [subscriptionSectionInfo numberOfObjects];
-	
-	NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row - subscriptionCount inSection:0];
+//	id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:0];
+//	NSUInteger subscriptionCount = [subscriptionSectionInfo numberOfObjects];
+//	
+//	NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row - subscriptionCount inSection:0];
+	NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
 	Category *category = [self.fetchedResultsControllerForCategory objectAtIndexPath:newIndexPath];
 	
 	TopViewController *newTopViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"TopViewController"];
@@ -515,6 +613,18 @@
 		TopViewCell *cell = (TopViewCell *)sender;
 		NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
 		
+		if (indexPath.section == 1) {
+			NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
+			Subscription *subscription = [self.fetchedResultsControllerForSubscription objectAtIndexPath:newIndexPath];
+			viewController.subscription = subscription;
+			viewController.title = subscription.title;
+		} else {
+			NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
+			Category *category = [self.fetchedResultsControllerForCategory objectAtIndexPath:newIndexPath];
+			viewController.category = category;
+			viewController.title = category.label;
+		}
+		/*
 		id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:0];
 		NSUInteger subscriptionCount = [subscriptionSectionInfo numberOfObjects];
 		if (indexPath.row < subscriptionCount) {
@@ -532,6 +642,7 @@
 			viewController.category = category;
 			viewController.title = category.label;
 		}
+		 */
 	}
 }
 
@@ -750,8 +861,10 @@
 		[self.tableView beginUpdates];
 		
 		[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-		[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
-		[self.tableView insertSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+		[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+		[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationFade];
+//		[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+//		[self.tableView insertSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
 		
 		[self.tableView endUpdates];
 #endif
