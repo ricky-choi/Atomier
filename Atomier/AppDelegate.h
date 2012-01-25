@@ -9,9 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "GoogleReader.h"
 #import "Subscription.h"
+#import "Reachability.h"
 
 #define kNOTIFICATION_LOGIN_SUCCESS @"kNOTIFICATION_LOGIN_SUCCESS"
 #define kNOTIFICATION_LOGIN_FAILED @"kNOTIFICATION_LOGIN_FAILED"
+
+#define kKEYCHAIN_SERVICE @"SyndiRSSReader"
+#define kKEYCHAIN_ACCOUNT_ID @"SyndiAccountID"
+#define kKEYCHAIN_ACCOUNT_PASSWORD @"SyndiAccountPW"
+
+@class LoginViewController;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, GoogleReaderDelegate>
 
@@ -28,8 +35,13 @@
 
 @property (strong, nonatomic) NSMutableArray *readyGetIcons;
 
+@property (strong, nonatomic) LoginViewController *loginViewController;
+
 - (void)requestSession;
 - (void)requestSessionWithEmail:(NSString *)email password:(NSString *)password;
+- (void)signout;
+- (void)deleteAllData;
+- (NSURL *)storeURL;
 
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
@@ -44,5 +56,19 @@
 
 - (void)markAsStarred:(Feed *)feed;
 - (void)markAsUnstarred:(Feed *)feed;
+
+- (BOOL)isBadge;
+- (int)syncRule;
+
+- (void)setBadge:(BOOL)on;
+- (void)setSyncRule:(int)rule;
+
+- (NSUInteger)unreadCount;
+
+- (NetworkStatus)reachability;
+- (BOOL)isWiFi;
+- (BOOL)isConnectedToNetwork;
+
+- (void)showNoInternet;
 
 @end

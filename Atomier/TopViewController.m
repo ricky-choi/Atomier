@@ -6,6 +6,7 @@
 //  Copyright (c) 2011 Appcid. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
 #import "TopViewController.h"
 #import "AppDelegate.h"
 #import "TopViewCell.h"
@@ -14,6 +15,7 @@
 #import "Feed.h"
 #import "ContentOrganizer.h"
 #import "FeedsViewController.h"
+#import "SettingsViewController.h"
 
 @interface TopViewController ()
 
@@ -56,9 +58,13 @@
 
 #pragma mark - View lifecycle
 
-- (void)awakeFromNib {
-	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	self.managedObjectContext = appDelegate.managedObjectContext;
+- (NSManagedObjectContext *)managedObjectContext {
+	if (__managedObjectContext == nil) {
+		AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		__managedObjectContext = appDelegate.managedObjectContext;
+	}
+	
+	return __managedObjectContext;
 }
 
 /*
@@ -110,20 +116,29 @@
 }
 
 - (void)invalidateEditButton {
-	[self.navigationItem.rightBarButtonItem setEnabled:([self.fetchedResultsControllerForSubscription.fetchedObjects count] > 0)];
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+	    [self.navigationItem.rightBarButtonItem setEnabled:([self.fetchedResultsControllerForSubscription.fetchedObjects count] > 0)];
+	}	
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+		
+	if (self.category) {
+		self.title = self.category.label;
+	}
 	
-	self.navigationItem.rightBarButtonItem = self.editButtonItem;
-	[self invalidateEditButton];
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+	    self.navigationItem.rightBarButtonItem = self.editButtonItem;
+		[self invalidateEditButton];
+	} 	
 	
 	if (self.category == nil) {
-		UIBarButtonItem *refreshItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresh:)];
-		self.navigationItem.leftBarButtonItem = refreshItem;
+		UIBarButtonItem *twoOptionItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Settings"] style:UIBarButtonItemStylePlain target:self action:@selector(settingWithOption:)];
+		self.navigationItem.leftBarButtonItem = twoOptionItem;
+
 	}
 	
 	UISegmentedControl *segmentControl = [[UISegmentedControl alloc] initWithItems:
@@ -158,6 +173,10 @@
 	[super viewWillAppear:animated];
 	
 	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:animated];
+	
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+	    [self.navigationController setToolbarHidden:YES animated:animated];
+	}
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -178,7 +197,7 @@
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 	    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 	}
-	return (interfaceOrientation == UIInterfaceOrientationPortrait);
+	return YES;
 }
 
 #pragma mark - UITableView Datasource and Delegate
@@ -349,6 +368,17 @@
 	}
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	if (section == 0) {
+		return NSLocalizedString(@"All", nil);
+	}
+	else if (section == 1) {
+		return NSLocalizedString(@"Subscription", nil);
+	}
+	
+	return nil;
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 2;
 }
@@ -419,13 +449,13 @@
 	[self.navigationController pushViewController:newTopViewController animated:YES];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-	if (section == 1) {
-		return 10.0f;
-	}
-	
-	return 0;
-}
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+//	if (section == 1) {
+//		return 10.0f;
+//	}
+//	
+//	return 0;
+//}
 
 #if 0
 
@@ -668,6 +698,28 @@
 
 #pragma mark - IBAction
 
+- (void)setting:(UIBarButtonItem *)sender {
+	SettingsViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"SettingsViewController"];
+	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+	[self presentViewController:navigationController animated:YES completion:nil];
+}
+
+- (void)settingWithOption:(UIBarButtonItem *)sender {
+	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Refresh All", nil), NSLocalizedString(@"Settings", nil), nil];
+	[actionSheet showFromToolbar:self.navigationController.toolbar];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if (buttonIndex == actionSheet.firstOtherButtonIndex) {
+		// refresh
+		[self refresh:nil];
+	}
+	else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
+		// setting
+		[self setting:nil];
+	}
+}
+
 - (IBAction)refresh:(id)sender {
 	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 	[appDelegate refresh];
@@ -678,24 +730,32 @@
 	
 	UISegmentedControl *segmentedControl = (UISegmentedControl *)sender;
 	NSInteger segment = [segmentedControl selectedSegmentIndex];
-	_currentSegment = segment;
 	
-	self.fetchedResultsControllerForCategory = nil;
-	self.fetchedResultsControllerForSubscription = nil;
-	
+	self.currentSegment = segment;
+}
+
+- (void)setCurrentSegment:(NSInteger)segment {
+	if (_currentSegment != segment) {
+		_currentSegment = segment;
+		
+		self.fetchedResultsControllerForCategory = nil;
+		self.fetchedResultsControllerForSubscription = nil;
+		
 #if 0
-	[self.tableView reloadData];
+		[self.tableView reloadData];
 #else
-	[self.tableView beginUpdates];
-	
-	[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-	[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
-	[self.tableView insertSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
-	
-	[self.tableView endUpdates];
+		[self.tableView beginUpdates];
+		
+		[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+		[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+		[self.tableView insertSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+		
+		[self.tableView endUpdates];
 #endif
+		
+		[self invalidateEditButton];
+	}
 	
-	[self invalidateEditButton];
 }
 
 @end

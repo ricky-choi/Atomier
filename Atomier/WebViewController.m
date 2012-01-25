@@ -17,6 +17,8 @@
 @synthesize backItem = _backItem;
 @synthesize forwardItem = _forwardItem;
 @synthesize refreshItem = _refreshItem;
+@synthesize actionSheet = _actionSheet;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -60,18 +62,22 @@
 }
 
 - (void)invalidateWebViewInsets {
-	UIScrollView *scrollView = self.webView.scrollView;
-	
-	CGFloat barHeight;
-
-	if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
-		barHeight = 44.0f;
-	} else {
-		barHeight = 32.0f;
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+	    UIScrollView *scrollView = self.webView.scrollView;
+		
+		CGFloat barHeight;
+		
+		if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)) {
+			barHeight = 44.0f;
+		} else {
+			barHeight = 32.0f;
+		}
+		
+		scrollView.contentInset = UIEdgeInsetsMake(barHeight, 0, 0, 0);
+		
+		self.webView.frame = CGRectMake(0, - barHeight, self.view.frame.size.width, self.view.frame.size.height + barHeight);
 	}
-	scrollView.contentInset = UIEdgeInsetsMake(barHeight, 0, 0, 0);
 	
-	self.webView.frame = CGRectMake(0, - barHeight, self.view.frame.size.width, self.view.frame.size.height + barHeight);
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -82,6 +88,11 @@
 	if ([[self.navigationController viewControllers] count] == 1) {
 		UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done)];
 		self.navigationItem.leftBarButtonItem = doneItem;
+	}
+	else if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+		UISwipeGestureRecognizer *gestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToRight:)];
+		gestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+		[self.webView addGestureRecognizer:gestureRecognizer];
 	}
 	
 	if (self.siteRequest) {
@@ -97,11 +108,17 @@
 	scrollView.delegate = self;
 	
 	[self invalidateWebViewInsets];
-	
-	
+}
+
+- (void)swipeToRight:(UISwipeGestureRecognizer *)gesture {
+	[self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)done {
+	if ([self.actionSheet isVisible]) {
+		[self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:YES];
+	}
+	
 	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -115,11 +132,17 @@
 	}
 }
 
-- (void)willMoveToParentViewController:(UIViewController *)parent {
-	CGFloat barHeight = self.navigationController.navigationBar.frame.size.height;
-	CGFloat barWidth = self.webView.frame.size.width;
-	CGFloat statusBarHeight = 20.0;
-	self.navigationController.navigationBar.frame = CGRectMake(0, statusBarHeight, barWidth, barHeight);
+- (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
+	
+	[[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+	
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+	    CGFloat barHeight = self.navigationController.navigationBar.frame.size.height;
+		CGFloat barWidth = self.webView.frame.size.width;
+		CGFloat statusBarHeight = 20.0;
+		self.navigationController.navigationBar.frame = CGRectMake(0, statusBarHeight, barWidth, barHeight);
+	} 
 }
 
 - (void)viewDidUnload
@@ -142,7 +165,7 @@
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 	    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 	}
-	return (interfaceOrientation == UIInterfaceOrientationPortrait);
+	return YES;
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
@@ -152,8 +175,28 @@
 
 #pragma mark - UIWebViewDelegate
 
+- (void)openURL:(NSURL *)url {
+	UIApplication *app = [UIApplication sharedApplication];
+	if ([app canOpenURL:url]) {
+		[app openURL:url];
+	}
+}
+
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-	return YES;
+	NSURL *url = request.URL;
+	NSString *scheme = url.scheme;
+	NSString *host = url.host;
+	
+	if ([host isEqualToString:@"itunes.apple.com"]) {
+		[self openURL:url];
+	}
+	else if ([scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"]) {
+		return YES;
+	} else {
+		[self openURL:url];
+	}
+	
+	return NO;
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
@@ -171,27 +214,29 @@
 #pragma mark - UIScrollViewDelegate
 
 - (void)resetNavigationBarForScrollView:(UIScrollView *)scrollView {
-	CGPoint offset = scrollView.contentOffset;
-	CGFloat barHeight = self.navigationController.navigationBar.frame.size.height;
-	CGFloat barWidth = self.webView.frame.size.width;
-	CGFloat statusBarHeight = 20.0;
-	if (offset.y > -(scrollView.contentInset.top)) {
-		CGFloat newY = -offset.y - barHeight + statusBarHeight;
-		self.navigationController.navigationBar.frame = CGRectMake(0, newY, barWidth, barHeight);
-	}
-	else {
-		self.navigationController.navigationBar.frame = CGRectMake(0, statusBarHeight, barWidth, barHeight);
-	}
-	
-	float scrollInset = -offset.y;
-	if (scrollInset < 0) {
-		scrollInset = 0;
-	}
-	else if (scrollInset > barHeight) {
-		scrollInset = barHeight;
-	}
-	
-	scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(scrollInset, 0, 0, 0);
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+	    CGPoint offset = scrollView.contentOffset;
+		CGFloat barHeight = self.navigationController.navigationBar.frame.size.height;
+		CGFloat barWidth = self.webView.frame.size.width;
+		CGFloat statusBarHeight = 20.0;
+		if (offset.y > -(scrollView.contentInset.top)) {
+			CGFloat newY = -offset.y - barHeight + statusBarHeight;
+			self.navigationController.navigationBar.frame = CGRectMake(0, newY, barWidth, barHeight);
+		}
+		else {
+			self.navigationController.navigationBar.frame = CGRectMake(0, statusBarHeight, barWidth, barHeight);
+		}
+		
+		float scrollInset = -offset.y;
+		if (scrollInset < 0) {
+			scrollInset = 0;
+		}
+		else if (scrollInset > barHeight) {
+			scrollInset = barHeight;
+		}
+		
+		scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(scrollInset, 0, 0, 0);
+	} 	
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView

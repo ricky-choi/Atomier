@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
+#import "FeedViewController.h"
 
 @class Category;
 @class Subscription;
 
-@interface FeedsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, UIActionSheetDelegate>
+@interface FeedsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, UIActionSheetDelegate, FeedViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
@@ -23,5 +24,9 @@
 @property (strong, nonatomic) Subscription *subscription;
 
 @property (assign, nonatomic) BOOL sortDateAscending;
+
+@property (strong, nonatomic) UIActionSheet *actionSheet;
+
+- (void)unsubscribe;
 
 @end

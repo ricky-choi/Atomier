@@ -9,27 +9,34 @@
 #import <Twitter/Twitter.h>
 #import "FeedViewController.h"
 #import "Feed.h"
+#import "Content.h"
 #import "ContentOrganizer.h"
 #import "Subscription.h"
 #import "AppDelegate.h"
 #import "Alternate.h"
 #import "NSString+HTML.h"
-
+#import "SimpleFeedsViewController.h"
 
 #define HELPERVIEW_HEIGHT 80.0f
 #define LABEL_HEIGHT 20.0f
+#define USE_CONTENT_ORGANIZER 0
 
 @interface FeedViewController ()
 
 - (void)invalidateFeedNavigateButtons;
 - (void)resetTopAndBottomView:(UIScrollView *)scrollView;
 - (void)setHelperViewTitle:(NSString *)title description:(NSString *)description top:(BOOL)top;
+- (void)removeShadowAtWebView:(UIWebView *)webview;
+
+- (NSString *)contentForFeed:(Feed *)feed;
 
 @end
 
 @implementation FeedViewController {
 	BOOL animating;
 }
+
+@synthesize delegate = _delegate;
 
 @synthesize feeds = _feeds;
 @synthesize feed = _feed;
@@ -44,8 +51,7 @@
 @synthesize topView = _topView;
 @synthesize bottomView = _bottomView;
 
-@synthesize tableView = _tableView;
-
+@synthesize popover = _popover;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -166,8 +172,23 @@
 	return _bottomView;
 }
 
+- (NSString *)contentForFeed:(Feed *)feed {
+#if USE_CONTENT_ORGANIZER
+	return [[ContentOrganizer sharedInstance] contentForID:[feed.keyId lastPathComponent]];
+#else
+	Content *contentManagedObject = feed.content;
+	return contentManagedObject.content;
+#endif
+	
+	return nil;
+}
+
 - (void)showFeed:(Feed *)feed toView:(UIWebView *)webView {
-	NSString *content = [[ContentOrganizer sharedInstance] contentForID:[feed.keyId lastPathComponent]];
+	
+	// remove uiwebview shadow
+	[self removeShadowAtWebView:webView];
+	
+	NSString *content = [self contentForFeed:feed];
 	NSString *source = [(Alternate *)[feed.alternates anyObject] href];
 	NSString *dateString = [NSDateFormatter localizedStringFromDate:feed.updatedDate
 														 dateStyle:NSDateFormatterLongStyle
@@ -217,10 +238,20 @@
 	}
 }
 
+- (void)removeShadowAtWebView:(UIWebView *)webview {
+//	for (UIView *subview in [webview.scrollView subviews]) {
+//		if ([subview isKindOfClass:[UIImageView class]]) {
+//			subview.hidden = YES;
+//		}
+//	}
+}
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	
+	
 	
 	self.unreadItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"UnreadOff"] style:UIBarButtonItemStylePlain target:self action:@selector(toggleUnread:)];
 	self.starredItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"StarredOff"] style:UIBarButtonItemStylePlain target:self action:@selector(toggleStarred:)];
@@ -231,11 +262,11 @@
 	UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-		UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done)];
-		self.toggleListItem = [[UIBarButtonItem alloc] initWithTitle:@"List" style:UIBarButtonItemStyleBordered target:self action:@selector(toggleList:)];
-		
-		self.navigationItem.leftBarButtonItem = nil;
-		self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:doneItem, self.toggleListItem, nil];
+//		UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done)];
+//		self.toggleListItem = [[UIBarButtonItem alloc] initWithTitle:@"List" style:UIBarButtonItemStyleBordered target:self action:@selector(toggleList:)];
+//		
+//		self.navigationItem.leftBarButtonItem = nil;
+//		self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:doneItem, self.toggleListItem, nil];
 		
 	    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.actionItem, self.starredItem, self.unreadItem, nil];
 		self.toolbarItems = [NSArray arrayWithObjects:self.previousButtonItem, flexibleItem, self.nextButtonItem, nil];
@@ -252,11 +283,42 @@
 		
 		[self.view addSubview:self.topView];
 		[self.view addSubview:self.bottomView];
+		
+		
 	} 
 }
 
-- (void)toggleList:(UIBarButtonItem *)item {
+- (void)done {
+	if ([self.actionSheet isVisible]) {
+		[self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:YES];
+	}
 	
+	if (_delegate && [_delegate respondsToSelector:@selector(feedViewControllerWillClose:)]) {
+		[_delegate feedViewControllerWillClose:self.feed];
+	}
+	else {
+		[self dismissViewControllerAnimated:YES completion:nil];
+	}
+}
+
+- (UIPopoverController *)popover {
+	if (_popover) {
+		return _popover;
+	}
+	
+	SimpleFeedsViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"SimpleFeedsViewController"];
+	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+	_popover = [[UIPopoverController alloc] initWithContentViewController:navigationController];
+	
+	return _popover;
+}
+
+- (void)toggleList:(UIBarButtonItem *)item {
+	if ([self.popover isPopoverVisible]) {
+		[self.popover dismissPopoverAnimated:YES];
+	} else {
+		[self.popover presentPopoverFromBarButtonItem:item permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+	}
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -265,6 +327,16 @@
 	if (self.feed) {		
 		[self invalidateFeedNavigateButtons];
 	} 
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
+	
+	if (_popover) {
+		if ([self.popover isPopoverVisible]) {
+			[self.popover dismissPopoverAnimated:YES];
+		}
+	}
 }
 
 - (void)invalidateFeedNavigateButtons {
@@ -408,6 +480,8 @@
 	newWebView.allowsInlineMediaPlayback = self.webView.allowsInlineMediaPlayback;
 	newWebView.mediaPlaybackAllowsAirPlay = self.webView.mediaPlaybackAllowsAirPlay;
 	newWebView.mediaPlaybackRequiresUserAction = self.webView.mediaPlaybackRequiresUserAction;
+	
+	//[self removeShadowAtWebView:newWebView];
 	
 	UIScrollView *scrollView = newWebView.scrollView;
 	
@@ -642,7 +716,7 @@
 	}
 	else if (buttonIndex == actionSheet.firstOtherButtonIndex + 3) {
 		// Mail Article
-		[self mail:[self feedTitle] body:[[ContentOrganizer sharedInstance] contentForID:[self.feed.keyId lastPathComponent]]];
+		[self mail:[self feedTitle] body:[self contentForFeed:self.feed]];
 	}
 	else if (buttonIndex == actionSheet.firstOtherButtonIndex + 4) {
 		// Send to Twitter

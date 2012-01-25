@@ -19,7 +19,12 @@
 @property (strong, nonatomic) NSString *siteURL;
 @property (strong, nonatomic) NSURLRequest *siteRequest;
 
+@property (strong, nonatomic) UIActionSheet *actionSheet;
+
 - (void)invalidateWebViewInsets;
 - (void)resetNavigationBarForScrollView:(UIScrollView *)scrollView;
+- (void)openURL:(NSURL *)url;
+
+- (void)done;
 
 @end

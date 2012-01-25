@@ -12,8 +12,15 @@
 
 @class Feed;
 
+@protocol FeedViewControllerDelegate <NSObject>
+
+- (void)feedViewControllerWillClose:(Feed *)currentFeed;
+
+@end
 
 @interface FeedViewController : WebViewController <UIWebViewDelegate, UIScrollViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
+
+@property (weak, nonatomic) id <FeedViewControllerDelegate> delegate;
 
 @property (strong, nonatomic) NSArray *feeds;
 @property (strong, nonatomic) Feed *feed;
@@ -29,7 +36,7 @@
 @property (strong, nonatomic) UIView *topView;
 @property (strong, nonatomic) UIView *bottomView;
 
-@property (strong, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) UIPopoverController *popover;
 
 - (void)replaceWithNewFeed:(Feed *)newFeed direction:(BOOL)up;
 

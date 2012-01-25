@@ -7,19 +7,21 @@
 //
 
 #import "AppDelegate.h"
-#import "ViewController.h"
+#import "LoginViewController.h"
 #import "Category.h"
 #import "Subscription.h"
 #import "Feed.h"
 #import "Alternate.h"
 #import "Tag.h"
 #import "Content.h"
-
 #import "ContentOrganizer.h"
+#import "SSKeychain.h"
 
 #define REFRESH_COUNT_IMMEDIATE 1
 
 #define DEFAULT_KEY_SYNCDATE @"DEFAULT_KEY_SYNCDATE"
+#define DEFAULT_KEY_SYNC_RULE @"DEFAULR_KEY_SYNC_RULE"
+#define DEFAULT_KEY_BADGE @"DEFAULT_KEY_BADGE"
 
 @interface AppDelegate ()
 
@@ -54,6 +56,8 @@
 
 @synthesize readyGetIcons = _readyGetIcons;
 
+@synthesize loginViewController = _loginViewController;
+
 - (NSMutableArray *)readyGetIcons {
 	if (_readyGetIcons == nil) {
 		_readyGetIcons = [NSMutableArray arrayWithCapacity:10];
@@ -62,45 +66,96 @@
 	return _readyGetIcons;
 }
 
+- (BOOL)isBadge {
+	return [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULT_KEY_BADGE];
+}
+
+- (int)syncRule {
+	return [[NSUserDefaults standardUserDefaults] integerForKey:DEFAULT_KEY_SYNC_RULE];
+}
+
+- (void)setBadge:(BOOL)on {
+	[[NSUserDefaults standardUserDefaults] setBool:on forKey:DEFAULT_KEY_BADGE];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	
+	if (on == NO) {
+		[[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+	}
+}
+
+- (void)setSyncRule:(int)rule {
+	[[NSUserDefaults standardUserDefaults] setInteger:rule forKey:DEFAULT_KEY_SYNC_RULE];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (NSUInteger)unreadCount {
+	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+	NSEntityDescription *entity = [NSEntityDescription entityForName:@"Feed" inManagedObjectContext:self.managedObjectContext];
+	[fetchRequest setEntity:entity];
+	
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"unread = 1"];
+	[fetchRequest setPredicate:predicate];
+	
+	return [self.managedObjectContext countForFetchRequest:fetchRequest error:nil];
+}
+
+- (NetworkStatus)reachability {
+	return [[Reachability reachabilityForInternetConnection] currentReachabilityStatus];
+}
+
+- (BOOL)isWiFi {
+	return [self reachability] == kReachableViaWiFi;
+}
+
+- (BOOL)isConnectedToNetwork {
+	return [self reachability] != kNotReachable;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+{	
+	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
+															 [NSNumber numberWithInt:1], DEFAULT_KEY_SYNC_RULE,
+															 [NSNumber numberWithBool:YES], DEFAULT_KEY_BADGE, nil]];
+	
 	self.savedCategoryIDs = [NSMutableDictionary dictionaryWithCapacity:10];
 	self.savedSubscriptionIDs = [NSMutableDictionary dictionaryWithCapacity:50];
 	self.savedFeedIDs = [NSMutableDictionary dictionaryWithCapacity:100];
 	self.savedTags = [NSMutableDictionary dictionaryWithCapacity:100];
 	
-	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-	NSEntityDescription *entity = [NSEntityDescription entityForName:@"Category" inManagedObjectContext:self.managedObjectContext];
-    [fetchRequest setEntity:entity];
-    NSArray *allCategories = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
-	NSLog(@"Saved Categories: %d", [allCategories count]);
-	for (Category *aCategory in allCategories) {
-		[self.savedCategoryIDs setValue:aCategory forKey:aCategory.keyId];
-	}
-	
-	entity = [NSEntityDescription entityForName:@"Subscription" inManagedObjectContext:self.managedObjectContext];
-	[fetchRequest setEntity:entity];
-	NSArray *allSubscriptions = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
-	NSLog(@"Saved Subscriptions: %d", [allSubscriptions count]);
-	for (Subscription *aSubscription in allSubscriptions) {
-		[self.savedSubscriptionIDs setValue:aSubscription forKey:aSubscription.keyId];
-	}
-	
-	entity = [NSEntityDescription entityForName:@"Feed" inManagedObjectContext:self.managedObjectContext];
-	[fetchRequest setEntity:entity];
-	NSArray *allFeeds = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
-	NSLog(@"Saved Feeds: %d", [allFeeds count]);
-	for (Feed *aFeed in allFeeds) {
-		[self.savedFeedIDs setValue:aFeed forKey:aFeed.keyId];
-	}
-	
-	entity = [NSEntityDescription entityForName:@"Tag" inManagedObjectContext:self.managedObjectContext];
-	[fetchRequest setEntity:entity];
-	NSArray *allTags = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
-	NSLog(@"Saved Tags: %d", [allTags count]);
-	for (Tag *aTag in allTags) {
-		[self.savedTags setValue:aTag forKey:aTag.tag];
-	}
+	if (self.managedObjectContext) {
+		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+		NSEntityDescription *entity = [NSEntityDescription entityForName:@"Category" inManagedObjectContext:self.managedObjectContext];
+		[fetchRequest setEntity:entity];
+		NSArray *allCategories = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
+		NSLog(@"Saved Categories: %d", [allCategories count]);
+		for (Category *aCategory in allCategories) {
+			[self.savedCategoryIDs setValue:aCategory forKey:aCategory.keyId];
+		}
+		
+		entity = [NSEntityDescription entityForName:@"Subscription" inManagedObjectContext:self.managedObjectContext];
+		[fetchRequest setEntity:entity];
+		NSArray *allSubscriptions = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
+		NSLog(@"Saved Subscriptions: %d", [allSubscriptions count]);
+		for (Subscription *aSubscription in allSubscriptions) {
+			[self.savedSubscriptionIDs setValue:aSubscription forKey:aSubscription.keyId];
+		}
+		
+		entity = [NSEntityDescription entityForName:@"Feed" inManagedObjectContext:self.managedObjectContext];
+		[fetchRequest setEntity:entity];
+		NSArray *allFeeds = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
+		NSLog(@"Saved Feeds: %d", [allFeeds count]);
+		for (Feed *aFeed in allFeeds) {
+			[self.savedFeedIDs setValue:aFeed forKey:aFeed.keyId];
+		}
+		
+		entity = [NSEntityDescription entityForName:@"Tag" inManagedObjectContext:self.managedObjectContext];
+		[fetchRequest setEntity:entity];
+		NSArray *allTags = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
+		NSLog(@"Saved Tags: %d", [allTags count]);
+		for (Tag *aTag in allTags) {
+			[self.savedTags setValue:aTag forKey:aTag.tag];
+		}
+	}	
 	
     return YES;
 }
@@ -119,7 +174,14 @@
 	 Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
 	 If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 	 */
-	//[self saveContext];
+	
+	if ([self isBadge]) {
+		[[UIApplication sharedApplication] setApplicationIconBadgeNumber:[self unreadCount]];
+	} else {
+		[[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+	}
+	
+	[self saveContext];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -140,9 +202,11 @@
 	[reader deleteToken];
 	
 	if ([reader isAuth]) {
-		[reader requestToken];
+		if ([self isConnectedToNetwork]) {
+			[reader requestToken];
+		}
 	}
-	else if ([reader isAuth] == NO) {
+	else {
 		[self requestSession];		
 	}
 }
@@ -159,12 +223,17 @@
 #pragma mark -
 
 - (void)requestSession {
-	if ([self existSignInIDAndPassword]) {
-		// 저장되어 있는 아이디와 패스워드가 있다.
-		[self requestSessionWithEmail:[self savedGoogleID] password:[self savedGooglePassword]];
+	if ([self isConnectedToNetwork]) {
+		if ([self existSignInIDAndPassword]) {
+			// 저장되어 있는 아이디와 패스워드가 있다.
+			[self requestSessionWithEmail:[self savedGoogleID] password:[self savedGooglePassword]];
+		} else {
+			[self showSignInView];
+		}
 	} else {
-		[self showSignInView];
-	}
+		// 인터넷 연결이 없다.
+		[self showNoInternet];
+	}	
 }
 
 - (void)requestSessionWithEmail:(NSString *)email password:(NSString *)password {
@@ -177,8 +246,29 @@
 }
 
 - (void)showSignInView {
-	ViewController *viewController = [self.window.rootViewController.storyboard instantiateViewControllerWithIdentifier:@"ViewController"];
-	[self.window.rootViewController presentModalViewController:viewController animated:NO];
+	
+	if (self.loginViewController != nil) {
+		return;
+	}
+	
+	NSLog(@"show sign in view");
+
+	LoginViewController *viewController;
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+	    viewController = [[UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil] instantiateViewControllerWithIdentifier:@"LoginViewController"];
+		viewController.modalPresentationStyle = UIModalPresentationFormSheet;
+	} else {
+	    
+		viewController = [self.window.rootViewController.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+	}
+	
+	if (viewController) {
+		[[NSUserDefaults standardUserDefaults] setValue:nil forKey:DEFAULT_KEY_SYNCDATE];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+		
+		self.loginViewController = viewController;
+		[self.window.rootViewController presentModalViewController:viewController animated:NO];
+	}
 }
 
 - (BOOL)existSignInIDAndPassword {
@@ -186,11 +276,92 @@
 }
 
 - (NSString *)savedGoogleID {
-	return nil;
+	return [SSKeychain passwordForService:kKEYCHAIN_SERVICE account:kKEYCHAIN_ACCOUNT_ID];
 }
 
 - (NSString *)savedGooglePassword {
-	return nil;
+	return [SSKeychain passwordForService:kKEYCHAIN_SERVICE account:kKEYCHAIN_ACCOUNT_PASSWORD];
+}
+
+- (void)deleteAllData {
+	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+	NSEntityDescription *entity = [NSEntityDescription entityForName:@"Alternate" inManagedObjectContext:self.managedObjectContext];
+	[fetchRequest setEntity:entity];
+	for (NSManagedObject *object in [self.managedObjectContext executeFetchRequest:fetchRequest error:nil]) {
+		[self.managedObjectContext deleteObject:object];
+	}
+	
+	entity = [NSEntityDescription entityForName:@"Content" inManagedObjectContext:self.managedObjectContext];
+	[fetchRequest setEntity:entity];
+	for (NSManagedObject *object in [self.managedObjectContext executeFetchRequest:fetchRequest error:nil]) {
+		[self.managedObjectContext deleteObject:object];
+	}
+	
+	entity = [NSEntityDescription entityForName:@"Tag" inManagedObjectContext:self.managedObjectContext];
+	[fetchRequest setEntity:entity];
+	for (NSManagedObject *object in [self.managedObjectContext executeFetchRequest:fetchRequest error:nil]) {
+		[self.managedObjectContext deleteObject:object];
+	}
+	
+	entity = [NSEntityDescription entityForName:@"Feed" inManagedObjectContext:self.managedObjectContext];
+	[fetchRequest setEntity:entity];
+	for (NSManagedObject *object in [self.managedObjectContext executeFetchRequest:fetchRequest error:nil]) {
+		[self.managedObjectContext deleteObject:object];
+	}
+	
+	entity = [NSEntityDescription entityForName:@"Subscription" inManagedObjectContext:self.managedObjectContext];
+	[fetchRequest setEntity:entity];
+	for (NSManagedObject *object in [self.managedObjectContext executeFetchRequest:fetchRequest error:nil]) {
+		[self.managedObjectContext deleteObject:object];
+	}
+	
+	entity = [NSEntityDescription entityForName:@"Category" inManagedObjectContext:self.managedObjectContext];
+	[fetchRequest setEntity:entity];
+	for (NSManagedObject *object in [self.managedObjectContext executeFetchRequest:fetchRequest error:nil]) {
+		[self.managedObjectContext deleteObject:object];
+	}
+	
+	self.savedCategoryIDs = [NSMutableDictionary dictionaryWithCapacity:10];
+	self.savedSubscriptionIDs = [NSMutableDictionary dictionaryWithCapacity:50];
+	self.savedFeedIDs = [NSMutableDictionary dictionaryWithCapacity:100];
+	self.savedTags = [NSMutableDictionary dictionaryWithCapacity:100];
+	
+	[self saveContext];
+	
+	loadingForSubscriptions = NO;
+	loadingForUnreads = NO;
+	loadingForStarreds = NO;
+	
+	[[NSUserDefaults standardUserDefaults] setValue:nil forKey:DEFAULT_KEY_SYNCDATE];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)signout {
+	GoogleReader *reader = [GoogleReader sharedInstance];
+	[reader cancelMainRequest];
+	[reader deleteAuth];
+	[reader deleteIDInfo];
+	[SSKeychain deletePasswordForService:kKEYCHAIN_SERVICE account:kKEYCHAIN_ACCOUNT_ID];
+	[SSKeychain deletePasswordForService:kKEYCHAIN_SERVICE account:kKEYCHAIN_ACCOUNT_PASSWORD];
+	
+	[self deleteAllData];
+	
+//	NSArray *stores = [self.persistentStoreCoordinator persistentStores];
+//	for (NSPersistentStore *store in stores) {
+//		NSError *error = nil;
+//		if ([self.persistentStoreCoordinator removePersistentStore:store error:&error]) {
+//			if ([[NSFileManager defaultManager] removeItemAtURL:[self storeURL] error:&error]) {
+//				// Success
+//			}
+//		}
+//	}
+//	
+//	__persistentStoreCoordinator = nil;
+//	__managedObjectModel = nil;
+//	__managedObjectContext = nil;
+
+	
+	[self requestSession];
 }
 
 #pragma mark - GoogleReader Delegate
@@ -198,15 +369,33 @@
 - (void)googleReaderAuthenticateSuccess {
 	NSLog(@"googleReaderAuthenticateSuccess");
 	
+	NSString *currentID = [SSKeychain passwordForService:kKEYCHAIN_SERVICE account:kKEYCHAIN_ACCOUNT_ID];
+	NSString *newID = [[GoogleReader sharedInstance] email];
+	
+	if (currentID && newID) {
+		if (![currentID isEqualToString:newID]) {
+			[self deleteAllData];
+		}
+	}
+	
 	NSDate *lastSyncDate = [[NSUserDefaults standardUserDefaults] valueForKey:DEFAULT_KEY_SYNCDATE];
 	if (lastSyncDate) {
-		NSDate *now = [NSDate date];
-		NSTimeInterval interval = [now timeIntervalSinceDate:lastSyncDate];
-		NSTimeInterval oneDay = 6 * 60 * 60;
-		
-		if (interval > oneDay) {
-			[self refresh];
-		}
+		if ([self syncRule] == 0 || [self syncRule] == 1) {
+			NSDate *now = [NSDate date];
+			NSTimeInterval interval = [now timeIntervalSinceDate:lastSyncDate];
+			NSTimeInterval oneDay = 6 * 60 * 60;
+			
+			if ([self syncRule] == 0 && [self isConnectedToNetwork]) {
+				if (interval > oneDay) {
+					[self refresh];
+				}
+			}
+			else if ([self syncRule] == 1 && [self isWiFi]) {
+				if (interval > oneDay) {
+					[self refresh];
+				}
+			}
+		}		
 	}
 	else {
 		[self refresh];
@@ -222,14 +411,23 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_LOGIN_FAILED
 														object:nil
 													  userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Authenticate", @"Kind", nil]];
+	[self showSignInView];
 }
 
 - (void)googleReaderRequestTokenFailed {
 	NSLog(@"googleReaderRequestTokenFailed");
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_LOGIN_FAILED
-														object:nil
-													  userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Token", @"Kind", nil]];
+//	[[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_LOGIN_FAILED
+//														object:nil
+//													  userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Token", @"Kind", nil]];
+	
+	[self requestSession];
+}
+
+- (void)googleReaderDownloadFailed {
+	loadingForSubscriptions = NO;
+	loadingForUnreads = NO;
+	loadingForStarreds = NO;
 }
 
 - (void)googleReaderAllSubscriptionsDidDownload:(NSArray *)allSubscriptions {
@@ -484,7 +682,7 @@
 					//NSLog(@"content: %@", contentOfContent);
 					if (contentOfContent && [contentOfContent length] > 0) {
 						// 새로운 컨텐트 추가
-#if 1
+#if 0
 						NSString *filename = [feedID lastPathComponent];
 						[[ContentOrganizer sharedInstance] save:contentOfContent forID:filename];
 #else
@@ -659,11 +857,24 @@
 	if ([self isLoading]) {
 		return;
 	}
-
-	[self startRefresh];
 	
-	GoogleReader *reader = [GoogleReader sharedInstance];
-	[reader getSubscriptionList];
+	if ([self isConnectedToNetwork]) {
+		GoogleReader *reader = [GoogleReader sharedInstance];
+		if ([reader isAuth]) {
+			[self startRefresh];
+			[reader getSubscriptionList];
+		} else {
+			[self requestSession];
+		}
+	} else {
+		// No Internet
+		[self showNoInternet];
+	}
+}
+
+- (void)showNoInternet {
+	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"No Internet", nil) message:NSLocalizedString(@"No Internet Message", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil];
+	[alertView show];
 }
 
 - (void)unsubscribe:(Subscription *)subscription {
@@ -774,6 +985,10 @@
     return __managedObjectModel;
 }
 
+- (NSURL *)storeURL {
+	return [[self applicationCachesDirectory] URLByAppendingPathComponent:@"ReaderStandard.sqlite"];
+}
+
 /**
  Returns the persistent store coordinator for the application.
  If the coordinator doesn't already exist, it is created and the application's store added to it.
@@ -785,7 +1000,7 @@
         return __persistentStoreCoordinator;
     }
     
-    NSURL *storeURL = [[self applicationCachesDirectory] URLByAppendingPathComponent:@"ReaderStandard.sqlite"];
+    NSURL *storeURL = [self storeURL];
     
     NSError *error = nil;
     __persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
