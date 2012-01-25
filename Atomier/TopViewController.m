@@ -375,6 +375,9 @@
 	else if (section == 1) {
 		return NSLocalizedString(@"Subscription", nil);
 	}
+	else if (section == 2) {
+		return NSLocalizedString(@"Category", nil);
+	}
 	
 	return nil;
 }
