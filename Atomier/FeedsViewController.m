@@ -311,13 +311,13 @@
 	}
 	
 	if ([feed.unread boolValue]) {
-		cell.unreadImageView.image = [UIImage imageNamed:@"UnreadItem"];
+		cell.unreadImageView.image = [UIImage imageNamed:@"unread"];
 	} else {
 		cell.unreadImageView.image = nil;
 	}
 	
 	if ([feed.starred boolValue]) {
-		cell.starredImageView.image = [UIImage imageNamed:@"StarredItem"];
+		cell.starredImageView.image = [UIImage imageNamed:@"star"];
 	} else {
 		cell.starredImageView.image = nil;
 	}
