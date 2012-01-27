@@ -344,20 +344,14 @@
 	});
 }
 
-- (void)setNavigationBarAndToolbarBackgroundImage:(UIInterfaceOrientation)orientation {
-//	if (UIInterfaceOrientationIsPortrait(orientation)) {
-//		[self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"TSAToolbarPortraitBG~ipad"] forBarMetrics:UIBarMetricsDefault];
-//	} else {
-//		[self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"TSAToolbarLandscapeBG~ipad"] forBarMetrics:UIBarMetricsDefault];
-//	}
-}
-
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	
-	[self setNavigationBarAndToolbarBackgroundImage:self.interfaceOrientation];
+	self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+	self.navigationController.toolbar.barStyle = self.navigationController.navigationBar.barStyle;
+	//self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"wood"]];
 	
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	[self invalidateEditButton];
@@ -384,6 +378,8 @@
 	
 	self.scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
 	self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	self.scrollView.contentInset = UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height, 0, self.navigationController.toolbar.frame.size.height, 0);
+	self.scrollView.scrollIndicatorInsets = self.scrollView.contentInset;
 	[self.view addSubview:self.scrollView];
 }
 
@@ -486,7 +482,6 @@
 	[UIView animateWithDuration:duration 
 					 animations:^{
 						 [self invalidateItemsForOrientation:toInterfaceOrientation]; 
-						 [self setNavigationBarAndToolbarBackgroundImage:toInterfaceOrientation];
 					 }
 					 completion:^(BOOL finished){
 						 

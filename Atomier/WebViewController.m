@@ -80,6 +80,12 @@
 	
 }
 
+- (void)addPopGesture:(UIWebView *)webview {
+	UISwipeGestureRecognizer *gestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToRight:)];
+	gestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+	[webview addGestureRecognizer:gestureRecognizer];
+}
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
@@ -88,11 +94,6 @@
 	if ([[self.navigationController viewControllers] count] == 1) {
 		UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done)];
 		self.navigationItem.leftBarButtonItem = doneItem;
-	}
-	else if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-		UISwipeGestureRecognizer *gestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToRight:)];
-		gestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
-		[self.webView addGestureRecognizer:gestureRecognizer];
 	}
 	
 	if (self.siteRequest) {

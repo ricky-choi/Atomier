@@ -6,6 +6,7 @@
 //  Copyright (c) 2011 Appcid. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
 #import <Twitter/Twitter.h>
 #import "FeedViewController.h"
 #import "Feed.h"
@@ -19,14 +20,13 @@
 
 #define HELPERVIEW_HEIGHT 80.0f
 #define LABEL_HEIGHT 20.0f
-#define USE_CONTENT_ORGANIZER 0
+#define USE_CONTENT_ORGANIZER 1
 
 @interface FeedViewController ()
 
 - (void)invalidateFeedNavigateButtons;
 - (void)resetTopAndBottomView:(UIScrollView *)scrollView;
 - (void)setHelperViewTitle:(NSString *)title description:(NSString *)description top:(BOOL)top;
-- (void)removeShadowAtWebView:(UIWebView *)webview;
 
 - (NSString *)contentForFeed:(Feed *)feed;
 
@@ -124,15 +124,19 @@
 		_topView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		_topView.backgroundColor = [UIColor clearColor];
 		
-		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, HELPERVIEW_HEIGHT/2.0f - LABEL_HEIGHT, _topView.frame.size.width - 20, LABEL_HEIGHT)];
+		CGFloat innerOffset = 10.0f;
+		
+		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(innerOffset, HELPERVIEW_HEIGHT/2.0f - LABEL_HEIGHT, _topView.frame.size.width - (innerOffset * 2.0), LABEL_HEIGHT)];
 		titleLabel.tag = 101;
 		titleLabel.font = [UIFont boldSystemFontOfSize:14.0];
 		titleLabel.backgroundColor = [UIColor clearColor];
 		titleLabel.textAlignment = UITextAlignmentCenter;
 		titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		titleLabel.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+		titleLabel.shadowOffset = CGSizeMake(0, 1.0);
 		[_topView addSubview:titleLabel];
 		
-		UILabel *descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, HELPERVIEW_HEIGHT/2.0f, titleLabel.frame.size.width, LABEL_HEIGHT)];
+		UILabel *descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(innerOffset, HELPERVIEW_HEIGHT/2.0f, titleLabel.frame.size.width, LABEL_HEIGHT)];
 		descriptionLabel.tag = 102;
 		descriptionLabel.font = [UIFont systemFontOfSize:12.0];
 		descriptionLabel.textColor = [UIColor lightGrayColor];
@@ -151,15 +155,19 @@
 		_bottomView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		_bottomView.backgroundColor = [UIColor clearColor];
 		
-		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, HELPERVIEW_HEIGHT/2.0f - LABEL_HEIGHT, _bottomView.frame.size.width - 20, LABEL_HEIGHT)];
+		CGFloat innerOffset = 10.0f;
+		
+		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(innerOffset, HELPERVIEW_HEIGHT/2.0f - LABEL_HEIGHT, _bottomView.frame.size.width - (innerOffset * 2.0), LABEL_HEIGHT)];
 		titleLabel.tag = 201;
 		titleLabel.font = [UIFont boldSystemFontOfSize:15.0];
 		titleLabel.backgroundColor = [UIColor clearColor];
 		titleLabel.textAlignment = UITextAlignmentCenter;
 		titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		titleLabel.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+		titleLabel.shadowOffset = CGSizeMake(0, 1.0);
 		[_bottomView addSubview:titleLabel];
 		
-		UILabel *descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, HELPERVIEW_HEIGHT/2.0f, titleLabel.frame.size.width, LABEL_HEIGHT)];
+		UILabel *descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(innerOffset, HELPERVIEW_HEIGHT/2.0f, titleLabel.frame.size.width, LABEL_HEIGHT)];
 		descriptionLabel.tag = 202;
 		descriptionLabel.font = [UIFont systemFontOfSize:13.0];
 		descriptionLabel.textColor = [UIColor lightGrayColor];
@@ -185,8 +193,9 @@
 
 - (void)showFeed:(Feed *)feed toView:(UIWebView *)webView {
 	
-	// remove uiwebview shadow
-	[self removeShadowAtWebView:webView];
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+		[self addPopGesture:webView];
+	} 
 	
 	NSString *content = [self contentForFeed:feed];
 	NSString *source = [(Alternate *)[feed.alternates anyObject] href];
@@ -238,20 +247,13 @@
 	}
 }
 
-- (void)removeShadowAtWebView:(UIWebView *)webview {
-//	for (UIView *subview in [webview.scrollView subviews]) {
-//		if ([subview isKindOfClass:[UIImageView class]]) {
-//			subview.hidden = YES;
-//		}
-//	}
-}
-
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	
-	
+	UIImage *backgroundImage = [UIImage imageNamed:@"oldpaper"];
+	self.webView.backgroundColor = [UIColor colorWithPatternImage:backgroundImage];
 	
 	self.unreadItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"UnreadOff"] style:UIBarButtonItemStylePlain target:self action:@selector(toggleUnread:)];
 	self.starredItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"StarredOff"] style:UIBarButtonItemStylePlain target:self action:@selector(toggleStarred:)];
@@ -262,24 +264,15 @@
 	UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-//		UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done)];
-//		self.toggleListItem = [[UIBarButtonItem alloc] initWithTitle:@"List" style:UIBarButtonItemStyleBordered target:self action:@selector(toggleList:)];
-//		
-//		self.navigationItem.leftBarButtonItem = nil;
-//		self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:doneItem, self.toggleListItem, nil];
 		
 	    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:self.actionItem, self.starredItem, self.unreadItem, nil];
 		self.toolbarItems = [NSArray arrayWithObjects:self.previousButtonItem, flexibleItem, self.nextButtonItem, nil];
 	} else {
-		//self.navigationItem.rightBarButtonItem = self.actionItem;
 	    self.toolbarItems = [NSArray arrayWithObjects:self.unreadItem, flexibleItem, self.starredItem, flexibleItem, self.previousButtonItem, flexibleItem, self.nextButtonItem, flexibleItem, self.actionItem, nil];
 	}
 	
 	if (self.feed) {		
 		[self showFeed:self.feed toView:self.webView];
-		//self.title = [self feedTitle];
-		
-		//[self invalidateFeedNavigateButtons];
 		
 		[self.view addSubview:self.topView];
 		[self.view addSubview:self.bottomView];
@@ -480,8 +473,6 @@
 	newWebView.allowsInlineMediaPlayback = self.webView.allowsInlineMediaPlayback;
 	newWebView.mediaPlaybackAllowsAirPlay = self.webView.mediaPlaybackAllowsAirPlay;
 	newWebView.mediaPlaybackRequiresUserAction = self.webView.mediaPlaybackRequiresUserAction;
-	
-	//[self removeShadowAtWebView:newWebView];
 	
 	UIScrollView *scrollView = newWebView.scrollView;
 	

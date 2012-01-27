@@ -27,4 +27,6 @@
 
 - (void)done;
 
+- (void)addPopGesture:(UIWebView *)webview;
+
 @end

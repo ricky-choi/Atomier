@@ -280,26 +280,7 @@
 	Feed *feed = [self.fetchedResultsController objectAtIndexPath:indexPath];
 	cell.titleLabel.text = [feed.title stringByReplacingHTMLEntities];
 	
-	Content *content = feed.content;
-	NSString *savedSummary = content.summary;
-	if (savedSummary == nil) {
-		savedSummary = @"";
-		NSString *contentHTML = content.content;
-		if (contentHTML) {
-			DocumentRoot* document = [Element parseHTML: contentHTML];
-			NSString *contentsText = document.contentsText;
-			
-			if ([contentsText length] > SUMMARY_MAX_LENGTH) {
-				savedSummary = [contentsText substringToIndex:SUMMARY_MAX_LENGTH];
-			} else {
-				savedSummary = contentsText;
-			}
-		}
-		
-		content.summary = savedSummary;
-	}
-	
-	cell.descriptionLabel.text = savedSummary;
+	cell.descriptionLabel.text = [[ContentOrganizer sharedInstance] summaryForID:[feed.keyId lastPathComponent]];
 	cell.subtitleLabel.text = feed.subscription.title;
 	
 	NSURL *sourceURL = [NSURL URLWithString:feed.subscription.htmlUrl];

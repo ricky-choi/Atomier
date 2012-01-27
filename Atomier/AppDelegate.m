@@ -113,6 +113,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {	
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+	    
+	}
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
 															 [NSNumber numberWithInt:1], DEFAULT_KEY_SYNC_RULE,
 															 [NSNumber numberWithBool:YES], DEFAULT_KEY_BADGE, nil]];
@@ -682,7 +685,7 @@
 					//NSLog(@"content: %@", contentOfContent);
 					if (contentOfContent && [contentOfContent length] > 0) {
 						// 새로운 컨텐트 추가
-#if 0
+#if 1
 						NSString *filename = [feedID lastPathComponent];
 						[[ContentOrganizer sharedInstance] save:contentOfContent forID:filename];
 #else

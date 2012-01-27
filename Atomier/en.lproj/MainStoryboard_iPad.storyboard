@@ -41,15 +41,6 @@
             <point key="canvasLocation" x="21" y="-40"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="StandViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/StandViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="changeMode:"/>
-                <relationship kind="action" name="refresh:"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>
