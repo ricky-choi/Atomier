@@ -70,6 +70,12 @@
 		69503655149B65F9005C7151 /* Subscription.m in Sources */ = {isa = PBXBuildFile; fileRef = 6950364C149B65F8005C7151 /* Subscription.m */; };
 		69503657149B65F9005C7151 /* Feed.m in Sources */ = {isa = PBXBuildFile; fileRef = 69503650149B65F9005C7151 /* Feed.m */; };
 		69503658149B6B9D005C7151 /* Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 6950364E149B65F9005C7151 /* Category.m */; };
+		6954AFF614D2B4B300A80A26 /* syndi_login.png in Resources */ = {isa = PBXBuildFile; fileRef = 6954AFF414D2B4B300A80A26 /* syndi_login.png */; };
+		6954AFF714D2B4B300A80A26 /* syndi_login@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6954AFF514D2B4B300A80A26 /* syndi_login@2x.png */; };
+		6954AFF814D2B71800A80A26 /* syndi_login.png in Resources */ = {isa = PBXBuildFile; fileRef = 6954AFF414D2B4B300A80A26 /* syndi_login.png */; };
+		6954AFF914D2B71B00A80A26 /* syndi_login@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6954AFF514D2B4B300A80A26 /* syndi_login@2x.png */; };
+		6954AFFB14D2CBD300A80A26 /* syndi-login~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 6954AFFA14D2CBD300A80A26 /* syndi-login~ipad.png */; };
+		6954AFFC14D2CBD300A80A26 /* syndi-login~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 6954AFFA14D2CBD300A80A26 /* syndi-login~ipad.png */; };
 		696ECEA614A0B6A300FE5706 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 696ECEA514A0B6A300FE5706 /* WebViewController.m */; };
 		696ECEAC14A0B93400FE5706 /* Back.png in Resources */ = {isa = PBXBuildFile; fileRef = 696ECEA814A0B93400FE5706 /* Back.png */; };
 		696ECEAD14A0B93400FE5706 /* Back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 696ECEA914A0B93400FE5706 /* Back@2x.png */; };
@@ -215,7 +221,6 @@
 		69BDBAE314D289ED007D6824 /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69EFCA6514D1778D003536D0 /* Icon-Small@2x.png */; };
 		69BDBAE414D289ED007D6824 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 69EFCA6614D1778D003536D0 /* Icon.png */; };
 		69BDBAE514D289ED007D6824 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69EFCA6714D1778D003536D0 /* Icon@2x.png */; };
-		69BDBAE614D289ED007D6824 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 69EFCA6814D1778D003536D0 /* iTunesArtwork.png */; };
 		69BDBAE714D289ED007D6824 /* Default-Landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = 69BDBA6214D2864B007D6824 /* Default-Landscape.png */; };
 		69BDBAE814D289ED007D6824 /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 69BDBA6314D2864B007D6824 /* Default-Portrait.png */; };
 		69BDBAE914D289ED007D6824 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 69BDBA6414D2864B007D6824 /* Default.png */; };
@@ -248,7 +253,6 @@
 		69EFCA6C14D1778D003536D0 /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69EFCA6514D1778D003536D0 /* Icon-Small@2x.png */; };
 		69EFCA6D14D1778D003536D0 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 69EFCA6614D1778D003536D0 /* Icon.png */; };
 		69EFCA6E14D1778D003536D0 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69EFCA6714D1778D003536D0 /* Icon@2x.png */; };
-		69EFCA6F14D1778D003536D0 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 69EFCA6814D1778D003536D0 /* iTunesArtwork.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -367,6 +371,9 @@
 		6950364E149B65F9005C7151 /* Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Category.m; sourceTree = "<group>"; };
 		6950364F149B65F9005C7151 /* Feed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Feed.h; sourceTree = "<group>"; };
 		69503650149B65F9005C7151 /* Feed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Feed.m; sourceTree = "<group>"; };
+		6954AFF414D2B4B300A80A26 /* syndi_login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = syndi_login.png; sourceTree = "<group>"; };
+		6954AFF514D2B4B300A80A26 /* syndi_login@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "syndi_login@2x.png"; sourceTree = "<group>"; };
+		6954AFFA14D2CBD300A80A26 /* syndi-login~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "syndi-login~ipad.png"; sourceTree = "<group>"; };
 		696ECEA414A0B6A300FE5706 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		696ECEA514A0B6A300FE5706 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		696ECEA814A0B93400FE5706 /* Back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Back.png; sourceTree = "<group>"; };
@@ -438,7 +445,6 @@
 		69EFCA6514D1778D003536D0 /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@2x.png"; sourceTree = "<group>"; };
 		69EFCA6614D1778D003536D0 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		69EFCA6714D1778D003536D0 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
-		69EFCA6814D1778D003536D0 /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -593,8 +599,7 @@
 			isa = PBXGroup;
 			children = (
 				69EFCA6114D17774003536D0 /* System */,
-				694F3EF914B6E8F500951D95 /* main~ipad.css */,
-				694F3EFA14B6E8F500951D95 /* main~iphone.css */,
+				6954AFF214D2B49500A80A26 /* css */,
 				696ECEA714A0B92500FE5706 /* images */,
 				6950362F149B53A5005C7151 /* temp image */,
 				69339951149B141100DD4E53 /* Atomier-Info.plist */,
@@ -752,6 +757,15 @@
 			name = "temp image";
 			sourceTree = "<group>";
 		};
+		6954AFF214D2B49500A80A26 /* css */ = {
+			isa = PBXGroup;
+			children = (
+				694F3EF914B6E8F500951D95 /* main~ipad.css */,
+				694F3EFA14B6E8F500951D95 /* main~iphone.css */,
+			);
+			name = css;
+			sourceTree = "<group>";
+		};
 		696ECEA214A0B68800FE5706 /* Content */ = {
 			isa = PBXGroup;
 			children = (
@@ -768,6 +782,9 @@
 		696ECEA714A0B92500FE5706 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				6954AFFA14D2CBD300A80A26 /* syndi-login~ipad.png */,
+				6954AFF414D2B4B300A80A26 /* syndi_login.png */,
+				6954AFF514D2B4B300A80A26 /* syndi_login@2x.png */,
 				69EFCA5514D15E45003536D0 /* arrow_down.png */,
 				69EFCA5614D15E45003536D0 /* arrow_down@2x.png */,
 				69EFCA5014D14C97003536D0 /* wood.png */,
@@ -837,7 +854,6 @@
 				69EFCA6514D1778D003536D0 /* Icon-Small@2x.png */,
 				69EFCA6614D1778D003536D0 /* Icon.png */,
 				69EFCA6714D1778D003536D0 /* Icon@2x.png */,
-				69EFCA6814D1778D003536D0 /* iTunesArtwork.png */,
 			);
 			name = System;
 			sourceTree = "<group>";
@@ -960,11 +976,13 @@
 				69EFCA6C14D1778D003536D0 /* Icon-Small@2x.png in Resources */,
 				69EFCA6D14D1778D003536D0 /* Icon.png in Resources */,
 				69EFCA6E14D1778D003536D0 /* Icon@2x.png in Resources */,
-				69EFCA6F14D1778D003536D0 /* iTunesArtwork.png in Resources */,
 				69BDBA6614D2864B007D6824 /* Default-Landscape.png in Resources */,
 				69BDBA6714D2864B007D6824 /* Default-Portrait.png in Resources */,
 				69BDBA6814D2864B007D6824 /* Default.png in Resources */,
 				69BDBA6914D2864B007D6824 /* Default@2x.png in Resources */,
+				6954AFF614D2B4B300A80A26 /* syndi_login.png in Resources */,
+				6954AFF714D2B4B300A80A26 /* syndi_login@2x.png in Resources */,
+				6954AFFB14D2CBD300A80A26 /* syndi-login~ipad.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1019,11 +1037,13 @@
 				69BDBAE314D289ED007D6824 /* Icon-Small@2x.png in Resources */,
 				69BDBAE414D289ED007D6824 /* Icon.png in Resources */,
 				69BDBAE514D289ED007D6824 /* Icon@2x.png in Resources */,
-				69BDBAE614D289ED007D6824 /* iTunesArtwork.png in Resources */,
 				69BDBAE714D289ED007D6824 /* Default-Landscape.png in Resources */,
 				69BDBAE814D289ED007D6824 /* Default-Portrait.png in Resources */,
 				69BDBAE914D289ED007D6824 /* Default.png in Resources */,
 				69BDBAEA14D289ED007D6824 /* Default@2x.png in Resources */,
+				6954AFF814D2B71800A80A26 /* syndi_login.png in Resources */,
+				6954AFF914D2B71B00A80A26 /* syndi_login@2x.png in Resources */,
+				6954AFFC14D2CBD300A80A26 /* syndi-login~ipad.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

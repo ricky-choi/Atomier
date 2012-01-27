@@ -18,6 +18,8 @@
 @synthesize spinner;
 @synthesize alertField;
 @synthesize descriptionLabel;
+@synthesize backgroundImageView;
+@synthesize signInButton;
 
 - (void)didReceiveMemoryWarning
 {
@@ -42,20 +44,28 @@
 	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-	    
+		self.backgroundImageView.image = [UIImage imageNamed:@"syndi-login~ipad"];
+	    self.emailField.frame =			CGRectMake(110, 357, 320, 31);
+		self.passwordField.frame =		CGRectMake(110, 405, 320, 31);
+		self.descriptionLabel.frame =	CGRectMake(110, 300, 320, 30);
+		self.alertField.frame =			CGRectMake(110, 275, 320, 20);
+		self.spinner.center =			CGPointMake(270, 240);
+		self.signInButton.frame =		CGRectMake(100, 465, 340, 44);
+
 	} else {
-	    [notificationCenter addObserver:self
-							   selector:@selector(keyboardWillShow:)
-								   name:UIKeyboardWillShowNotification
-								 object:nil];
-		
-		[notificationCenter addObserver:self
-							   selector:@selector(keyboardWillHide:)
-								   name:UIKeyboardWillHideNotification
-								 object:nil];
+		self.backgroundImageView.image = [UIImage imageNamed:@"syndi-login"];
+
 	}
 	
+	[notificationCenter addObserver:self
+						   selector:@selector(keyboardWillShow:)
+							   name:UIKeyboardWillShowNotification
+							 object:nil];
 	
+	[notificationCenter addObserver:self
+						   selector:@selector(keyboardWillHide:)
+							   name:UIKeyboardWillHideNotification
+							 object:nil];
 	
 	
 	
@@ -90,6 +100,8 @@
 	[self setSpinner:nil];
 	[self setAlertField:nil];
 	[self setDescriptionLabel:nil];
+	[self setBackgroundImageView:nil];
+	[self setSignInButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -135,15 +147,19 @@
 }
 
 - (IBAction)login:(id)sender {
-	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	if ([appDelegate isConnectedToNetwork]) {
-		[appDelegate requestSessionWithEmail:[self email] password:[self password]];
-		
-		[self.spinner startAnimating];
-	} else {
-		[appDelegate showNoInternet];
-	}
 	
+	NSUInteger emailLength = [[self email] length];
+	NSUInteger passwordLength = [[self password] length];
+	if (emailLength > 0 && passwordLength > 0) {
+		AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		if ([appDelegate isConnectedToNetwork]) {
+			[appDelegate requestSessionWithEmail:[self email] password:[self password]];
+			
+			[self.spinner startAnimating];
+		} else {
+			[appDelegate showNoInternet];
+		}
+	}
 }
 
 - (void)loginSuccess:(NSNotification *)notification {
@@ -227,13 +243,17 @@
 	//NSLog(@"keyboardWillShow: %@", [notification userInfo]);
 	
 	NSDictionary* info = [notification userInfo];
-	//CGRect beginFrame = [[info valueForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
 	CGRect endFrame = [[info valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
 	CGFloat duration = [[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
 	
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+	    endFrame = [self.view.window convertRect:endFrame toView:self.view];
+		//NSLog(@"my end frame: %@", NSStringFromCGRect(endFrame));
+	}
+	
 	CGRect newViewFrame = [self.view frame];
 	CGFloat keyboardAfterTop = endFrame.origin.y;
-	CGFloat passwordFieldBottom = self.passwordField.frame.origin.y + self.passwordField.frame.size.height;
+	CGFloat passwordFieldBottom = self.passwordField.frame.origin.y + self.passwordField.frame.size.height + 20.0f;
 	if (keyboardAfterTop < passwordFieldBottom) {
 		newViewFrame.origin.y = keyboardAfterTop - passwordFieldBottom;
 		
@@ -241,7 +261,9 @@
 		[UIView animateWithDuration:duration animations:^{
 			mainView.frame = newViewFrame;
 		}];
-	}	
+	}
+	
+	
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification {
@@ -250,8 +272,13 @@
 	NSDictionary* info = [notification userInfo];
 	CGFloat duration = [[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
 	
-	CGRect newViewFrame = [self.view frame];
-	newViewFrame.origin.y = 0;
+	CGRect newViewFrame = [self.view bounds];
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+	    newViewFrame.origin.y = 0;
+	} else {
+	    newViewFrame.origin.y = 20;
+	}
+	
 	
 	UIView *mainView = self.view;
 	[UIView animateWithDuration:duration animations:^{
