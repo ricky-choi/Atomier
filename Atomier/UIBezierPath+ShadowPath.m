@@ -35,4 +35,22 @@ static const CGFloat curve = 5.0;
 	return path;
 }
 
++ (UIBezierPath*)bezierPathWithShadowForRect:(CGRect)rect {
+	UIBezierPath *path = [UIBezierPath bezierPath];	
+	
+	CGPoint topLeft		 = rect.origin;
+	CGPoint bottomLeft	 = CGPointMake(-curve, CGRectGetHeight(rect)+curve);
+	CGPoint bottomRight	 = CGPointMake(CGRectGetWidth(rect)+curve, CGRectGetHeight(rect)+curve);
+	CGPoint topRight	 = CGPointMake(CGRectGetWidth(rect)+curve, 0.0);
+	
+	[path moveToPoint:topLeft];	
+	[path addLineToPoint:bottomLeft];
+	[path addLineToPoint:bottomRight];
+	[path addLineToPoint:topRight];
+	[path addLineToPoint:topLeft];
+	[path closePath];
+	
+	return path;
+}
+
 @end

@@ -20,7 +20,10 @@
 
 #define HELPERVIEW_HEIGHT 80.0f
 #define LABEL_HEIGHT 20.0f
+
 #define USE_CONTENT_ORGANIZER 1
+#define USE_TITLE_SHADOW 1
+#define USE_CUSTOM_BACKGROUND 0
 
 @interface FeedViewController ()
 
@@ -118,6 +121,8 @@
 	}
 }
 
+
+
 - (UIView *)topView {
 	if (_topView == nil) {
 		_topView = [[UIView alloc] initWithFrame:CGRectMake(0, -HELPERVIEW_HEIGHT, self.webView.frame.size.width, HELPERVIEW_HEIGHT)];
@@ -132,8 +137,10 @@
 		titleLabel.backgroundColor = [UIColor clearColor];
 		titleLabel.textAlignment = UITextAlignmentCenter;
 		titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+#if USE_TITLE_SHADOW
 		titleLabel.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.5];
 		titleLabel.shadowOffset = CGSizeMake(0, 1.0);
+#endif
 		[_topView addSubview:titleLabel];
 		
 		UILabel *descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(innerOffset, HELPERVIEW_HEIGHT/2.0f, titleLabel.frame.size.width, LABEL_HEIGHT)];
@@ -163,8 +170,10 @@
 		titleLabel.backgroundColor = [UIColor clearColor];
 		titleLabel.textAlignment = UITextAlignmentCenter;
 		titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+#if USE_TITLE_SHADOW
 		titleLabel.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.5];
 		titleLabel.shadowOffset = CGSizeMake(0, 1.0);
+#endif
 		[_bottomView addSubview:titleLabel];
 		
 		UILabel *descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(innerOffset, HELPERVIEW_HEIGHT/2.0f, titleLabel.frame.size.width, LABEL_HEIGHT)];
@@ -252,8 +261,10 @@
 {
     [super viewDidLoad];
 	
+#if USE_CUSTOM_BACKGROUND
 	UIImage *backgroundImage = [UIImage imageNamed:@"oldpaper"];
 	self.webView.backgroundColor = [UIColor colorWithPatternImage:backgroundImage];
+#endif
 	
 	self.unreadItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"UnreadOff"] style:UIBarButtonItemStylePlain target:self action:@selector(toggleUnread:)];
 	self.starredItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"StarredOff"] style:UIBarButtonItemStylePlain target:self action:@selector(toggleStarred:)];
@@ -276,8 +287,6 @@
 		
 		[self.view addSubview:self.topView];
 		[self.view addSubview:self.bottomView];
-		
-		
 	} 
 }
 
@@ -453,6 +462,13 @@
 - (void)replaceWithNewFeed:(Feed *)newFeed direction:(BOOL)up {
 	animating = YES;
 	
+	if ([self.webView isLoading]) {
+		[self.webView stopLoading];
+	}
+	
+	self.topView.hidden = YES;
+	self.bottomView.hidden = YES;
+	
 	CGRect rightFrame = self.webView.frame;
 	CGRect beforeFrame = rightFrame;
 	CGRect afterFrame = rightFrame;
@@ -494,13 +510,14 @@
 					  duration:0.3
 					   options:UIViewAnimationOptionCurveEaseInOut
 					animations:^ {
+						[self.webView setDelegate:nil];
+						[self.webView.scrollView setDelegate:nil];
+						
 						self.webView.frame = afterFrame;
 						newWebView.frame = rightFrame;
 					}
 					completion:^(BOOL finished) {
 						if (finished) {
-							[self.webView setDelegate:nil];
-							[self.webView.scrollView setDelegate:nil];
 							[self.webView removeFromSuperview];
 							
 							self.webView = newWebView;

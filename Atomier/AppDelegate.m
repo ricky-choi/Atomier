@@ -550,7 +550,7 @@
 		if (feed) {
 			//NSLog(@"already exist(%@): %@", feed, unreadState ? @"unread" : @"starred");
 			// 이미 있는 피드
-			[existFeedObjects removeObject:feed];				
+			[existFeedObjects removeObject:feed];
 			
 			if (unreadState) {
 				// unread 목록

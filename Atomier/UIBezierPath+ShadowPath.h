@@ -11,5 +11,6 @@
 @interface UIBezierPath (ShadowPath)
 
 + (UIBezierPath*)bezierPathWithCurvedShadowForRect:(CGRect)rect;
++ (UIBezierPath*)bezierPathWithShadowForRect:(CGRect)rect;
 
 @end

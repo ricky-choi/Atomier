@@ -109,6 +109,12 @@
 	layer.shadowPath = [UIBezierPath bezierPathWithCurvedShadowForRect:layer.bounds].CGPath;
 }
 
+- (void)addShadowRightAngle:(CALayer *)layer {
+	layer.shadowOffset = CGSizeMake(0, 3);
+	layer.shadowOpacity = 0.7;
+	layer.shadowPath = [UIBezierPath bezierPathWithShadowForRect:layer.bounds].CGPath;
+}
+
 - (void)invalidateItemsForOrientation:(UIInterfaceOrientation)interfaceOrientation changeMode:(BOOL)changeMode {
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 	    NSLog(@"subscription: %@", self.fetchedResultsControllerForSubscription);
@@ -349,9 +355,12 @@
 {
     [super viewDidLoad];
 	
-	self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-	self.navigationController.toolbar.barStyle = self.navigationController.navigationBar.barStyle;
+	//self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+	//self.navigationController.toolbar.barStyle = self.navigationController.navigationBar.barStyle;
 	//self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"wood"]];
+	
+	self.navigationController.navigationBar.clipsToBounds = NO;
+	[self addShadowRightAngle:self.navigationController.navigationBar.layer];
 	
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	[self invalidateEditButton];
@@ -378,8 +387,8 @@
 	
 	self.scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
 	self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	self.scrollView.contentInset = UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height, 0, self.navigationController.toolbar.frame.size.height, 0);
-	self.scrollView.scrollIndicatorInsets = self.scrollView.contentInset;
+	//self.scrollView.contentInset = UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height, 0, self.navigationController.toolbar.frame.size.height, 0);
+	//self.scrollView.scrollIndicatorInsets = self.scrollView.contentInset;
 	[self.view addSubview:self.scrollView];
 }
 
@@ -484,7 +493,7 @@
 						 [self invalidateItemsForOrientation:toInterfaceOrientation]; 
 					 }
 					 completion:^(BOOL finished){
-						 
+						 [self addShadowRightAngle:self.navigationController.navigationBar.layer];
 					 }];
 }
 
