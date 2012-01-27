@@ -14,7 +14,12 @@
 #define kNOTIFICATION_LOGIN_SUCCESS @"kNOTIFICATION_LOGIN_SUCCESS"
 #define kNOTIFICATION_LOGIN_FAILED @"kNOTIFICATION_LOGIN_FAILED"
 
+#ifdef FREE_FOR_PROMOTION
+#define kKEYCHAIN_SERVICE @"SyndiRSSReaderFree"
+#else
 #define kKEYCHAIN_SERVICE @"SyndiRSSReader"
+#endif
+
 #define kKEYCHAIN_ACCOUNT_ID @"SyndiAccountID"
 #define kKEYCHAIN_ACCOUNT_PASSWORD @"SyndiAccountPW"
 
@@ -36,6 +41,8 @@
 @property (strong, nonatomic) NSMutableArray *readyGetIcons;
 
 @property (strong, nonatomic) LoginViewController *loginViewController;
+
+- (NSString *)savedGoogleID;
 
 - (void)requestSession;
 - (void)requestSessionWithEmail:(NSString *)email password:(NSString *)password;

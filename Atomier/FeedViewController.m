@@ -215,23 +215,27 @@
 	NSString *subscriptionTitle = feed.subscription.title;
 	NSString *author = feed.author;
 	
-	if (source == nil) {
+	if (content == nil || [content isEqualToString:@"(null)"]) {
+		content = @"";
+	}
+	
+	if (source == nil || [source isEqualToString:@"(null)"]) {
 		source = @"";
 	}
 	
-	if (dateString == nil) {
+	if (dateString == nil || [dateString isEqualToString:@"(null)"]) {
 		dateString = @"";
 	}
 	
-	if (feedTitle == nil) {
+	if (feedTitle == nil || [feedTitle isEqualToString:@"(null)"]) {
 		feedTitle = @"";
 	}
 	
-	if (subscriptionTitle == nil) {
+	if (subscriptionTitle == nil || [subscriptionTitle isEqualToString:@"(null)"]) {
 		subscriptionTitle = @"";
 	}
 	
-	if (author == nil) {
+	if (author == nil || [author isEqualToString:@"(null)"]) {
 		subscriptionTitle = @"";
 	}
 	

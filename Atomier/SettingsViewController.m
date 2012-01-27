@@ -103,6 +103,15 @@
 	return YES;
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	if (section == 0) {
+		AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		return [NSString stringWithFormat:@"Account: %@", [appDelegate savedGoogleID]];
+	}
+	
+	return [super tableView:tableView titleForHeaderInSection:section];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 	

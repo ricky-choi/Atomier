@@ -28,7 +28,6 @@
 - (BOOL)existSignInIDAndPassword;
 - (void)showSignInView;
 
-- (NSString *)savedGoogleID;
 - (NSString *)savedGooglePassword;
 
 - (void)startRefresh;
