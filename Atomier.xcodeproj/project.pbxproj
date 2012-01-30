@@ -225,6 +225,9 @@
 		69BDBAE814D289ED007D6824 /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 69BDBA6314D2864B007D6824 /* Default-Portrait.png */; };
 		69BDBAE914D289ED007D6824 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 69BDBA6414D2864B007D6824 /* Default.png */; };
 		69BDBAEA14D289ED007D6824 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69BDBA6514D2864B007D6824 /* Default@2x.png */; };
+		69BEFF6D14D6D88200AE7FED /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BEFF6C14D6D88200AE7FED /* iAd.framework */; };
+		69BEFF7814D6D9D400AE7FED /* libGoogleAdMobAds.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BEFF7714D6D9D400AE7FED /* libGoogleAdMobAds.a */; };
+		69BEFF7A14D6D9FB00AE7FED /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BEFF7914D6D9FB00AE7FED /* AudioToolbox.framework */; };
 		69C93CE614AF214000D1495B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69C93CE514AF213F00D1495B /* QuartzCore.framework */; };
 		69C93CF014AF225F00D1495B /* UIBezierPath+ShadowPath.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C93CED14AF225F00D1495B /* UIBezierPath+ShadowPath.m */; };
 		69C93CF114AF225F00D1495B /* ImageHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 69C93CEF14AF225F00D1495B /* ImageHelpers.m */; };
@@ -417,6 +420,15 @@
 		69BDBA6514D2864B007D6824 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		69BDBAF014D289ED007D6824 /* Syndi Free.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Syndi Free.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		69BDBAF214D289EE007D6824 /* AtomierFree-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "AtomierFree-Info.plist"; path = "/Users/jay/Works/Appcid/Project/RSS/Atomier/AtomierFree-Info.plist"; sourceTree = "<absolute>"; };
+		69BEFF6C14D6D88200AE7FED /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
+		69BEFF7114D6D9D400AE7FED /* GADBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADBannerView.h; sourceTree = "<group>"; };
+		69BEFF7214D6D9D400AE7FED /* GADBannerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADBannerViewDelegate.h; sourceTree = "<group>"; };
+		69BEFF7314D6D9D400AE7FED /* GADInterstitial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADInterstitial.h; sourceTree = "<group>"; };
+		69BEFF7414D6D9D400AE7FED /* GADInterstitialDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADInterstitialDelegate.h; sourceTree = "<group>"; };
+		69BEFF7514D6D9D400AE7FED /* GADRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADRequest.h; sourceTree = "<group>"; };
+		69BEFF7614D6D9D400AE7FED /* GADRequestError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GADRequestError.h; sourceTree = "<group>"; };
+		69BEFF7714D6D9D400AE7FED /* libGoogleAdMobAds.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleAdMobAds.a; sourceTree = "<group>"; };
+		69BEFF7914D6D9FB00AE7FED /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		69C93CE514AF213F00D1495B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		69C93CEC14AF225F00D1495B /* UIBezierPath+ShadowPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+ShadowPath.h"; sourceTree = "<group>"; };
 		69C93CED14AF225F00D1495B /* UIBezierPath+ShadowPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+ShadowPath.m"; sourceTree = "<group>"; };
@@ -479,6 +491,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69BEFF7A14D6D9FB00AE7FED /* AudioToolbox.framework in Frameworks */,
+				69BEFF6D14D6D88200AE7FED /* iAd.framework in Frameworks */,
 				69BDBAAA14D289ED007D6824 /* QuartzCore.framework in Frameworks */,
 				69BDBAAB14D289ED007D6824 /* Twitter.framework in Frameworks */,
 				69BDBAAC14D289ED007D6824 /* MessageUI.framework in Frameworks */,
@@ -491,6 +505,7 @@
 				69BDBAB314D289ED007D6824 /* UIKit.framework in Frameworks */,
 				69BDBAB414D289ED007D6824 /* Foundation.framework in Frameworks */,
 				69BDBAB514D289ED007D6824 /* CoreGraphics.framework in Frameworks */,
+				69BEFF7814D6D9D400AE7FED /* libGoogleAdMobAds.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -587,6 +602,9 @@
 		6933993A149B141100DD4E53 = {
 			isa = PBXGroup;
 			children = (
+				69BEFF7914D6D9FB00AE7FED /* AudioToolbox.framework */,
+				69BEFF7014D6D9BA00AE7FED /* AdMob */,
+				69BEFF6C14D6D88200AE7FED /* iAd.framework */,
 				69C93CE514AF213F00D1495B /* QuartzCore.framework */,
 				698309D114A852F6008CCE5E /* Twitter.framework */,
 				698BCA9014A45B7900617269 /* MessageUI.framework */,
@@ -852,6 +870,20 @@
 				6972681B14C5A8AF00217A56 /* SSKeychain.m */,
 			);
 			name = SSKeychain;
+			sourceTree = "<group>";
+		};
+		69BEFF7014D6D9BA00AE7FED /* AdMob */ = {
+			isa = PBXGroup;
+			children = (
+				69BEFF7114D6D9D400AE7FED /* GADBannerView.h */,
+				69BEFF7214D6D9D400AE7FED /* GADBannerViewDelegate.h */,
+				69BEFF7314D6D9D400AE7FED /* GADInterstitial.h */,
+				69BEFF7414D6D9D400AE7FED /* GADInterstitialDelegate.h */,
+				69BEFF7514D6D9D400AE7FED /* GADRequest.h */,
+				69BEFF7614D6D9D400AE7FED /* GADRequestError.h */,
+				69BEFF7714D6D9D400AE7FED /* libGoogleAdMobAds.a */,
+			);
+			name = AdMob;
 			sourceTree = "<group>";
 		};
 		69C93CEB14AF225200D1495B /* Shadow */ = {
@@ -1419,6 +1451,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "AtomierFree-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				OTHER_CFLAGS = "-DFREE_FOR_PROMOTION";
 				PRODUCT_NAME = "Syndi Free";
 				WRAPPER_EXTENSION = app;
@@ -1431,6 +1467,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "AtomierFree-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				OTHER_CFLAGS = (
 					"-DNS_BLOCK_ASSERTIONS=1",
 					"-DFREE_FOR_PROMOTION",
@@ -1446,6 +1486,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "AtomierFree-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				OTHER_CFLAGS = (
 					"-DNS_BLOCK_ASSERTIONS=1",
 					"-DFREE_FOR_PROMOTION",
@@ -1462,6 +1506,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "AtomierFree-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				OTHER_CFLAGS = (
 					"-DNS_BLOCK_ASSERTIONS=1",
 					"-DFREE_FOR_PROMOTION",
