@@ -235,9 +235,13 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	
+#ifdef FREE_FOR_PROMOTION
+    [self.navigationController setToolbarHidden:YES animated:animated];
+#else
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 	    [self.navigationController setToolbarHidden:NO animated:animated];
 	}
+#endif
 	
 //	NSIndexPath *selectedRow = [self.tableView indexPathForSelectedRow];
 //	if (selectedRow) {

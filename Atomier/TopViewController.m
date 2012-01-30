@@ -25,6 +25,8 @@
 - (void)addPreviewFeed:(PreviewFeed *)previewFeed;
 - (BOOL)loadPreviewFeed:(NSFetchedResultsController *)controller;
 
+- (void)setting:(UIBarButtonItem *)sender;
+
 @end
 
 @implementation TopViewController
@@ -132,12 +134,20 @@
 		self.title = self.category.label;
 	}
 	
-#ifndef FREE_FOR_PROMOTION	
+	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+#ifdef FREE_FOR_PROMOTION
+		UIBarButtonItem *modeItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Unread", nil) 
+																	 style:UIBarButtonItemStyleBordered
+																	target:self
+																	action:@selector(changeModeByAlternativeWay:)];
+		self.navigationItem.rightBarButtonItem = modeItem;
+#else
 		self.navigationItem.rightBarButtonItem = self.editButtonItem;
 		[self invalidateEditButton];   
+#endif
 	} 	
-#endif	
+	
 	
 	if (self.category == nil) {
 		UIBarButtonItem *twoOptionItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Settings"] style:UIBarButtonItemStylePlain target:self action:@selector(settingWithOption:)];
@@ -158,6 +168,41 @@
 	UIBarButtonItem *flexibleSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 	
 	self.toolbarItems = [NSArray arrayWithObjects:flexibleSpaceItem, segmentItem, flexibleSpaceItem, nil];
+}
+
+- (void)changeModeByAlternativeWay:(UIBarButtonItem *)barButtonItem {
+	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Unread", nil), NSLocalizedString(@"Starred", nil), NSLocalizedString(@"All Items", nil), nil];
+	actionSheet.tag = 101;
+	[actionSheet showFromBarButtonItem:barButtonItem animated:YES];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if (buttonIndex == actionSheet.cancelButtonIndex) {
+		return;
+	}
+	
+	if (actionSheet.tag == 100) {
+		if (buttonIndex == actionSheet.firstOtherButtonIndex) {
+			// refresh
+			[self refresh:nil];
+		}
+		else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
+			// setting
+			[self setting:nil];
+		}
+	} else if (actionSheet.tag == 101) {
+		self.currentSegment = buttonIndex - actionSheet.firstOtherButtonIndex;
+		
+		if (self.currentSegment == 0) {
+			[self.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Unread", nil)];
+		}
+		else if (self.currentSegment == 1) {
+			[self.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Starred", nil)];
+		}
+		else if (self.currentSegment == 2) {
+			[self.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"All Items", nil)];
+		}
+	}
 }
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
@@ -181,6 +226,11 @@
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 	    [self.navigationController setToolbarHidden:YES animated:animated];
 	}
+#ifdef FREE_FOR_PROMOTION
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+		[self.navigationController setToolbarHidden:YES animated:animated];
+	}
+#endif
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -711,18 +761,8 @@
 
 - (void)settingWithOption:(UIBarButtonItem *)sender {
 	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Refresh All", nil), NSLocalizedString(@"Settings", nil), nil];
+	actionSheet.tag = 100;
 	[actionSheet showFromToolbar:self.navigationController.toolbar];
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-	if (buttonIndex == actionSheet.firstOtherButtonIndex) {
-		// refresh
-		[self refresh:nil];
-	}
-	else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
-		// setting
-		[self setting:nil];
-	}
 }
 
 - (IBAction)refresh:(id)sender {
