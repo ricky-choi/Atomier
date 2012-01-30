@@ -41,21 +41,30 @@
 		self.emailField.text = savedID;
 	}
 	
-	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-	
+#ifdef FREE_FOR_PROMOTION
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+		self.backgroundImageView.image = [UIImage imageNamed:@"free_syndi-login~ipad"];
+	} else {
+		self.backgroundImageView.image = [UIImage imageNamed:@"free_syndi_login"];
+	}
+#else
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 		self.backgroundImageView.image = [UIImage imageNamed:@"syndi-login~ipad"];
+	} else {
+		self.backgroundImageView.image = [UIImage imageNamed:@"syndi_login"];
+	}
+#endif
+	
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 	    self.emailField.frame =			CGRectMake(110, 357, 320, 31);
 		self.passwordField.frame =		CGRectMake(110, 405, 320, 31);
 		self.descriptionLabel.frame =	CGRectMake(110, 300, 320, 30);
 		self.alertField.frame =			CGRectMake(110, 275, 320, 20);
 		self.spinner.center =			CGPointMake(270, 240);
 		self.signInButton.frame =		CGRectMake(100, 465, 340, 44);
-
-	} else {
-		self.backgroundImageView.image = [UIImage imageNamed:@"syndi-login"];
-
 	}
+	
+	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 	
 	[notificationCenter addObserver:self
 						   selector:@selector(keyboardWillShow:)

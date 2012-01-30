@@ -116,9 +116,11 @@
 }
 
 - (void)invalidateEditButton {
+#ifndef FREE_FOR_PROMOTION	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 	    [self.navigationItem.rightBarButtonItem setEnabled:([self.fetchedResultsControllerForSubscription.fetchedObjects count] > 0)];
 	}	
+#endif
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -130,10 +132,12 @@
 		self.title = self.category.label;
 	}
 	
+#ifndef FREE_FOR_PROMOTION	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-	    self.navigationItem.rightBarButtonItem = self.editButtonItem;
-		[self invalidateEditButton];
+		self.navigationItem.rightBarButtonItem = self.editButtonItem;
+		[self invalidateEditButton];   
 	} 	
+#endif	
 	
 	if (self.category == nil) {
 		UIBarButtonItem *twoOptionItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Settings"] style:UIBarButtonItemStylePlain target:self action:@selector(settingWithOption:)];
@@ -252,7 +256,7 @@
 		}
 		else if (self.currentSegment == 2) {
 			allCell.textLabel.text = NSLocalizedString(@"All Items", nil);
-			allCell.imageView.image = [UIImage imageNamed:@"list "];
+			allCell.imageView.image = [UIImage imageNamed:@"list"];
 		}
 		
 		NSUInteger count = [self countForMode:self.currentSegment];
@@ -365,18 +369,19 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if (section == 0) {
-		return NSLocalizedString(@"All", nil);
+		return nil;
+		//return NSLocalizedString(@"All", nil);
 	}
 	else if (section == 1) {
 		id <NSFetchedResultsSectionInfo> subscriptionSectionInfo = [[self.fetchedResultsControllerForSubscription sections] objectAtIndex:0];
 		if ([subscriptionSectionInfo numberOfObjects] > 0) {
-			return NSLocalizedString(@"Subscription", nil);
+			return NSLocalizedString(@"Subscriptions", nil);
 		}		
 	}
 	else if (section == 2) {
 		id <NSFetchedResultsSectionInfo> categorySectionInfo = [[self.fetchedResultsControllerForCategory sections] objectAtIndex:0];
 		if ([categorySectionInfo numberOfObjects] > 0) {
-			return NSLocalizedString(@"Category", nil);
+			return NSLocalizedString(@"Folders", nil);
 		}
 	}
 	

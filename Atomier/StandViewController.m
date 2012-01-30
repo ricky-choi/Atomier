@@ -82,7 +82,9 @@
 */
 
 - (void)invalidateEditButton {
+#ifndef FREE_FOR_PROMOTION	
 	[self.navigationItem.rightBarButtonItem setEnabled:([self.fetchedResultsControllerForSubscription.fetchedObjects count] + [self.fetchedResultsControllerForCategory.fetchedObjects count] > 0)];
+#endif
 }
 
 - (CGSize)chipSize {
@@ -361,9 +363,11 @@
 	
 	self.navigationController.navigationBar.clipsToBounds = NO;
 	[self addShadowRightAngle:self.navigationController.navigationBar.layer];
-	
+
+#ifndef FREE_FOR_PROMOTION	
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	[self invalidateEditButton];
+#endif
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad || self.category == nil) {
 		UIBarButtonItem *refreshItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresh:)];

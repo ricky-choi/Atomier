@@ -18,12 +18,12 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
-				<string>Icon.png</string>
-				<string>Icon@2x.png</string>
-				<string>Icon-72.png</string>
-				<string>Icon-Small.png</string>
-				<string>Icon-Small@2x.png</string>
-				<string>Icon-Small-50.png</string>
+				<string>free_Icon.png</string>
+				<string>free_Icon@2x.png</string>
+				<string>free_Icon-72.png</string>
+				<string>free_Icon-Small.png</string>
+				<string>free_Icon-Small@2x.png</string>
+				<string>free_Icon-Small-50.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
 			<true/>
