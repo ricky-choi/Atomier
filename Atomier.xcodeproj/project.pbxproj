@@ -1403,10 +1403,12 @@
 		694F3F0014B72A4B00951D95 /* AppStore */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jaeyoung CHOI";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "Atomier/Atomier-Info.plist";
 				PRODUCT_NAME = Syndi;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E2BE147C-FC64-48A0-889A-CB8E4925BB85";
 				WRAPPER_EXTENSION = app;
 			};
 			name = AppStore;
