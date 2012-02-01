@@ -599,42 +599,42 @@
 	if ([self.actionSheet isVisible]) {
 		[self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:YES];
 	}
-	
-	Alternate *alternate = [self.feed.alternates anyObject];
-	NSURL *sourceURL = [NSURL URLWithString:alternate.href];
-	if (sourceURL) {
-		
-		if ([TWTweetComposeViewController canSendTweet]) {
-			self.actionSheet = [[UIActionSheet alloc] initWithTitle:alternate.href 
-													  delegate:self
-											 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-										destructiveButtonTitle:nil
-											 otherButtonTitles:NSLocalizedString(@"Open in Safari", nil)
-						   , NSLocalizedString(@"Copy Link", nil)
-						   , NSLocalizedString(@"Mail Link", nil)
-						   , NSLocalizedString(@"Mail Article", nil)
-						   , NSLocalizedString(@"Send to Twitter", nil)
-						   , nil];
-		}
-		else {
-			self.actionSheet = [[UIActionSheet alloc] initWithTitle:alternate.href 
-													  delegate:self
-											 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-										destructiveButtonTitle:nil
-											 otherButtonTitles:NSLocalizedString(@"Open in Safari", nil)
-						   , NSLocalizedString(@"Copy Link", nil)
-						   , NSLocalizedString(@"Mail Link", nil)
-						   , NSLocalizedString(@"Mail Article", nil)
-						   , nil];
-		}
-		
-		if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-			[self.actionSheet showFromBarButtonItem:sender animated:YES];
-		} else {
-			[self.actionSheet showFromToolbar:self.navigationController.toolbar];
-		}
-				 
-	}	
+	else {
+		Alternate *alternate = [self.feed.alternates anyObject];
+		NSURL *sourceURL = [NSURL URLWithString:alternate.href];
+		if (sourceURL) {
+			
+			if ([TWTweetComposeViewController canSendTweet]) {
+				self.actionSheet = [[UIActionSheet alloc] initWithTitle:alternate.href 
+															   delegate:self
+													  cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+												 destructiveButtonTitle:nil
+													  otherButtonTitles:NSLocalizedString(@"Open in Safari", nil)
+									, NSLocalizedString(@"Copy Link", nil)
+									, NSLocalizedString(@"Mail Link", nil)
+									, NSLocalizedString(@"Mail Article", nil)
+									, NSLocalizedString(@"Send to Twitter", nil)
+									, nil];
+			}
+			else {
+				self.actionSheet = [[UIActionSheet alloc] initWithTitle:alternate.href 
+															   delegate:self
+													  cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+												 destructiveButtonTitle:nil
+													  otherButtonTitles:NSLocalizedString(@"Open in Safari", nil)
+									, NSLocalizedString(@"Copy Link", nil)
+									, NSLocalizedString(@"Mail Link", nil)
+									, NSLocalizedString(@"Mail Article", nil)
+									, nil];
+			}
+			
+			if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+				[self.actionSheet showFromBarButtonItem:sender animated:YES];
+			} else {
+				[self.actionSheet showFromToolbar:self.navigationController.toolbar];
+			}
+		}	
+	}
 }
 
 -(void)launchMailAppOnDevice:(NSString *)title body:(NSString *)body

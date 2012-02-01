@@ -10,10 +10,13 @@
 #import <CoreData/CoreData.h>
 #import "FeedViewController.h"
 
+#import <iAd/ADBannerView.h>
+#import "GADBannerView.h"
+
 @class Category;
 @class Subscription;
 
-@interface FeedsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, UIActionSheetDelegate, FeedViewControllerDelegate>
+@interface FeedsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, UIActionSheetDelegate, FeedViewControllerDelegate, ADBannerViewDelegate, GADBannerViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
@@ -28,5 +31,10 @@
 @property (strong, nonatomic) UIActionSheet *actionSheet;
 
 - (void)unsubscribe;
+
+// for ad
+@property (strong, nonatomic) ADBannerView *adView;
+@property (strong, nonatomic) GADBannerView *gadView;
+@property (assign, nonatomic) BOOL gadBannerLoaded;
 
 @end

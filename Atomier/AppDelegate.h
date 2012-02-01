@@ -23,6 +23,8 @@
 #define kKEYCHAIN_ACCOUNT_ID @"SyndiAccountID"
 #define kKEYCHAIN_ACCOUNT_PASSWORD @"SyndiAccountPW"
 
+#define MY_BANNER_UNIT_ID @"a14f26a1d66744d"
+
 @class LoginViewController;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, GoogleReaderDelegate>

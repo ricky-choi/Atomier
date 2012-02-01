@@ -103,14 +103,40 @@
 	return YES;
 }
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+#ifdef FREE_FOR_PROMOTION
+    return 4;
+#endif
+	return 3;
+}
+
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if (section == 0) {
 		AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-		return [NSString stringWithFormat:@"Account: %@", [appDelegate savedGoogleID]];
+		return [NSString stringWithFormat:NSLocalizedString(@"Account: %@", nil), [appDelegate savedGoogleID]];
+	}
+	else if (section == 1) {
+		return NSLocalizedString(@"Sync", nil);
+	}
+	else if (section == 2) {
+		return NSLocalizedString(@"Home Screen", nil);
+	}
+	else if (section == 3) {
+		return NSLocalizedString(@"Upgrade", nil);
 	}
 	
-	return [super tableView:tableView titleForHeaderInSection:section];
+	return nil;
 }
+
+//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+//	static NSString *CellIdentifier = @"Cell";
+//    
+//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+//	
+//	
+//	
+//    return cell;
+//}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -129,6 +155,19 @@
 			
 			AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 			[appDelegate setSyncRule:newRule];
+		}
+	}
+	else if (indexPath.section == 3) {
+		if (indexPath.row == 0) {
+			// remove ad : in app purchase
+		}
+		else if (indexPath.row == 1) {
+			// go appstore
+			UIApplication *app = [UIApplication sharedApplication];
+			NSURL *syndiAppStoreURL = [NSURL URLWithString:@""];
+			if ([app canOpenURL:syndiAppStoreURL]) {
+				[app openURL:syndiAppStoreURL];
+			}
 		}
 	}
 }

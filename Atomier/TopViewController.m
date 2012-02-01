@@ -17,6 +17,9 @@
 #import "FeedsViewController.h"
 #import "SettingsViewController.h"
 
+#define TAG_ACTIONSHEET_CHANGEMODE 101
+#define TAG_ACTUINSHEET_SETTINGS 100
+
 @interface TopViewController ()
 
 @property (nonatomic, retain) UIView *sectionView;
@@ -26,6 +29,12 @@
 - (BOOL)loadPreviewFeed:(NSFetchedResultsController *)controller;
 
 - (void)setting:(UIBarButtonItem *)sender;
+- (NSString *)currentModeName;
+
+// for Ad
+- (void)layoutForCurrentOrientation:(NSTimeInterval)duration;
+- (void)createADBannerView;
+- (void)createGADBannerView;
 
 @end
 
@@ -40,6 +49,153 @@
 @synthesize previewFeed = _previewFeed;
 @synthesize tempPreviewFeed = _tempPreviewFeed;
 @synthesize category = _category;
+
+@synthesize adView = _adView;
+@synthesize gadView = _gadView;
+@synthesize gadBannerLoaded = _gadBannerLoaded;
+
+- (void)layoutForCurrentOrientation:(NSTimeInterval)duration {
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+		
+		CGRect contentFrame = self.view.bounds;
+		CGPoint bannerOrigin = CGPointMake(CGRectGetMinX(contentFrame), CGRectGetMaxY(contentFrame));
+		CGFloat bannerHeight = 0.0f;
+		
+		UIView *currentAdView = nil;
+		
+		if (self.adView && self.adView.bannerLoaded) {
+			ADBannerView *adBanner = self.adView;
+			
+			if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
+				adBanner.currentContentSizeIdentifier = ADBannerContentSizeIdentifierLandscape;
+			else
+				adBanner.currentContentSizeIdentifier = ADBannerContentSizeIdentifierPortrait;
+			
+			bannerHeight = adBanner.bounds.size.height;
+			
+			contentFrame.size.height -= bannerHeight;
+			bannerOrigin.y -= bannerHeight;
+			
+			currentAdView = adBanner;
+		}
+		else if (self.gadBannerLoaded) {
+			GADBannerView *adBanner = self.gadView;
+			
+			if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+				bannerHeight = adBanner.bounds.size.height;
+				
+				contentFrame.size.height -= bannerHeight;
+				bannerOrigin.y -= bannerHeight;
+			}
+			
+			currentAdView = adBanner;
+		}
+		else {
+			
+		}
+		
+		if (currentAdView && [currentAdView superview] == nil) {
+			[self.view addSubview:currentAdView];
+		}
+		
+		// And finally animate the changes, running layout for the content view if required.
+		[UIView animateWithDuration:duration
+						 animations:^{
+							 self.tableView.frame = contentFrame;
+							 //[self.tableView layoutIfNeeded];
+							 if (currentAdView) {
+								 currentAdView.frame = CGRectMake(bannerOrigin.x, bannerOrigin.y, currentAdView.frame.size.width, currentAdView.frame.size.height);
+							 }
+							 
+						 }];
+	}
+}
+
+- (void)createADBannerView {
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+		if (self.adView.bannerLoaded || self.gadBannerLoaded) {
+			return;
+		}
+		
+	    self.adView = [[ADBannerView alloc] initWithFrame:CGRectZero];
+		self.adView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleTopMargin;
+		self.adView.requiredContentSizeIdentifiers = [NSSet setWithObjects:ADBannerContentSizeIdentifierPortrait, ADBannerContentSizeIdentifierLandscape, nil];
+		
+		NSString *contentSize = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? ADBannerContentSizeIdentifierPortrait : ADBannerContentSizeIdentifierLandscape;
+		self.adView.currentContentSizeIdentifier = contentSize;
+		
+		CGRect frame;
+		frame.size = [ADBannerView sizeFromBannerContentSizeIdentifier:contentSize];
+		frame.origin = CGPointMake(0.0f, CGRectGetMaxY(self.view.bounds));
+		
+		self.adView.frame = frame;
+		self.adView.delegate = self;
+		
+		[self.view addSubview:self.adView];
+	}
+}
+
+- (void)createGADBannerView {
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+		if (self.adView.bannerLoaded || self.gadBannerLoaded) {
+			return;
+		}
+		
+		CGRect frame;
+		frame.size = GAD_SIZE_320x50;
+		frame.origin = CGPointMake(0.0f, CGRectGetMaxY(self.view.bounds));
+		
+		self.gadView = [[GADBannerView alloc] initWithFrame:frame];
+		self.gadView.adUnitID = MY_BANNER_UNIT_ID;
+		self.gadView.delegate = self;
+		
+		self.gadView.rootViewController = self;
+		[self.view addSubview:self.gadView];
+		
+		[self.gadView loadRequest:[GADRequest request]];
+	}
+}
+
+#pragma mark -
+#pragma mark ADBannerViewDelegate methods
+
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner
+{
+    [self layoutForCurrentOrientation:0.25];
+}
+
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
+{
+    [self layoutForCurrentOrientation:0.25];
+	[self createGADBannerView];
+}
+
+- (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave
+{
+    return YES;
+}
+
+- (void)bannerViewActionDidFinish:(ADBannerView *)banner
+{
+	[self layoutForCurrentOrientation:0];
+}
+
+- (void)adViewDidReceiveAd:(GADBannerView *)view {
+	self.gadBannerLoaded = YES;
+	[self layoutForCurrentOrientation:0.25];
+}
+
+- (void)adView:(GADBannerView *)view didFailToReceiveAdWithError:(GADRequestError *)error {
+	NSLog(@"adView:didFailToReceiveAdWithError:%@", [error localizedDescription]);
+	self.gadBannerLoaded = NO;
+	[self layoutForCurrentOrientation:0.25];
+}
+
+- (void)adViewWillDismissScreen:(GADBannerView *)adView {
+	[self layoutForCurrentOrientation:0];
+}
+
+#pragma mark -
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -125,6 +281,24 @@
 #endif
 }
 
++ (NSString *)modeNameForSegment:(NSUInteger)segment {
+	if (segment == 0) {
+		return NSLocalizedString(@"Unread", nil);
+	}
+	else if (segment == 1) {
+		return NSLocalizedString(@"Starred", nil);
+	}
+	else if (segment == 2) {
+		return NSLocalizedString(@"All Items", nil);
+	}
+	
+	return nil;
+}
+
+- (NSString *)currentModeName {
+	return [TopViewController modeNameForSegment:self.currentSegment];
+}
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
@@ -137,7 +311,7 @@
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 #ifdef FREE_FOR_PROMOTION
-		UIBarButtonItem *modeItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Unread", nil) 
+		UIBarButtonItem *modeItem = [[UIBarButtonItem alloc] initWithTitle:[self currentModeName] 
 																	 style:UIBarButtonItemStyleBordered
 																	target:self
 																	action:@selector(changeModeByAlternativeWay:)];
@@ -157,9 +331,9 @@
 	
 	UISegmentedControl *segmentControl = [[UISegmentedControl alloc] initWithItems:
 										  [NSArray arrayWithObjects:
-										   NSLocalizedString(@"Unread", nil),
-										   NSLocalizedString(@"Starred", nil),
-										   NSLocalizedString(@"All Items", nil), nil]];
+										   [TopViewController modeNameForSegment:0],
+										   [TopViewController modeNameForSegment:1],
+										   [TopViewController modeNameForSegment:2], nil]];
 	segmentControl.segmentedControlStyle = UISegmentedControlStyleBar;
 	segmentControl.selectedSegmentIndex = _currentSegment;
 	[segmentControl addTarget:self action:@selector(changeMode:) forControlEvents:UIControlEventValueChanged];
@@ -168,11 +342,20 @@
 	UIBarButtonItem *flexibleSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 	
 	self.toolbarItems = [NSArray arrayWithObjects:flexibleSpaceItem, segmentItem, flexibleSpaceItem, nil];
+	
+#ifdef FREE_FOR_PROMOTION
+	[self createADBannerView];
+	//[self createGADBannerView];
+#endif
 }
 
 - (void)changeModeByAlternativeWay:(UIBarButtonItem *)barButtonItem {
-	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Unread", nil), NSLocalizedString(@"Starred", nil), NSLocalizedString(@"All Items", nil), nil];
-	actionSheet.tag = 101;
+	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil 
+															 delegate:self 
+													cancelButtonTitle:NSLocalizedString(@"Cancel", nil) 
+											   destructiveButtonTitle:nil 
+													otherButtonTitles:[TopViewController modeNameForSegment:0], [TopViewController modeNameForSegment:1], [TopViewController modeNameForSegment:2], nil];
+	actionSheet.tag = TAG_ACTIONSHEET_CHANGEMODE;
 	[actionSheet showFromBarButtonItem:barButtonItem animated:YES];
 }
 
@@ -181,7 +364,7 @@
 		return;
 	}
 	
-	if (actionSheet.tag == 100) {
+	if (actionSheet.tag == TAG_ACTUINSHEET_SETTINGS) {
 		if (buttonIndex == actionSheet.firstOtherButtonIndex) {
 			// refresh
 			[self refresh:nil];
@@ -190,18 +373,10 @@
 			// setting
 			[self setting:nil];
 		}
-	} else if (actionSheet.tag == 101) {
+	} else if (actionSheet.tag == TAG_ACTIONSHEET_CHANGEMODE) {
 		self.currentSegment = buttonIndex - actionSheet.firstOtherButtonIndex;
-		
-		if (self.currentSegment == 0) {
-			[self.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Unread", nil)];
-		}
-		else if (self.currentSegment == 1) {
-			[self.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Starred", nil)];
-		}
-		else if (self.currentSegment == 2) {
-			[self.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"All Items", nil)];
-		}
+
+		[self.navigationItem.rightBarButtonItem setTitle:[self currentModeName]];
 	}
 }
 
@@ -228,18 +403,25 @@
 	}
 #ifdef FREE_FOR_PROMOTION
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-		[self.navigationController setToolbarHidden:YES animated:animated];
+		if (self.navigationController.toolbarHidden == NO) {
+			[self.navigationController setToolbarHidden:YES animated:animated];
+		}		
+		[self layoutForCurrentOrientation:0];
 	}
 #endif
 }
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
+
 }
 
 - (void)viewDidUnload
 {
 	[self setTableView:nil];
+	self.adView.delegate = nil;
+	self.gadView.delegate = nil;
+	
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -252,6 +434,13 @@
 	    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 	}
 	return YES;
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+#ifdef FREE_FOR_PROMOTION
+    [self layoutForCurrentOrientation:duration];
+#endif
 }
 
 #pragma mark - UITableView Datasource and Delegate
@@ -296,16 +485,14 @@
 		static NSString *AllCellIdentifier = @"AllCell";
 		
 		UITableViewCell *allCell = [tableView dequeueReusableCellWithIdentifier:AllCellIdentifier];
+		allCell.textLabel.text = [self currentModeName];
 		if (self.currentSegment == 0) {
-			allCell.textLabel.text = NSLocalizedString(@"Unread", nil);
 			allCell.imageView.image = [UIImage imageNamed:@"unread"];
 		}
 		else if (self.currentSegment == 1) {
-			allCell.textLabel.text = NSLocalizedString(@"Starred", nil);
 			allCell.imageView.image = [UIImage imageNamed:@"star"];
 		}
 		else if (self.currentSegment == 2) {
-			allCell.textLabel.text = NSLocalizedString(@"All Items", nil);
 			allCell.imageView.image = [UIImage imageNamed:@"list"];
 		}
 		
@@ -555,15 +742,7 @@
 		FeedsViewController *viewController = (FeedsViewController *)segue.destinationViewController;
 		viewController.currentSegment = self.currentSegment;
 		viewController.category = self.category;
-		if (self.currentSegment == 0) {
-			viewController.title = NSLocalizedString(@"Unread", nil);
-		}
-		else if (self.currentSegment == 1) {
-			viewController.title = NSLocalizedString(@"Starred", nil);
-		}
-		else if (self.currentSegment == 2) {
-			viewController.title = NSLocalizedString(@"All Items", nil);
-		}
+		viewController.title = [self currentModeName];
 	}
 	else if ([segue.identifier isEqualToString:@"FeedListFromFolder"]) {
 		FeedsViewController *viewController = (FeedsViewController *)segue.destinationViewController;
@@ -761,8 +940,9 @@
 
 - (void)settingWithOption:(UIBarButtonItem *)sender {
 	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Refresh All", nil), NSLocalizedString(@"Settings", nil), nil];
-	actionSheet.tag = 100;
-	[actionSheet showFromToolbar:self.navigationController.toolbar];
+	actionSheet.tag = TAG_ACTUINSHEET_SETTINGS;
+	[actionSheet showFromBarButtonItem:sender animated:YES];
+//	[actionSheet showFromToolbar:self.navigationController.toolbar];
 }
 
 - (IBAction)refresh:(id)sender {

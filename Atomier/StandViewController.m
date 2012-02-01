@@ -19,10 +19,23 @@
 
 #define IPHONE_STORYBOARD [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil]
 
+#define TAG_ACTIONSHEET_CHANGEMODE 101
+#define TAG_ACTUINSHEET_UNSUBSCRIBE 100
+
 @interface StandViewController ()
 
 - (void)insertObject:(NSManagedObject *)managedObject atIndex:(NSUInteger)index;
 - (void)deleteObject:(NSManagedObject *)managedObject atIndex:(NSUInteger)index;
+
+- (void)invalidateItemsForOrientation:(UIInterfaceOrientation)interfaceOrientation changeMode:(BOOL)changeMode;
+- (void)invalidateItemsForOrientation:(UIInterfaceOrientation)interfaceOrientation;
+
+- (NSString *)currentModeName;
+
+// for Ad
+- (void)layoutForCurrentOrientation:(NSTimeInterval)duration;
+- (void)createADBannerView;
+- (void)createGADBannerView;
 
 @end
 
@@ -37,6 +50,146 @@
 @synthesize childs = _childs;
 @synthesize chipSize = _chipSize;
 @synthesize selectedFeedsViewController = _selectedFeedsViewController;
+@synthesize actionSheet = _actionSheet;
+
+@synthesize adView = _adView;
+@synthesize gadView = _gadView;
+@synthesize gadBannerLoaded = _gadBannerLoaded;
+@synthesize firstAttempIsiAd;
+
+- (void)layoutForCurrentOrientation:(NSTimeInterval)duration {
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+		
+		CGRect contentFrame = self.view.bounds;
+		CGPoint bannerOrigin = CGPointMake(CGRectGetMinX(contentFrame), CGRectGetMaxY(contentFrame));
+		CGFloat bannerHeight = 0.0f;
+		
+		UIView *currentAdView = nil;
+		
+		if (self.adView && self.adView.bannerLoaded) {
+			ADBannerView *adBanner = self.adView;
+			
+			if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
+				adBanner.currentContentSizeIdentifier = ADBannerContentSizeIdentifierLandscape;
+			else
+				adBanner.currentContentSizeIdentifier = ADBannerContentSizeIdentifierPortrait;
+			
+			bannerHeight = adBanner.bounds.size.height;
+			
+			contentFrame.size.height -= bannerHeight;
+			bannerOrigin.y -= bannerHeight;
+			
+			currentAdView = adBanner;
+		}
+		else {
+			
+		}
+		
+		if (currentAdView && [currentAdView superview] == nil) {
+			[self.view addSubview:currentAdView];
+		}
+		
+		// And finally animate the changes, running layout for the content view if required.
+		[UIView animateWithDuration:duration
+						 animations:^{
+							 self.scrollView.frame = contentFrame;
+							 //[self.tableView layoutIfNeeded];
+							 if (currentAdView) {
+								 currentAdView.frame = CGRectMake(bannerOrigin.x, bannerOrigin.y, currentAdView.frame.size.width, currentAdView.frame.size.height);
+							 }
+							 
+						 }];
+	}
+}
+
+- (void)createADBannerView {
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+		if (self.adView.bannerLoaded || self.gadBannerLoaded) {
+			return;
+		}
+		
+	    self.adView = [[ADBannerView alloc] initWithFrame:CGRectZero];
+		self.adView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleTopMargin;
+		self.adView.requiredContentSizeIdentifiers = [NSSet setWithObjects:ADBannerContentSizeIdentifierPortrait, ADBannerContentSizeIdentifierLandscape, nil];
+		
+		NSString *contentSize = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? ADBannerContentSizeIdentifierPortrait : ADBannerContentSizeIdentifierLandscape;
+		self.adView.currentContentSizeIdentifier = contentSize;
+		
+		CGRect frame;
+		frame.size = [ADBannerView sizeFromBannerContentSizeIdentifier:contentSize];
+		frame.origin = CGPointMake(0.0f, CGRectGetMaxY(self.view.bounds));
+		
+		self.adView.frame = frame;
+		self.adView.delegate = self;
+		
+		[self.view addSubview:self.adView];
+	}
+}
+
+- (void)createGADBannerView {
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+		if (self.adView.bannerLoaded || self.gadBannerLoaded) {
+			return;
+		}
+		
+		CGRect frame = CGRectZero;
+		frame.size = GAD_SIZE_300x250;
+		
+		self.gadView = [[GADBannerView alloc] initWithFrame:frame];
+		self.gadView.adUnitID = MY_BANNER_UNIT_ID;
+		self.gadView.delegate = self;
+		
+		self.gadView.rootViewController = self;
+		//[self.view addSubview:self.gadView];
+		
+		[self.gadView loadRequest:[GADRequest request]];
+	}
+}
+
+#pragma mark -
+#pragma mark ADBannerViewDelegate methods
+
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner
+{
+    [self layoutForCurrentOrientation:0.25];
+}
+
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
+{
+    [self layoutForCurrentOrientation:0.25];
+	if (firstAttempIsiAd) {
+		[self createGADBannerView];
+	}
+}
+
+- (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave
+{
+    return YES;
+}
+
+- (void)bannerViewActionDidFinish:(ADBannerView *)banner
+{
+	[self layoutForCurrentOrientation:0];
+}
+
+- (void)adViewDidReceiveAd:(GADBannerView *)view {
+	self.gadBannerLoaded = YES;
+	[self invalidateItemsForOrientation:self.interfaceOrientation];
+}
+
+- (void)adView:(GADBannerView *)view didFailToReceiveAdWithError:(GADRequestError *)error {
+	NSLog(@"adView:didFailToReceiveAdWithError:%@", [error localizedDescription]);
+	self.gadBannerLoaded = NO;
+	if (!firstAttempIsiAd) {
+		[self createADBannerView];
+	}
+}
+
+- (void)adViewWillDismissScreen:(GADBannerView *)adView {
+
+}
+
+#pragma mark -
 
 - (NSMutableDictionary *)childs {
 	if (_childs == nil) {
@@ -80,6 +233,10 @@
 {
 }
 */
+
+- (NSString *)currentModeName {
+	return [TopViewController modeNameForSegment:self.currentSegment];
+}
 
 - (void)invalidateEditButton {
 #ifndef FREE_FOR_PROMOTION	
@@ -140,6 +297,11 @@
 		NSUInteger chipCount = [subscriptions count] + [cateogries count];
 		if (chipCount > 0) {
 			chipCount++;
+#ifdef FREE_FOR_PROMOTION
+			if (self.gadBannerLoaded && chipCount >= 5) {
+				chipCount++;
+			}
+#endif
 		}
 		
 		if (chipCount <= 1) {
@@ -298,6 +460,21 @@
 			nextOrigin = [self nextOrigin:nextOrigin padding:(CGFloat)paddingInt scrollViewWidth:scrollViewWidth];
 		}
 		
+#ifdef FREE_FOR_PROMOTION
+		if (chipCount >= 5 && self.gadBannerLoaded) {
+			// 마지막 위치에 광고 삽입
+			CGRect nextFrame = CGRectMake(nextOrigin.x, nextOrigin.y, viewControllerSize.width, viewControllerSize.height);
+			self.gadView.center = CGPointMake(CGRectGetMidX(nextFrame), CGRectGetMidY(nextFrame));
+			if ([self.gadView superview] == nil) {
+				[self.scrollView addSubview:self.gadView];
+			}
+			
+			[self addShadow:self.gadView.layer];
+			
+			nextOrigin = [self nextOrigin:nextOrigin padding:(CGFloat)paddingInt scrollViewWidth:scrollViewWidth];
+		}
+#endif
+		
 		if (nextOrigin.x == paddingInt) {
 			self.scrollView.contentSize = CGSizeMake(scrollViewWidth, nextOrigin.y);
 		} else {
@@ -364,7 +541,15 @@
 	self.navigationController.navigationBar.clipsToBounds = NO;
 	[self addShadowRightAngle:self.navigationController.navigationBar.layer];
 
-#ifndef FREE_FOR_PROMOTION	
+#ifdef FREE_FOR_PROMOTION	
+	self.navigationController.toolbarHidden = YES;
+	
+	UIBarButtonItem *modeItem = [[UIBarButtonItem alloc] initWithTitle:[self currentModeName] 
+																 style:UIBarButtonItemStyleBordered
+																target:self
+																action:@selector(changeModeByAlternativeWay:)];
+	self.navigationItem.rightBarButtonItem = modeItem;
+#else
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	[self invalidateEditButton];
 #endif
@@ -377,9 +562,9 @@
 	
 	UISegmentedControl *segmentControl = [[UISegmentedControl alloc] initWithItems:
 										  [NSArray arrayWithObjects:
-										   NSLocalizedString(@"Unread", nil),
-										   NSLocalizedString(@"Starred", nil),
-										   NSLocalizedString(@"All Items", nil), nil]];
+										   [TopViewController modeNameForSegment:0],
+										   [TopViewController modeNameForSegment:1],
+										   [TopViewController modeNameForSegment:2], nil]];
 	segmentControl.segmentedControlStyle = UISegmentedControlStyleBar;
 	segmentControl.selectedSegmentIndex = _currentSegment;
 	[segmentControl addTarget:self action:@selector(changeMode:) forControlEvents:UIControlEventValueChanged];
@@ -394,6 +579,32 @@
 	//self.scrollView.contentInset = UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height, 0, self.navigationController.toolbar.frame.size.height, 0);
 	//self.scrollView.scrollIndicatorInsets = self.scrollView.contentInset;
 	[self.view addSubview:self.scrollView];
+	
+#ifdef FREE_FOR_PROMOTION
+	srandom(time(NULL));
+	int randomNumber = random() % 100;
+	if (randomNumber < 50) {
+		firstAttempIsiAd = YES;
+		[self createADBannerView];
+	} else {
+		firstAttempIsiAd = NO;
+		[self createGADBannerView];
+	}	
+#endif
+}
+
+- (void)changeModeByAlternativeWay:(UIBarButtonItem *)barButtonItem {
+	if ([self.actionSheet isVisible]) {
+		[self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:YES];
+	} else {
+		self.actionSheet = [[UIActionSheet alloc] initWithTitle:nil 
+													   delegate:self 
+											  cancelButtonTitle:NSLocalizedString(@"Cancel", nil) 
+										 destructiveButtonTitle:nil 
+											  otherButtonTitles:[TopViewController modeNameForSegment:0], [TopViewController modeNameForSegment:1], [TopViewController modeNameForSegment:2], nil];
+		self.actionSheet.tag = TAG_ACTIONSHEET_CHANGEMODE;
+		[self.actionSheet showFromBarButtonItem:barButtonItem animated:YES];
+	}
 }
 
 - (void)setting:(UIBarButtonItem *)sender {
@@ -409,6 +620,8 @@
 	[super viewDidAppear:animated];
 	
 	[self invalidateItemsForOrientation:self.interfaceOrientation];
+	
+	[self layoutForCurrentOrientation:0];
 }
 
 #define CLOSE_BUTTON_TAG 999
@@ -435,21 +648,40 @@
 }
 
 - (void)unsubscribe:(id)sender {
-	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) destructiveButtonTitle:NSLocalizedString(@"Unsubscribe", nil) otherButtonTitles:nil];
-	[actionSheet showFromRect:[sender bounds] inView:sender animated:YES];
+	if ([self.actionSheet isVisible]) {
+		[self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:YES];
+	}
+	else {
+		self.actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) destructiveButtonTitle:NSLocalizedString(@"Unsubscribe", nil) otherButtonTitles:nil];
+		self.actionSheet.tag = TAG_ACTUINSHEET_UNSUBSCRIBE;
+		[self.actionSheet showFromRect:[sender bounds] inView:sender animated:YES];
+	}
+	
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-	if (buttonIndex == actionSheet.destructiveButtonIndex) {
-		[UIView animateWithDuration:0.5
-						 animations:^{
-							 self.selectedFeedsViewController.navigationController.view.alpha = 0.0;
-							 self.selectedFeedsViewController.navigationController.view.transform = CGAffineTransformMakeScale(0.1, 0.1);
-						 }
-						 completion:^(BOOL finished){
-							 [self.selectedFeedsViewController unsubscribe];
-						 }];
+	if (buttonIndex == actionSheet.cancelButtonIndex) {
+		return;
 	}
+	
+	if (actionSheet.tag == TAG_ACTUINSHEET_UNSUBSCRIBE) {
+		if (buttonIndex == actionSheet.destructiveButtonIndex) {
+			[UIView animateWithDuration:0.5
+							 animations:^{
+								 self.selectedFeedsViewController.navigationController.view.alpha = 0.0;
+								 self.selectedFeedsViewController.navigationController.view.transform = CGAffineTransformMakeScale(0.1, 0.1);
+							 }
+							 completion:^(BOOL finished){
+								 [self.selectedFeedsViewController unsubscribe];
+							 }];
+		}
+	}
+	else if (actionSheet.tag == TAG_ACTIONSHEET_CHANGEMODE) {
+		self.currentSegment = buttonIndex - actionSheet.firstOtherButtonIndex;
+		
+		[self.navigationItem.rightBarButtonItem setTitle:[self currentModeName]];
+	}
+	
 }
 
 - (void)removeCloseButton:(UIViewController *)viewController {
@@ -480,6 +712,9 @@
 
 - (void)viewDidUnload
 {
+	self.adView.delegate = nil;
+	self.gadView.delegate = nil;
+	
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -492,6 +727,7 @@
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	
 	[UIView animateWithDuration:duration 
 					 animations:^{
 						 [self invalidateItemsForOrientation:toInterfaceOrientation]; 
@@ -499,6 +735,13 @@
 					 completion:^(BOOL finished){
 						 [self addShadowRightAngle:self.navigationController.navigationBar.layer];
 					 }];
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+#ifdef FREE_FOR_PROMOTION
+    [self layoutForCurrentOrientation:duration];
+#endif
 }
 
 - (IBAction)refresh:(id)sender {
@@ -511,15 +754,21 @@
 	
 	UISegmentedControl *segmentedControl = (UISegmentedControl *)sender;
 	NSInteger segment = [segmentedControl selectedSegmentIndex];
-	_currentSegment = segment;
-	
-	self.fetchedResultsControllerForCategory = nil;
-	self.fetchedResultsControllerForSubscription = nil;
-	
-	// Reload Interface	
-	[self invalidateItemsForOrientation:self.interfaceOrientation changeMode:YES];
-	
-	[self invalidateEditButton];
+	self.currentSegment = segment;
+}
+
+- (void)setCurrentSegment:(NSInteger)segment {
+	if (_currentSegment != segment) {
+		_currentSegment = segment;
+		
+		self.fetchedResultsControllerForCategory = nil;
+		self.fetchedResultsControllerForSubscription = nil;
+		
+		// Reload Interface	
+		[self invalidateItemsForOrientation:self.interfaceOrientation changeMode:YES];
+		
+		[self invalidateEditButton];
+	}
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

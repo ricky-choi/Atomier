@@ -4,7 +4,7 @@
   Created by Choi Jaeyoung on 12/28/11.
   Copyright (c) 2011 Appcid. All rights reserved. */
 
-"Unread" = "안 읽은 글";
+"Unread" = "새 글";
 
 "Starred" = "별표한 글";
 
@@ -63,4 +63,12 @@
 "Folders" = "폴더";
 
 "Subscriptions" = "구독";
+
+"Account: %@" = "계정: %@";
+
+"Sync" = "동기화";
+
+"Home Screen" = "홈 스크린";
+
+"Upgrade" = "업그레이드";
 

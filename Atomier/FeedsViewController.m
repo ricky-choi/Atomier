@@ -26,6 +26,11 @@
 - (void)configureCell:(FeedsViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 - (void)refreshTitle;
 
+// for Ad
+- (void)layoutForCurrentOrientation:(NSTimeInterval)duration;
+- (void)createADBannerView;
+- (void)createGADBannerView;
+
 @end
 
 @implementation FeedsViewController
@@ -38,6 +43,154 @@
 @synthesize subscription = _subscription;
 @synthesize sortDateAscending = _sortDateAscending;
 @synthesize actionSheet = _actionSheet;
+
+@synthesize adView = _adView;
+@synthesize gadView = _gadView;
+@synthesize gadBannerLoaded = _gadBannerLoaded;
+
+- (void)layoutForCurrentOrientation:(NSTimeInterval)duration {
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+		CGRect contentFrame = self.view.bounds;
+		CGPoint bannerOrigin = CGPointMake(CGRectGetMinX(contentFrame), CGRectGetMaxY(contentFrame));
+		CGFloat bannerHeight = 0.0f;
+		
+		UIView *currentAdView = nil;
+		
+		if (self.adView && self.adView.bannerLoaded) {
+			ADBannerView *adBanner = self.adView;
+			
+			if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
+				adBanner.currentContentSizeIdentifier = ADBannerContentSizeIdentifierLandscape;
+			else
+				adBanner.currentContentSizeIdentifier = ADBannerContentSizeIdentifierPortrait;
+			
+			bannerHeight = adBanner.bounds.size.height;
+			
+			contentFrame.size.height -= bannerHeight;
+			bannerOrigin.y -= bannerHeight;
+			
+			currentAdView = adBanner;
+		}
+		else if (self.gadBannerLoaded) {
+			GADBannerView *adBanner = self.gadView;
+			
+			if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+				bannerHeight = adBanner.bounds.size.height;
+				
+				contentFrame.size.height -= bannerHeight;
+				bannerOrigin.y -= bannerHeight;
+			}
+			
+			currentAdView = adBanner;
+		}
+		else {
+			
+		}
+		
+		if (currentAdView && [currentAdView superview] == nil) {
+			[self.view addSubview:currentAdView];
+		}
+		
+		// And finally animate the changes, running layout for the content view if required.
+		[UIView animateWithDuration:duration
+						 animations:^{
+							 self.tableView.frame = contentFrame;
+							 //[self.tableView layoutIfNeeded];
+							 if (currentAdView) {
+								 currentAdView.frame = CGRectMake(bannerOrigin.x, bannerOrigin.y, currentAdView.frame.size.width, currentAdView.frame.size.height);
+							 }
+							 
+						 }];
+	}
+}
+
+- (void)createADBannerView {
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+		if (self.adView.bannerLoaded || self.gadBannerLoaded) {
+			return;
+		}
+		
+	    self.adView = [[ADBannerView alloc] initWithFrame:CGRectZero];
+		self.adView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleTopMargin;
+		self.adView.requiredContentSizeIdentifiers = [NSSet setWithObjects:ADBannerContentSizeIdentifierPortrait, ADBannerContentSizeIdentifierLandscape, nil];
+		
+		NSString *contentSize = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? ADBannerContentSizeIdentifierPortrait : ADBannerContentSizeIdentifierLandscape;
+		self.adView.currentContentSizeIdentifier = contentSize;
+		
+		CGRect frame;
+		frame.size = [ADBannerView sizeFromBannerContentSizeIdentifier:contentSize];
+		frame.origin = CGPointMake(0.0f, CGRectGetMaxY(self.view.bounds));
+		
+		self.adView.frame = frame;
+		self.adView.delegate = self;
+		
+		[self.view addSubview:self.adView];
+	}
+}
+
+- (void)createGADBannerView {
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+		if (self.adView.bannerLoaded || self.gadBannerLoaded) {
+			return;
+		}
+		
+		CGRect frame;
+		frame.size = GAD_SIZE_320x50;
+		frame.origin = CGPointMake(0.0f, CGRectGetMaxY(self.view.bounds));
+		
+		self.gadView = [[GADBannerView alloc] initWithFrame:frame];
+		self.gadView.adUnitID = MY_BANNER_UNIT_ID;
+		self.gadView.delegate = self;
+		//self.gadView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+		
+		self.gadView.rootViewController = self;
+		[self.view addSubview:self.gadView];
+		
+		[self.gadView loadRequest:[GADRequest request]];
+	}
+}
+
+#pragma mark -
+#pragma mark ADBannerViewDelegate methods
+
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner
+{
+    [self layoutForCurrentOrientation:0.25];
+}
+
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
+{
+    [self layoutForCurrentOrientation:0.25];
+	[self createGADBannerView];
+}
+
+- (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave
+{
+    return YES;
+}
+
+- (void)bannerViewActionDidFinish:(ADBannerView *)banner
+{
+	[self layoutForCurrentOrientation:0];
+}
+
+- (void)adViewDidReceiveAd:(GADBannerView *)view {
+	self.gadBannerLoaded = YES;
+	[self layoutForCurrentOrientation:0.25];
+}
+
+- (void)adView:(GADBannerView *)view didFailToReceiveAdWithError:(GADRequestError *)error {
+	NSLog(@"adView:didFailToReceiveAdWithError:%@", [error localizedDescription]);
+	self.gadBannerLoaded = NO;
+	//[self createADBannerView];
+	[self layoutForCurrentOrientation:0.25];
+}
+
+- (void)adViewWillDismissScreen:(GADBannerView *)adView {
+	[self layoutForCurrentOrientation:0];
+}
+
+#pragma mark -
 
 - (void)awakeFromNib {
 	self.sortDateAscending = [[NSUserDefaults standardUserDefaults] boolForKey:SORT_DATE];
@@ -132,6 +285,11 @@
 																target:self
 																action:@selector(sort:)];
 	self.toolbarItems = [NSArray arrayWithObjects:markAll, flexibleSpace, showOldest, flexibleSpace, sortItem, nil];
+	
+#ifdef FREE_FOR_PROMOTION
+	[self createADBannerView];
+	//[self createGADBannerView];
+#endif
 }
 
 - (void)feedViewControllerWillClose:(Feed *)currentFeed {
@@ -152,17 +310,18 @@
 	if ([self.actionSheet isVisible]) {
 		[self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:YES];
 	}
-	
-	self.actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Sort", nil)
-															 delegate:self
-													cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-											   destructiveButtonTitle:nil
-													otherButtonTitles:NSLocalizedString(@"Ascending", nil), NSLocalizedString(@"Descending", nil), nil];
-	
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-	    [self.actionSheet showFromBarButtonItem:sender animated:YES];
-	} else {
-	    [self.actionSheet showFromToolbar:self.navigationController.toolbar];
+	else {
+		self.actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Sort", nil)
+													   delegate:self
+											  cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+										 destructiveButtonTitle:nil
+											  otherButtonTitles:NSLocalizedString(@"Ascending", nil), NSLocalizedString(@"Descending", nil), nil];
+		
+		if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+			[self.actionSheet showFromBarButtonItem:sender animated:YES];
+		} else {
+			[self.actionSheet showFromToolbar:self.navigationController.toolbar];
+		}
 	}
 }
 
@@ -189,16 +348,17 @@
 	if ([self.actionSheet isVisible]) {
 		[self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:YES];
 	}
-	
-	self.actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Mark all items from this list as read?", nil)
-															 delegate:self
-													cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-											   destructiveButtonTitle:NSLocalizedString(@"Mark all as read", nil)
-													otherButtonTitles:nil];
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-	    [self.actionSheet showFromBarButtonItem:sender animated:YES];
-	} else {
-	    [self.actionSheet showFromToolbar:self.navigationController.toolbar];
+	else {
+		self.actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Mark all items from this list as read?", nil)
+													   delegate:self
+											  cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+										 destructiveButtonTitle:NSLocalizedString(@"Mark all as read", nil)
+											  otherButtonTitles:nil];
+		if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+			[self.actionSheet showFromBarButtonItem:sender animated:YES];
+		} else {
+			[self.actionSheet showFromToolbar:self.navigationController.toolbar];
+		}
 	}
 }
 
@@ -237,6 +397,7 @@
 	
 #ifdef FREE_FOR_PROMOTION
     [self.navigationController setToolbarHidden:YES animated:animated];
+	[self layoutForCurrentOrientation:0];
 #else
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 	    [self.navigationController setToolbarHidden:NO animated:animated];
@@ -249,8 +410,20 @@
 //	}
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+	
+#ifdef FREE_FOR_PROMOTION
+    [self layoutForCurrentOrientation:0];
+#endif
+	
+}
+
 - (void)viewDidUnload
 {
+	self.adView.delegate = nil;
+	self.gadView.delegate = nil;
+	
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -263,6 +436,13 @@
 	    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 	}
 	return YES;
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+#ifdef FREE_FOR_PROMOTION
+    [self layoutForCurrentOrientation:duration];
+#endif
 }
 
 #pragma mark - TableView

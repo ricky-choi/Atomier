@@ -103,6 +103,9 @@
 		698BCA9114A45B7900617269 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 698BCA9014A45B7900617269 /* MessageUI.framework */; };
 		69A4205F14D03F6F009A2DFA /* checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 69A4205B14D03F6F009A2DFA /* checkmark.png */; };
 		69A4206014D03F6F009A2DFA /* checkmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69A4205C14D03F6F009A2DFA /* checkmark@2x.png */; };
+		69B3B59214D9609B003249D5 /* libGoogleAdMobAds.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BEFF7714D6D9D400AE7FED /* libGoogleAdMobAds.a */; settings = {ATTRIBUTES = (Weak, ); }; };
+		69B3B59414D960A3003249D5 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BEFF6C14D6D88200AE7FED /* iAd.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		69B3B59514D96136003249D5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69BEFF7914D6D9FB00AE7FED /* AudioToolbox.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		69B622E114B1E2C40002A94E /* closebox_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 69B622DD14B1E2C40002A94E /* closebox_pressed.png */; };
 		69B622E214B1E2C40002A94E /* closebox_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69B622DE14B1E2C40002A94E /* closebox_pressed@2x.png */; };
 		69B622E314B1E2C40002A94E /* closebox.png in Resources */ = {isa = PBXBuildFile; fileRef = 69B622DF14B1E2C40002A94E /* closebox.png */; };
@@ -410,6 +413,7 @@
 		698BCA9014A45B7900617269 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		69A4205B14D03F6F009A2DFA /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkmark.png; sourceTree = "<group>"; };
 		69A4205C14D03F6F009A2DFA /* checkmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkmark@2x.png"; sourceTree = "<group>"; };
+		69B3B59614D962F2003249D5 /* Syndi Free.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Syndi Free.entitlements"; sourceTree = "<group>"; };
 		69B622DD14B1E2C40002A94E /* closebox_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = closebox_pressed.png; sourceTree = "<group>"; };
 		69B622DE14B1E2C40002A94E /* closebox_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "closebox_pressed@2x.png"; sourceTree = "<group>"; };
 		69B622DF14B1E2C40002A94E /* closebox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = closebox.png; sourceTree = "<group>"; };
@@ -472,6 +476,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69B3B59514D96136003249D5 /* AudioToolbox.framework in Frameworks */,
 				69C93CE614AF214000D1495B /* QuartzCore.framework in Frameworks */,
 				698309D214A852F7008CCE5E /* Twitter.framework in Frameworks */,
 				698BCA9114A45B7900617269 /* MessageUI.framework in Frameworks */,
@@ -484,6 +489,8 @@
 				6933994A149B141100DD4E53 /* UIKit.framework in Frameworks */,
 				6933994C149B141100DD4E53 /* Foundation.framework in Frameworks */,
 				6933994E149B141100DD4E53 /* CoreGraphics.framework in Frameworks */,
+				69B3B59214D9609B003249D5 /* libGoogleAdMobAds.a in Frameworks */,
+				69B3B59414D960A3003249D5 /* iAd.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -602,6 +609,7 @@
 		6933993A149B141100DD4E53 = {
 			isa = PBXGroup;
 			children = (
+				69B3B59614D962F2003249D5 /* Syndi Free.entitlements */,
 				69BEFF7914D6D9FB00AE7FED /* AudioToolbox.framework */,
 				69BEFF7014D6D9BA00AE7FED /* AdMob */,
 				69BEFF6C14D6D88200AE7FED /* iAd.framework */,
@@ -1361,6 +1369,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "Atomier/Atomier-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				PRODUCT_NAME = Syndi;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1372,6 +1384,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "Atomier/Atomier-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				PRODUCT_NAME = Syndi;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1405,6 +1421,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "Atomier/Atomier-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				PRODUCT_NAME = Syndi;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "35E43687-F35A-47F8-8D95-FED2F25FCAAB";
 				WRAPPER_EXTENSION = app;
@@ -1439,6 +1459,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "Atomier/Atomier-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				PRODUCT_NAME = Syndi;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E2BE147C-FC64-48A0-889A-CB8E4925BB85";
 				WRAPPER_EXTENSION = app;
@@ -1448,6 +1472,7 @@
 		69BDBAEC14D289ED007D6824 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Syndi Free.entitlements";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "AtomierFree-Info.plist";
@@ -1464,6 +1489,7 @@
 		69BDBAED14D289ED007D6824 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Syndi Free.entitlements";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "AtomierFree-Info.plist";
@@ -1483,6 +1509,7 @@
 		69BDBAEE14D289ED007D6824 /* AppStore */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Syndi Free.entitlements";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "AtomierFree-Info.plist";
@@ -1502,6 +1529,7 @@
 		69BDBAEF14D289ED007D6824 /* AdHoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Syndi Free.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jaeyoung CHOI";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
