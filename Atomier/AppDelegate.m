@@ -22,6 +22,7 @@
 #define DEFAULT_KEY_SYNCDATE @"DEFAULT_KEY_SYNCDATE"
 #define DEFAULT_KEY_SYNC_RULE @"DEFAULR_KEY_SYNC_RULE"
 #define DEFAULT_KEY_BADGE @"DEFAULT_KEY_BADGE"
+#define DEFAULT_KEY_AD @"DEFAULT_KEY_AD"
 
 @interface AppDelegate ()
 
@@ -56,6 +57,7 @@
 @synthesize readyGetIcons = _readyGetIcons;
 
 @synthesize loginViewController = _loginViewController;
+
 
 - (NSMutableArray *)readyGetIcons {
 	if (_readyGetIcons == nil) {
@@ -116,6 +118,7 @@
 	    
 	}
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
+															 [NSNumber numberWithBool:YES], DEFAULT_KEY_AD,
 															 [NSNumber numberWithInt:1], DEFAULT_KEY_SYNC_RULE,
 															 [NSNumber numberWithBool:YES], DEFAULT_KEY_BADGE, nil]];
 	

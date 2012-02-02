@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		6902A91E14AAA911001A594A /* StandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6902A91D14AAA911001A594A /* StandViewController.m */; };
 		6902A92214AAAB14001A594A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6902A92414AAAB14001A594A /* Localizable.strings */; };
+		6907247514DA4F5300E85BAF /* promote-Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = 6907247314DA4F5300E85BAF /* promote-Icon-Small.png */; };
+		6907247614DA4F5300E85BAF /* promote-Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6907247414DA4F5300E85BAF /* promote-Icon-Small@2x.png */; };
 		69142930149DAF010096C5AE /* CDataChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 6914290F149DAF010096C5AE /* CDataChunk.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		69142931149DAF010096C5AE /* Chunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 69142911149DAF010096C5AE /* Chunk.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		69142932149DAF010096C5AE /* CommentChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 69142913149DAF010096C5AE /* CommentChunk.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -266,6 +268,8 @@
 		6902A91D14AAA911001A594A /* StandViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StandViewController.m; sourceTree = "<group>"; };
 		6902A92314AAAB14001A594A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6902A92614AAAB20001A594A /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6907247314DA4F5300E85BAF /* promote-Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "promote-Icon-Small.png"; sourceTree = "<group>"; };
+		6907247414DA4F5300E85BAF /* promote-Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "promote-Icon-Small@2x.png"; sourceTree = "<group>"; };
 		6914290E149DAF010096C5AE /* CDataChunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDataChunk.h; sourceTree = "<group>"; };
 		6914290F149DAF010096C5AE /* CDataChunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDataChunk.m; sourceTree = "<group>"; };
 		69142910149DAF010096C5AE /* Chunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Chunk.h; sourceTree = "<group>"; };
@@ -413,7 +417,6 @@
 		698BCA9014A45B7900617269 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		69A4205B14D03F6F009A2DFA /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkmark.png; sourceTree = "<group>"; };
 		69A4205C14D03F6F009A2DFA /* checkmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkmark@2x.png"; sourceTree = "<group>"; };
-		69B3B59614D962F2003249D5 /* Syndi Free.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Syndi Free.entitlements"; sourceTree = "<group>"; };
 		69B622DD14B1E2C40002A94E /* closebox_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = closebox_pressed.png; sourceTree = "<group>"; };
 		69B622DE14B1E2C40002A94E /* closebox_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "closebox_pressed@2x.png"; sourceTree = "<group>"; };
 		69B622DF14B1E2C40002A94E /* closebox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = closebox.png; sourceTree = "<group>"; };
@@ -593,6 +596,8 @@
 		691B2DAE14D2D9B300CB5AA0 /* free image */ = {
 			isa = PBXGroup;
 			children = (
+				6907247314DA4F5300E85BAF /* promote-Icon-Small.png */,
+				6907247414DA4F5300E85BAF /* promote-Icon-Small@2x.png */,
 				691B2DAF14D2D9EB00CB5AA0 /* free_Icon-72.png */,
 				691B2DB014D2D9EB00CB5AA0 /* free_Icon-Small-50.png */,
 				691B2DB114D2D9EB00CB5AA0 /* free_Icon-Small.png */,
@@ -609,7 +614,6 @@
 		6933993A149B141100DD4E53 = {
 			isa = PBXGroup;
 			children = (
-				69B3B59614D962F2003249D5 /* Syndi Free.entitlements */,
 				69BEFF7914D6D9FB00AE7FED /* AudioToolbox.framework */,
 				69BEFF7014D6D9BA00AE7FED /* AdMob */,
 				69BEFF6C14D6D88200AE7FED /* iAd.framework */,
@@ -1143,6 +1147,8 @@
 				691B2DC014D2DA0000CB5AA0 /* free_syndi_login.png in Resources */,
 				691B2DC114D2DA0000CB5AA0 /* free_syndi_login@2x.png in Resources */,
 				691B2DC214D2DA0000CB5AA0 /* free_syndi-login~ipad.png in Resources */,
+				6907247514DA4F5300E85BAF /* promote-Icon-Small.png in Resources */,
+				6907247614DA4F5300E85BAF /* promote-Icon-Small@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1472,7 +1478,7 @@
 		69BDBAEC14D289ED007D6824 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "Syndi Free.entitlements";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jaeyoung CHOI (544PMM4TRQ)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "AtomierFree-Info.plist";
@@ -1482,6 +1488,7 @@
 				);
 				OTHER_CFLAGS = "-DFREE_FOR_PROMOTION";
 				PRODUCT_NAME = "Syndi Free";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5258B2DB-2FB3-4272-818A-6E2CF8B5BB10";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1489,7 +1496,7 @@
 		69BDBAED14D289ED007D6824 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "Syndi Free.entitlements";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jaeyoung CHOI (544PMM4TRQ)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "AtomierFree-Info.plist";
@@ -1502,6 +1509,7 @@
 					"-DFREE_FOR_PROMOTION",
 				);
 				PRODUCT_NAME = "Syndi Free";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5258B2DB-2FB3-4272-818A-6E2CF8B5BB10";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1509,7 +1517,6 @@
 		69BDBAEE14D289ED007D6824 /* AppStore */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "Syndi Free.entitlements";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "AtomierFree-Info.plist";
@@ -1529,7 +1536,6 @@
 		69BDBAEF14D289ED007D6824 /* AdHoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "Syndi Free.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jaeyoung CHOI";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";

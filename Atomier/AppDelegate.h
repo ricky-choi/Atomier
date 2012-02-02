@@ -15,7 +15,7 @@
 #define kNOTIFICATION_LOGIN_FAILED @"kNOTIFICATION_LOGIN_FAILED"
 
 #ifdef FREE_FOR_PROMOTION
-#define kKEYCHAIN_SERVICE @"SyndiRSSReaderFree"
+#define kKEYCHAIN_SERVICE @"com.felaur.syndifree"
 #else
 #define kKEYCHAIN_SERVICE @"SyndiRSSReader"
 #endif

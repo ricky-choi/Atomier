@@ -10,7 +10,18 @@
 #import "AppDelegate.h"
 
 @implementation SettingsViewController
-@synthesize badgeSwitch;
+@synthesize badgeSwitch = _badgeSwitch;
+
+- (UISwitch *)badgeSwitch {
+	if (_badgeSwitch) {
+		return _badgeSwitch;
+	}
+	
+	_badgeSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+	[_badgeSwitch addTarget:self action:@selector(toggleSwitch:) forControlEvents:UIControlEventValueChanged];
+	
+	return _badgeSwitch;
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -111,6 +122,7 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	
 	if (section == 0) {
 		AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 		return [NSString stringWithFormat:NSLocalizedString(@"Account: %@", nil), [appDelegate savedGoogleID]];
@@ -128,15 +140,59 @@
 	return nil;
 }
 
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-//	static NSString *CellIdentifier = @"Cell";
-//    
-//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-//	
-//	
-//	
-//    return cell;
-//}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	
+	if (section == 1) {
+		return 3;
+	}
+	
+	return 1;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	static NSString *CellIdentifier = @"Cell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+	
+	NSInteger section = indexPath.section;
+	NSInteger row = indexPath.row;
+	
+	cell.textLabel.textAlignment = UITextAlignmentLeft;
+	cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+	cell.accessoryView = nil;
+	cell.imageView.image = nil;
+	
+	if (section == 0) {
+		cell.textLabel.text = NSLocalizedString(@"Sign out", nil);
+		cell.textLabel.textAlignment = UITextAlignmentCenter;
+	}
+	else if (section == 1) {
+		if (row == 0) {
+			cell.textLabel.text = NSLocalizedString(@"Automatic", nil);
+		}
+		else if (row == 1) {
+			cell.textLabel.text = NSLocalizedString(@"Automatic if Wi-Fi", nil);
+		}
+		else if (row == 2) {
+			cell.textLabel.text = NSLocalizedString(@"Manual", nil);
+		}
+	}
+	else if (section == 2) {
+		cell.textLabel.text = NSLocalizedString(@"Show Unread Badge", nil);
+		cell.selectionStyle = UITableViewCellSelectionStyleNone;
+		cell.accessoryView = self.badgeSwitch;
+	}
+	else if (section == 3) {
+		if (row == 0) {
+			cell.textLabel.text = NSLocalizedString(@"Buy Full Version", nil);
+			cell.imageView.image = [UIImage imageNamed:@"promote-Icon-Small"];
+		} else {
+			cell.textLabel.text = NSLocalizedString(@"Remove Ad", nil);
+		}
+	}
+	
+    return cell;
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -159,15 +215,15 @@
 	}
 	else if (indexPath.section == 3) {
 		if (indexPath.row == 0) {
-			// remove ad : in app purchase
-		}
-		else if (indexPath.row == 1) {
 			// go appstore
 			UIApplication *app = [UIApplication sharedApplication];
-			NSURL *syndiAppStoreURL = [NSURL URLWithString:@""];
+			NSURL *syndiAppStoreURL = [NSURL URLWithString:@"http://itunes.apple.com/us/app/syndi-rss-reader/id498935649?ls=1&mt=8"];
 			if ([app canOpenURL:syndiAppStoreURL]) {
 				[app openURL:syndiAppStoreURL];
 			}
+		}
+		else if (indexPath.row == 1) {
+			// remove ad : in app purchase
 		}
 	}
 }

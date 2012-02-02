@@ -10,7 +10,7 @@
 
 @interface SettingsViewController : UITableViewController
 
-@property (weak, nonatomic) IBOutlet UISwitch *badgeSwitch;
+@property (strong, nonatomic) IBOutlet UISwitch *badgeSwitch;
 
 - (IBAction)signout:(id)sender;
 - (IBAction)toggleSwitch:(id)sender;
