@@ -699,10 +699,10 @@
 		
 		if (viewController.view.tag > 0) {
 			if (editing) {
-				[viewController.view startWiggling];
+				//[viewController.view startWiggling];
 				[self addCloseButton:viewController];
 			} else {
-				[viewController.view stopWiggling];
+				//[viewController.view stopWiggling];
 				[self removeCloseButton:viewController];
 			}
 			

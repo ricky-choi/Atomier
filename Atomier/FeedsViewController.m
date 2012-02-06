@@ -222,6 +222,12 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+	[super setEditing:editing animated:animated];
+	
+	[self.tableView setEditing:editing animated:animated];
+}
+
 #pragma mark - View lifecycle
 
 /*
@@ -265,6 +271,7 @@
 																	 style:UIBarButtonItemStyleBordered
 																	target:self
 																	action:@selector(goSourceOfSubscription)];
+
 		self.navigationItem.rightBarButtonItem = siteItem;
 	}
 	
@@ -536,6 +543,11 @@
 	
 	return titleString;
 #endif
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+	
+	return NO;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

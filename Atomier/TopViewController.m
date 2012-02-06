@@ -552,12 +552,13 @@
 		}
 		
 		// icon image
+		cell.iconImageView.contentMode = UIViewContentModeScaleAspectFit;
 		NSURL *sourceURL = [NSURL URLWithString:subscription.htmlUrl];
 		UIImage *icon = [[ContentOrganizer sharedInstance] iconForSubscription:[sourceURL host]];
 		if (icon) {
 			cell.iconImageView.image = icon;
 		} else {
-			cell.iconImageView.image = [UIImage imageNamed:@"FeedDefaultIcon"];
+			cell.iconImageView.image = [UIImage imageNamed:@"rss_source"];
 		}	
 		
 		// accessory
@@ -596,7 +597,8 @@
 		}
 		
 		// icon image
-		cell.iconImageView.image = [UIImage imageNamed:@"Folder"];
+		cell.iconImageView.contentMode = UIViewContentModeTopLeft;
+		cell.iconImageView.image = [UIImage imageNamed:@"rss_folder"];
 		
 		// accessory
 		cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;

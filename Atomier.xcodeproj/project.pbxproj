@@ -38,6 +38,14 @@
 		691B2DC014D2DA0000CB5AA0 /* free_syndi_login.png in Resources */ = {isa = PBXBuildFile; fileRef = 691B2DBD14D2DA0000CB5AA0 /* free_syndi_login.png */; };
 		691B2DC114D2DA0000CB5AA0 /* free_syndi_login@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 691B2DBE14D2DA0000CB5AA0 /* free_syndi_login@2x.png */; };
 		691B2DC214D2DA0000CB5AA0 /* free_syndi-login~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 691B2DBF14D2DA0000CB5AA0 /* free_syndi-login~ipad.png */; };
+		693287DB14DF945100D935A0 /* rss_folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 693287D914DF945100D935A0 /* rss_folder.png */; };
+		693287DC14DF945100D935A0 /* rss_folder.png in Resources */ = {isa = PBXBuildFile; fileRef = 693287D914DF945100D935A0 /* rss_folder.png */; };
+		693287DD14DF945100D935A0 /* rss_folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 693287DA14DF945100D935A0 /* rss_folder@2x.png */; };
+		693287DE14DF945100D935A0 /* rss_folder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 693287DA14DF945100D935A0 /* rss_folder@2x.png */; };
+		693287E114DF99A400D935A0 /* rss_source.png in Resources */ = {isa = PBXBuildFile; fileRef = 693287DF14DF99A400D935A0 /* rss_source.png */; };
+		693287E214DF99A400D935A0 /* rss_source.png in Resources */ = {isa = PBXBuildFile; fileRef = 693287DF14DF99A400D935A0 /* rss_source.png */; };
+		693287E314DF99A400D935A0 /* rss_source@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 693287E014DF99A400D935A0 /* rss_source@2x.png */; };
+		693287E414DF99A400D935A0 /* rss_source@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 693287E014DF99A400D935A0 /* rss_source@2x.png */; };
 		6933994A149B141100DD4E53 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69339949149B141100DD4E53 /* UIKit.framework */; };
 		6933994C149B141100DD4E53 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6933994B149B141100DD4E53 /* Foundation.framework */; };
 		6933994E149B141100DD4E53 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6933994D149B141100DD4E53 /* CoreGraphics.framework */; };
@@ -315,6 +323,10 @@
 		691B2DBD14D2DA0000CB5AA0 /* free_syndi_login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = free_syndi_login.png; sourceTree = "<group>"; };
 		691B2DBE14D2DA0000CB5AA0 /* free_syndi_login@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "free_syndi_login@2x.png"; sourceTree = "<group>"; };
 		691B2DBF14D2DA0000CB5AA0 /* free_syndi-login~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "free_syndi-login~ipad.png"; sourceTree = "<group>"; };
+		693287D914DF945100D935A0 /* rss_folder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rss_folder.png; sourceTree = "<group>"; };
+		693287DA14DF945100D935A0 /* rss_folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rss_folder@2x.png"; sourceTree = "<group>"; };
+		693287DF14DF99A400D935A0 /* rss_source.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rss_source.png; sourceTree = "<group>"; };
+		693287E014DF99A400D935A0 /* rss_source@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rss_source@2x.png"; sourceTree = "<group>"; };
 		69339945149B141100DD4E53 /* Syndi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Syndi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		69339949149B141100DD4E53 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6933994B149B141100DD4E53 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -854,6 +866,10 @@
 		696ECEA714A0B92500FE5706 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				693287DF14DF99A400D935A0 /* rss_source.png */,
+				693287E014DF99A400D935A0 /* rss_source@2x.png */,
+				693287D914DF945100D935A0 /* rss_folder.png */,
+				693287DA14DF945100D935A0 /* rss_folder@2x.png */,
 				69EFCA5514D15E45003536D0 /* arrow_down.png */,
 				69EFCA5614D15E45003536D0 /* arrow_down@2x.png */,
 				69EFCA5014D14C97003536D0 /* wood.png */,
@@ -1086,6 +1102,10 @@
 				6954AFF614D2B4B300A80A26 /* syndi_login.png in Resources */,
 				6954AFF714D2B4B300A80A26 /* syndi_login@2x.png in Resources */,
 				6954AFFB14D2CBD300A80A26 /* syndi-login~ipad.png in Resources */,
+				693287DB14DF945100D935A0 /* rss_folder.png in Resources */,
+				693287DD14DF945100D935A0 /* rss_folder@2x.png in Resources */,
+				693287E114DF99A400D935A0 /* rss_source.png in Resources */,
+				693287E314DF99A400D935A0 /* rss_source@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1149,6 +1169,10 @@
 				691B2DC214D2DA0000CB5AA0 /* free_syndi-login~ipad.png in Resources */,
 				6907247514DA4F5300E85BAF /* promote-Icon-Small.png in Resources */,
 				6907247614DA4F5300E85BAF /* promote-Icon-Small@2x.png in Resources */,
+				693287DC14DF945100D935A0 /* rss_folder.png in Resources */,
+				693287DE14DF945100D935A0 /* rss_folder@2x.png in Resources */,
+				693287E214DF99A400D935A0 /* rss_source.png in Resources */,
+				693287E414DF99A400D935A0 /* rss_source@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

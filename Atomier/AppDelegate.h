@@ -17,7 +17,7 @@
 #ifdef FREE_FOR_PROMOTION
 #define kKEYCHAIN_SERVICE @"com.felaur.syndifree"
 #else
-#define kKEYCHAIN_SERVICE @"SyndiRSSReader"
+#define kKEYCHAIN_SERVICE @"com.felaur.syndi"
 #endif
 
 #define kKEYCHAIN_ACCOUNT_ID @"SyndiAccountID"
