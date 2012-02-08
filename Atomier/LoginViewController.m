@@ -13,6 +13,9 @@
 #define NOTIFICATION_KEYBOARD_DID_IMPLEMENTATION 0
 
 @implementation LoginViewController
+
+@synthesize delegate = _delegate;
+
 @synthesize emailField;
 @synthesize passwordField;
 @synthesize spinner;
@@ -177,7 +180,9 @@
 	
 	[self.spinner stopAnimating];
 	
-	[self dismissModalViewControllerAnimated:YES];
+	if (_delegate && [_delegate respondsToSelector:@selector(loginViewControllerDidDismiss)]) {
+		[_delegate loginViewControllerDidDismiss];
+	}
 }
 
 - (void)loginFailed:(NSNotification *)notification {

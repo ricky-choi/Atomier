@@ -10,6 +10,7 @@
 #import "GoogleReader.h"
 #import "Subscription.h"
 #import "Reachability.h"
+#import "LoginViewController.h"
 
 #define kNOTIFICATION_LOGIN_SUCCESS @"kNOTIFICATION_LOGIN_SUCCESS"
 #define kNOTIFICATION_LOGIN_FAILED @"kNOTIFICATION_LOGIN_FAILED"
@@ -27,7 +28,7 @@
 
 @class LoginViewController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, GoogleReaderDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, GoogleReaderDelegate, LoginViewControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

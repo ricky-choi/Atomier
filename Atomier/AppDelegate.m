@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "LoginViewController.h"
 #import "Category.h"
 #import "Subscription.h"
 #import "Feed.h"
@@ -204,7 +203,7 @@
 
 	GoogleReader *reader = [GoogleReader sharedInstance];
 	reader.delegate = self;
-	[reader deleteToken];
+	//[reader deleteToken];
 	
 	if ([reader isAuth]) {
 		if ([self isConnectedToNetwork]) {
@@ -272,8 +271,15 @@
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		
 		self.loginViewController = viewController;
-		[self.window.rootViewController presentModalViewController:viewController animated:NO];
+		self.loginViewController.delegate = self;
+		[self.window.rootViewController presentViewController:viewController animated:NO completion:nil];
 	}
+}
+
+- (void)loginViewControllerDidDismiss {
+	[self.window.rootViewController dismissViewControllerAnimated:YES completion:^{
+		self.loginViewController = nil;
+	}];
 }
 
 - (BOOL)existSignInIDAndPassword {
@@ -409,6 +415,7 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_LOGIN_SUCCESS
 														object:nil
 													  userInfo:nil];
+	
 }
 - (void)googleReaderAuthenticateFailed {
 	NSLog(@"googleReaderAuthenticateFailed");
