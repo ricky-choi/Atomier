@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
+#import "SettingsViewController.h"
 
 #import <iAd/ADBannerView.h>
 #import "GADBannerView.h"
@@ -15,7 +16,7 @@
 @class Category;
 @class FeedsViewController;
 
-@interface StandViewController : UIViewController <NSFetchedResultsControllerDelegate, UIActionSheetDelegate, ADBannerViewDelegate, GADBannerViewDelegate>
+@interface StandViewController : UIViewController <NSFetchedResultsControllerDelegate, UIActionSheetDelegate, ADBannerViewDelegate, GADBannerViewDelegate, SettingsViewControllerDelegate>
 
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsControllerForCategory;

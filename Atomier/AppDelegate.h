@@ -12,6 +12,8 @@
 #import "Reachability.h"
 #import "LoginViewController.h"
 
+#define DEFAULT_KEY_AD @"DEFAULT_KEY_AD"
+
 #define kNOTIFICATION_LOGIN_SUCCESS @"kNOTIFICATION_LOGIN_SUCCESS"
 #define kNOTIFICATION_LOGIN_FAILED @"kNOTIFICATION_LOGIN_FAILED"
 
@@ -80,5 +82,7 @@
 - (BOOL)isConnectedToNetwork;
 
 - (void)showNoInternet;
+
+- (BOOL)showAD;
 
 @end

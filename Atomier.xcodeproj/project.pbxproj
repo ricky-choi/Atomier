@@ -46,6 +46,7 @@
 		693287E214DF99A400D935A0 /* rss_source.png in Resources */ = {isa = PBXBuildFile; fileRef = 693287DF14DF99A400D935A0 /* rss_source.png */; };
 		693287E314DF99A400D935A0 /* rss_source@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 693287E014DF99A400D935A0 /* rss_source@2x.png */; };
 		693287E414DF99A400D935A0 /* rss_source@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 693287E014DF99A400D935A0 /* rss_source@2x.png */; };
+		69328FA914E6203A0096CD7D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69328FA814E6203A0096CD7D /* StoreKit.framework */; };
 		6933994A149B141100DD4E53 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69339949149B141100DD4E53 /* UIKit.framework */; };
 		6933994C149B141100DD4E53 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6933994B149B141100DD4E53 /* Foundation.framework */; };
 		6933994E149B141100DD4E53 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6933994D149B141100DD4E53 /* CoreGraphics.framework */; };
@@ -327,6 +328,8 @@
 		693287DA14DF945100D935A0 /* rss_folder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rss_folder@2x.png"; sourceTree = "<group>"; };
 		693287DF14DF99A400D935A0 /* rss_source.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rss_source.png; sourceTree = "<group>"; };
 		693287E014DF99A400D935A0 /* rss_source@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rss_source@2x.png"; sourceTree = "<group>"; };
+		69328FA814E6203A0096CD7D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		69328FAB14E624CC0096CD7D /* Syndi Free.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Syndi Free.entitlements"; sourceTree = "<group>"; };
 		69339945149B141100DD4E53 /* Syndi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Syndi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		69339949149B141100DD4E53 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6933994B149B141100DD4E53 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -513,6 +516,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69328FA914E6203A0096CD7D /* StoreKit.framework in Frameworks */,
 				69BEFF7A14D6D9FB00AE7FED /* AudioToolbox.framework in Frameworks */,
 				69BEFF6D14D6D88200AE7FED /* iAd.framework in Frameworks */,
 				69BDBAAA14D289ED007D6824 /* QuartzCore.framework in Frameworks */,
@@ -626,6 +630,8 @@
 		6933993A149B141100DD4E53 = {
 			isa = PBXGroup;
 			children = (
+				69328FAB14E624CC0096CD7D /* Syndi Free.entitlements */,
+				69328FA814E6203A0096CD7D /* StoreKit.framework */,
 				69BEFF7914D6D9FB00AE7FED /* AudioToolbox.framework */,
 				69BEFF7014D6D9BA00AE7FED /* AdMob */,
 				69BEFF6C14D6D88200AE7FED /* iAd.framework */,
@@ -1396,6 +1402,7 @@
 		69339967149B141100DD4E53 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jaeyoung CHOI (544PMM4TRQ)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "Atomier/Atomier-Info.plist";
@@ -1404,6 +1411,7 @@
 					"\"$(SRCROOT)\"",
 				);
 				PRODUCT_NAME = Syndi;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CE63909C-EA38-4172-B674-77FAEB22EA9E";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1411,6 +1419,7 @@
 		69339968149B141100DD4E53 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jaeyoung CHOI (544PMM4TRQ)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "Atomier/Atomier-Info.plist";
@@ -1419,6 +1428,7 @@
 					"\"$(SRCROOT)\"",
 				);
 				PRODUCT_NAME = Syndi;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CE63909C-EA38-4172-B674-77FAEB22EA9E";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1502,6 +1512,7 @@
 		69BDBAEC14D289ED007D6824 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Syndi Free.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jaeyoung CHOI (544PMM4TRQ)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
@@ -1512,7 +1523,7 @@
 				);
 				OTHER_CFLAGS = "-DFREE_FOR_PROMOTION";
 				PRODUCT_NAME = "Syndi Free";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5258B2DB-2FB3-4272-818A-6E2CF8B5BB10";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CE63909C-EA38-4172-B674-77FAEB22EA9E";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1520,6 +1531,7 @@
 		69BDBAED14D289ED007D6824 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Syndi Free.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jaeyoung CHOI (544PMM4TRQ)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
@@ -1533,7 +1545,7 @@
 					"-DFREE_FOR_PROMOTION",
 				);
 				PRODUCT_NAME = "Syndi Free";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5258B2DB-2FB3-4272-818A-6E2CF8B5BB10";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CE63909C-EA38-4172-B674-77FAEB22EA9E";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1541,6 +1553,8 @@
 		69BDBAEE14D289ED007D6824 /* AppStore */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Syndi Free.entitlements";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jaeyoung CHOI";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "AtomierFree-Info.plist";
@@ -1553,6 +1567,7 @@
 					"-DFREE_FOR_PROMOTION",
 				);
 				PRODUCT_NAME = "Syndi Free";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3AE1D372-7D5A-4104-9B03-D1003FB04CB9";
 				WRAPPER_EXTENSION = app;
 			};
 			name = AppStore;
@@ -1560,6 +1575,7 @@
 		69BDBAEF14D289ED007D6824 /* AdHoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Syndi Free.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jaeyoung CHOI";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";

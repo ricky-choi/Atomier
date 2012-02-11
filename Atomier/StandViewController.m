@@ -15,7 +15,7 @@
 #import "FeedsViewController.h"
 #import "UIBezierPath+ShadowPath.h"
 #import "UIView+Wiggle.h"
-#import "SettingsViewController.h"
+
 
 #define IPHONE_STORYBOARD [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil]
 
@@ -36,6 +36,7 @@
 - (void)layoutForCurrentOrientation:(NSTimeInterval)duration;
 - (void)createADBannerView;
 - (void)createGADBannerView;
+- (void)removeAd;
 
 @end
 
@@ -56,6 +57,19 @@
 @synthesize gadView = _gadView;
 @synthesize gadBannerLoaded = _gadBannerLoaded;
 @synthesize firstAttempIsiAd;
+
+- (void)removeAd {
+	if (self.adView) {
+		[self.adView removeFromSuperview];
+		self.adView = nil;
+	}
+	
+	if (self.gadView) {
+		[self.gadView removeFromSuperview];
+		self.gadView = nil;
+		self.gadBannerLoaded = NO;
+	}
+}
 
 - (void)layoutForCurrentOrientation:(NSTimeInterval)duration {
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
@@ -103,6 +117,11 @@
 }
 
 - (void)createADBannerView {
+	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	if ([appDelegate showAD] == NO) {
+		return;
+	}
+	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 		if (self.adView.bannerLoaded || self.gadBannerLoaded) {
 			return;
@@ -127,6 +146,11 @@
 }
 
 - (void)createGADBannerView {
+	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	if ([appDelegate showAD] == NO) {
+		return;
+	}
+	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 		if (self.adView.bannerLoaded || self.gadBannerLoaded) {
 			return;
@@ -529,6 +553,10 @@
 	});
 }
 
+- (void)dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
@@ -581,16 +609,27 @@
 	[self.view addSubview:self.scrollView];
 	
 #ifdef FREE_FOR_PROMOTION
-	srandom(time(NULL));
-	int randomNumber = random() % 100;
-	if (randomNumber < 50) {
-		firstAttempIsiAd = YES;
-		[self createADBannerView];
-	} else {
-		firstAttempIsiAd = NO;
-		[self createGADBannerView];
-	}	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adFreeNotified:) name:DEFAULT_KEY_AD object:nil];
+	
+	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	if ([appDelegate showAD]) {
+		srandom(time(NULL));
+		int randomNumber = random() % 100;
+		if (randomNumber < 50) {
+			firstAttempIsiAd = YES;
+			[self createADBannerView];
+		} else {
+			firstAttempIsiAd = NO;
+			[self createGADBannerView];
+		}
+	}
 #endif
+}
+
+- (void)adFreeNotified:(NSNotification *)notification {
+	[self removeAd];
+	[self layoutForCurrentOrientation:0];
+	[self invalidateItemsForOrientation:self.interfaceOrientation];
 }
 
 - (void)changeModeByAlternativeWay:(UIBarButtonItem *)barButtonItem {
@@ -609,19 +648,29 @@
 
 - (void)setting:(UIBarButtonItem *)sender {
 	SettingsViewController *viewController = [IPHONE_STORYBOARD instantiateViewControllerWithIdentifier:@"SettingsViewController"];
+	viewController.delegate = self;
 	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
 	navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
 	[self presentViewController:navigationController animated:YES completion:nil];
 
 }
 
+- (void)purchaseAdFreeDone {
+	[self removeAd];
+	[self layoutForCurrentOrientation:0];
+	[self invalidateItemsForOrientation:self.interfaceOrientation];
+}
 
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
 	
 	[self invalidateItemsForOrientation:self.interfaceOrientation];
 	
+#ifdef FREE_FOR_PROMOTION
+
 	[self layoutForCurrentOrientation:0];
+#endif
+	
 }
 
 #define CLOSE_BUTTON_TAG 999

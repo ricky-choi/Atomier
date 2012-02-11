@@ -21,7 +21,6 @@
 #define DEFAULT_KEY_SYNCDATE @"DEFAULT_KEY_SYNCDATE"
 #define DEFAULT_KEY_SYNC_RULE @"DEFAULR_KEY_SYNC_RULE"
 #define DEFAULT_KEY_BADGE @"DEFAULT_KEY_BADGE"
-#define DEFAULT_KEY_AD @"DEFAULT_KEY_AD"
 
 @interface AppDelegate ()
 
@@ -56,6 +55,10 @@
 @synthesize readyGetIcons = _readyGetIcons;
 
 @synthesize loginViewController = _loginViewController;
+
+- (BOOL)showAD {
+	return [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULT_KEY_AD];
+}
 
 
 - (NSMutableArray *)readyGetIcons {
@@ -121,6 +124,27 @@
 															 [NSNumber numberWithInt:1], DEFAULT_KEY_SYNC_RULE,
 															 [NSNumber numberWithBool:YES], DEFAULT_KEY_BADGE, nil]];
 	
+#ifdef FREE_FOR_PROMOTION
+    // check iCloud
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSURL *cloudDirectory = [fileManager URLForUbiquityContainerIdentifier:nil];
+	NSLog(@"cloud url: %@", [cloudDirectory description]);
+	
+	if (cloudDirectory) {
+		NSUbiquitousKeyValueStore* store = [NSUbiquitousKeyValueStore defaultStore];
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(updateKVStoreItems:)
+													 name:NSUbiquitousKeyValueStoreDidChangeExternallyNotification
+												   object:store];
+		if ([store synchronize] == NO) {
+			NSLog(@"iCloud Sync Error");
+		}
+		else {
+			NSLog(@"iCloud Representation: %@", [[store dictionaryRepresentation] description]);
+		}
+	}
+#endif
+	
 	self.savedCategoryIDs = [NSMutableDictionary dictionaryWithCapacity:10];
 	self.savedSubscriptionIDs = [NSMutableDictionary dictionaryWithCapacity:50];
 	self.savedFeedIDs = [NSMutableDictionary dictionaryWithCapacity:100];
@@ -162,6 +186,49 @@
 	}	
 	
     return YES;
+}
+
+- (void)updateKVStoreItems:(NSNotification*)notification {
+	// Get the list of keys that changed.
+	NSDictionary* userInfo = [notification userInfo];
+	NSLog(@"updateKVStoreItems: %@", [userInfo description]);
+	
+	NSNumber* reasonForChange = [userInfo objectForKey:NSUbiquitousKeyValueStoreChangeReasonKey];
+	NSInteger reason = -1;
+	
+	// If a reason could not be determined, do not update anything.
+	if (!reasonForChange)
+		return;
+	
+	// Update only for changes from the server.
+	reason = [reasonForChange integerValue];
+	if ((reason == NSUbiquitousKeyValueStoreServerChange) ||
+		(reason == NSUbiquitousKeyValueStoreInitialSyncChange)) {
+		// If something is changing externally, get the changes
+		// and update the corresponding keys locally.
+		NSArray* changedKeys = [userInfo objectForKey:NSUbiquitousKeyValueStoreChangedKeysKey];
+		NSUbiquitousKeyValueStore* store = [NSUbiquitousKeyValueStore defaultStore];
+		NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
+		
+		// This loop assumes you are using the same key names in both
+		// the user defaults database and the iCloud key-value store
+		for (NSString* key in changedKeys) {
+			id value = [store objectForKey:key];
+			[userDefaults setObject:value forKey:key];
+			
+			if ([key isEqualToString:DEFAULT_KEY_AD]) {
+				[[NSNotificationCenter defaultCenter] postNotificationName:DEFAULT_KEY_AD object:value];
+			}
+		}
+		
+		[userDefaults synchronize];
+		
+		NSLog(@"iCloud Representation Update: %@", [[store dictionaryRepresentation] description]);
+	}
+	else if (reason == NSUbiquitousKeyValueStoreQuotaViolationChange) {
+		// iCloud 용량 없음
+		NSLog(@"iCloud Quota Violation");
+	}
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application

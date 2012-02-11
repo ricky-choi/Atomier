@@ -15,7 +15,7 @@
 #import "Feed.h"
 #import "ContentOrganizer.h"
 #import "FeedsViewController.h"
-#import "SettingsViewController.h"
+
 
 #define TAG_ACTIONSHEET_CHANGEMODE 101
 #define TAG_ACTUINSHEET_SETTINGS 100
@@ -35,6 +35,7 @@
 - (void)layoutForCurrentOrientation:(NSTimeInterval)duration;
 - (void)createADBannerView;
 - (void)createGADBannerView;
+- (void)removeAd;
 
 @end
 
@@ -53,6 +54,19 @@
 @synthesize adView = _adView;
 @synthesize gadView = _gadView;
 @synthesize gadBannerLoaded = _gadBannerLoaded;
+
+- (void)removeAd {
+	if (self.adView) {
+		[self.adView removeFromSuperview];
+		self.adView = nil;
+	}
+	
+	if (self.gadView) {
+		[self.gadView removeFromSuperview];
+		self.gadView = nil;
+		self.gadBannerLoaded = NO;
+	}
+}
 
 - (void)layoutForCurrentOrientation:(NSTimeInterval)duration {
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
@@ -112,6 +126,11 @@
 }
 
 - (void)createADBannerView {
+	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	if ([appDelegate showAD] == NO) {
+		return;
+	}
+	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 		if (self.adView.bannerLoaded || self.gadBannerLoaded) {
 			return;
@@ -136,6 +155,11 @@
 }
 
 - (void)createGADBannerView {
+	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	if ([appDelegate showAD] == NO) {
+		return;
+	}
+	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 		if (self.adView.bannerLoaded || self.gadBannerLoaded) {
 			return;
@@ -299,6 +323,10 @@
 	return [TopViewController modeNameForSegment:self.currentSegment];
 }
 
+- (void)dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
@@ -344,9 +372,19 @@
 	self.toolbarItems = [NSArray arrayWithObjects:flexibleSpaceItem, segmentItem, flexibleSpaceItem, nil];
 	
 #ifdef FREE_FOR_PROMOTION
-	[self createADBannerView];
-	//[self createGADBannerView];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adFreeNotified:) name:DEFAULT_KEY_AD object:nil];
+	
+	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	if ([appDelegate showAD]) {
+		[self createADBannerView];
+		//[self createGADBannerView];
+	}
 #endif
+}
+
+- (void)adFreeNotified:(NSNotification *)notification {
+	[self removeAd];
+	[self layoutForCurrentOrientation:0];
 }
 
 - (void)changeModeByAlternativeWay:(UIBarButtonItem *)barButtonItem {
@@ -406,6 +444,7 @@
 		if (self.navigationController.toolbarHidden == NO) {
 			[self.navigationController setToolbarHidden:YES animated:animated];
 		}		
+
 		[self layoutForCurrentOrientation:0];
 	}
 #endif
@@ -936,8 +975,14 @@
 
 - (void)setting:(UIBarButtonItem *)sender {
 	SettingsViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"SettingsViewController"];
+	viewController.delegate = self;
 	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
 	[self presentViewController:navigationController animated:YES completion:nil];
+}
+
+- (void)purchaseAdFreeDone {
+	[self removeAd];
+	[self layoutForCurrentOrientation:0];
 }
 
 - (void)settingWithOption:(UIBarButtonItem *)sender {

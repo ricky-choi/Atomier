@@ -9,8 +9,41 @@
 #import "SettingsViewController.h"
 #import "AppDelegate.h"
 
+#define kMyFeatureIdentifier @"SyndiFree.AdFree"
+
+@interface SettingsViewController ()
+
+- (BOOL)showAD;
+- (void)freeAd;
+- (void)requestProductData;
+
+@end
+
 @implementation SettingsViewController
+
+@synthesize delegate = _delegate;
+
 @synthesize badgeSwitch = _badgeSwitch;
+
+@synthesize readyPurchase = _readyPurchase;
+@synthesize productsToSell = _productsToSell;
+@synthesize productPrice = _productPrice;
+
+- (NSString *)productPrice {
+	if (_productPrice == nil && [self.productsToSell count] > 0) {
+		SKProduct *product = [self.productsToSell objectAtIndex:0];
+		
+		NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+		[numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
+		[numberFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+		[numberFormatter setLocale:product.priceLocale];
+		NSString *formattedString = [numberFormatter stringFromNumber:product.price];
+		
+		return formattedString;
+	}
+	
+	return _productPrice;
+}
 
 - (UISwitch *)badgeSwitch {
 	if (_badgeSwitch) {
@@ -42,6 +75,10 @@
 
 #pragma mark - View lifecycle
 
+- (void)dealloc {
+	[[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -60,6 +97,11 @@
 	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 	
 	self.badgeSwitch.on = [appDelegate isBadge];
+
+	_readyPurchase = NO;
+	if ([self showAD] && [SKPaymentQueue canMakePayments] && self.productsToSell == nil) {
+		[self requestProductData];
+	}
 }
 
 - (void)done:(id)sender {
@@ -68,6 +110,7 @@
 
 - (void)viewDidUnload
 {
+	
 	[self setBadgeSwitch:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
@@ -84,10 +127,10 @@
 {
     [super viewWillAppear:animated];
 
-	int rule = [self currentRule];
-	NSIndexPath *ruleIndexPath = [NSIndexPath indexPathForRow:rule inSection:1];
-	UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:ruleIndexPath];
-	cell.accessoryType = UITableViewCellAccessoryCheckmark;
+//	int rule = [self currentRule];
+//	NSIndexPath *ruleIndexPath = [NSIndexPath indexPathForRow:rule inSection:1];
+//	UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:ruleIndexPath];
+//	cell.accessoryType = UITableViewCellAccessoryCheckmark;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -145,6 +188,13 @@
 	if (section == 1) {
 		return 3;
 	}
+	else if (section == 3) {
+		if ([self showAD] && [SKPaymentQueue canMakePayments]) {
+			return 2;
+		} else {
+			return 1;
+		}
+	}
 	
 	return 1;
 }
@@ -157,10 +207,13 @@
 	NSInteger section = indexPath.section;
 	NSInteger row = indexPath.row;
 	
+	cell.textLabel.textColor = [UIColor darkTextColor];
 	cell.textLabel.textAlignment = UITextAlignmentLeft;
 	cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 	cell.accessoryView = nil;
 	cell.imageView.image = nil;
+	cell.accessoryType = UITableViewCellAccessoryNone;
+	cell.detailTextLabel.text = @"";
 	
 	if (section == 0) {
 		cell.textLabel.text = NSLocalizedString(@"Sign out", nil);
@@ -176,6 +229,10 @@
 		else if (row == 2) {
 			cell.textLabel.text = NSLocalizedString(@"Manual", nil);
 		}
+		
+		if (row == [self currentRule]) {
+			cell.accessoryType = UITableViewCellAccessoryCheckmark;
+		}
 	}
 	else if (section == 2) {
 		cell.textLabel.text = NSLocalizedString(@"Show Unread Badge", nil);
@@ -188,6 +245,14 @@
 			cell.imageView.image = [UIImage imageNamed:@"promote-Icon-Small"];
 		} else {
 			cell.textLabel.text = NSLocalizedString(@"Remove Ad", nil);
+			if (self.readyPurchase) {
+				cell.textLabel.textColor = [UIColor darkTextColor];
+				cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+				cell.detailTextLabel.text = [self productPrice];
+			} else {
+				cell.textLabel.textColor = [UIColor lightGrayColor];
+				cell.selectionStyle = UITableViewCellSelectionStyleNone;
+			}
 		}
 	}
 	
@@ -224,6 +289,10 @@
 		}
 		else if (indexPath.row == 1) {
 			// remove ad : in app purchase
+			if (self.readyPurchase) {
+				NSLog(@"remove ad");
+				[self freeAd];
+			}
 		}
 	}
 }
@@ -242,5 +311,130 @@
 	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 	[appDelegate setBadge:aSwitch.on];
 }
+
+#pragma mark - Remove Ad
+
+- (void)freeAd {
+	// 광고창을 영원히 보여주지 않는다.
+	// 결제 모듈로 연결
+	
+	if ([[[SKPaymentQueue defaultQueue] transactions] count] > 0) {
+		return;
+	}
+	
+	if ([self.productsToSell count] > 0) {
+		SKProduct *freeAdProduct = [self.productsToSell objectAtIndex:0];
+		SKPayment *payment = [SKPayment paymentWithProduct:freeAdProduct];
+		[[SKPaymentQueue defaultQueue] addPayment:payment];
+	}
+	
+}
+
+- (BOOL)showAD {
+	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	return [appDelegate showAD];
+}
+
+- (void) requestProductData
+{
+	NSLog(@"request products");
+	
+	SKProductsRequest *request= [[SKProductsRequest alloc] initWithProductIdentifiers: [NSSet setWithObject: kMyFeatureIdentifier]];
+	request.delegate = self;
+	[request start];
+}
+
+- (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
+{
+	NSArray *items = response.products;	// SKProduct list
+    NSLog(@"purchase items: %@", items);
+	if ([items count] > 0) {
+		self.readyPurchase = YES;
+		
+		self.productsToSell = items;
+		[[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+		
+		[self.tableView beginUpdates];
+		[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:3]] withRowAnimation:UITableViewRowAnimationNone];
+		[self.tableView endUpdates];		
+	}
+}
+
+- (void)recordTransaction:(SKPaymentTransaction *)transaction {
+	// 구매했음을 기록
+	[[NSUserDefaults standardUserDefaults] setBool:NO forKey:DEFAULT_KEY_AD];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	
+	[[NSUbiquitousKeyValueStore defaultStore] setBool:NO forKey:DEFAULT_KEY_AD];
+	[[NSUbiquitousKeyValueStore defaultStore] synchronize];
+}
+
+- (void)provideContent:(NSString *)identifier {
+	// 구매 cell 을 삭제
+	[self.tableView beginUpdates];
+	[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:3] withRowAnimation:UITableViewRowAnimationRight];
+	[self.tableView endUpdates];
+	
+	if (_delegate && [_delegate respondsToSelector:@selector(purchaseAdFreeDone)]) {
+		[_delegate purchaseAdFreeDone];
+	}
+}
+
+- (void) completeTransaction: (SKPaymentTransaction *)transaction
+{
+	NSLog(@"completeTransaction");
+	// Your application should implement these two methods.
+    [self recordTransaction: transaction];
+    [self provideContent: transaction.payment.productIdentifier];
+	// Remove the transaction from the payment queue.
+    [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
+}
+
+- (void) restoreTransaction: (SKPaymentTransaction *)transaction
+{
+	NSLog(@"restoreTransaction");
+    [self recordTransaction: transaction];
+    [self provideContent: transaction.originalTransaction.payment.productIdentifier];
+    [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
+}
+
+- (void) failedTransaction: (SKPaymentTransaction *)transaction
+{
+	NSLog(@"failedTransaction");
+    if (transaction.error.code != SKErrorPaymentCancelled)
+    {
+        // Optionally, display an error here.
+    }
+    [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
+}
+
+- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions
+{
+    for (SKPaymentTransaction *transaction in transactions)
+    {
+        switch (transaction.transactionState)
+        {
+			case SKPaymentTransactionStatePurchasing:
+				self.navigationItem.leftBarButtonItem.enabled = NO;
+				break;
+            case SKPaymentTransactionStatePurchased:
+                [self completeTransaction:transaction];
+				self.navigationItem.leftBarButtonItem.enabled = YES;
+                break;
+            case SKPaymentTransactionStateFailed:
+                [self failedTransaction:transaction];
+				self.navigationItem.leftBarButtonItem.enabled = YES;
+                break;
+            case SKPaymentTransactionStateRestored:
+                [self restoreTransaction:transaction];
+				self.navigationItem.leftBarButtonItem.enabled = YES;
+				break;
+            default:
+				self.navigationItem.leftBarButtonItem.enabled = YES;
+                break;
+        }
+    }
+}
+
 
 @end
