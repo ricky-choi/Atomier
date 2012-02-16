@@ -554,7 +554,9 @@
 }
 
 - (void)dealloc {
+#ifdef FREE_FOR_PROMOTION
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+#endif
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.

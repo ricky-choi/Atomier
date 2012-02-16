@@ -977,7 +977,9 @@
 	[self.savedSubscriptionIDs removeObjectForKey:subscription.keyId];
 	[self.managedObjectContext deleteObject:subscription];
 	
-	[self saveContext];
+	[self refreshUnreadAndStarred:0];
+	
+	[self saveContext];	
 }
 
 - (void)markAsRead:(Feed *)feed {

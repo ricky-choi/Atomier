@@ -11,35 +11,14 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFiles</key>
-	<array/>
-	<key>CFBundleIcons</key>
-	<dict>
-		<key>CFBundlePrimaryIcon</key>
-		<dict>
-			<key>CFBundleIconFiles</key>
-			<array>
-				<string>free_Icon.png</string>
-				<string>free_Icon@2x.png</string>
-				<string>free_Icon-72.png</string>
-				<string>free_Icon-Small.png</string>
-				<string>free_Icon-Small@2x.png</string>
-				<string>free_Icon-Small-50.png</string>
-			</array>
-			<key>UIPrerenderedIcon</key>
-			<true/>
-		</dict>
-		<key>UINewsstandIcon</key>
-		<dict>
-			<key>CFBundleIconFiles</key>
-			<array>
-				<string></string>
-			</array>
-			<key>UINewsstandBindingEdge</key>
-			<string>UINewsstandBindingEdgeLeft</string>
-			<key>UINewsstandBindingType</key>
-			<string>UINewsstandBindingTypeMagazine</string>
-		</dict>
-	</dict>
+	<array>
+		<string>free_Icon.png</string>
+		<string>free_Icon@2x.png</string>
+		<string>free_Icon-72.png</string>
+		<string>free_Icon-Small.png</string>
+		<string>free_Icon-Small@2x.png</string>
+		<string>free_Icon-Small-50.png</string>
+	</array>
 	<key>CFBundleIdentifier</key>
 	<string>com.felaur.syndifree</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -53,13 +32,17 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>35</string>
+	<string>38</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UILaunchImageFile</key>
+	<string>Default-NoToolbar</string>
 	<key>UIMainStoryboardFile</key>
 	<string>MainStoryboard_iPhone</string>
 	<key>UIMainStoryboardFile~ipad</key>
 	<string>MainStoryboard_iPad</string>
+	<key>UIPrerenderedIcon</key>
+	<true/>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

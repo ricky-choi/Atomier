@@ -236,7 +236,7 @@
 	}
 	
 	if (author == nil || [author isEqualToString:@"(null)"]) {
-		subscriptionTitle = @"";
+		author = @"";
 	}
 	
 	NSString *cssFile = nil;
@@ -247,6 +247,8 @@
 	}
 	
 	NSString *template = [NSString stringWithFormat:@"<meta name = \"viewport\" content = \"width = device-width, user-scalable = no, initial-scale = 1.0\" /><link href=\"%@\" rel=\"stylesheet\" type=\"text/css\" /><body><div class=\"header\"><span id=\"subscription\">%@</span><a id=\"header\" href=\"%@\"><span id=\"title\">%@</span><span id=\"author\">%@</span></a><span id=\"date\">%@</span></div><div class=\"syndi-content\">%@</div></body>", cssFile, subscriptionTitle, source, feedTitle, author, dateString, content];
+	
+	NSLog(@"This Feed: %@, %@, %@, %@, %@\n%@", source, dateString, feedTitle, subscriptionTitle, author, template);
 	
 	NSURL *baseURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
 	[webView loadHTMLString:template baseURL:baseURL];
@@ -445,6 +447,7 @@
 		} else {
 			[self openURL:url];
 		}
+		
 		return NO;
 	}
 	
