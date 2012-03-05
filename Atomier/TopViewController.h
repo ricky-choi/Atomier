@@ -15,6 +15,7 @@
 #import "GADBannerView.h"
 
 @class Category;
+@class NASegmentedControl;
 
 @interface TopViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, PreviewFeedDelegate, UIActionSheetDelegate, ADBannerViewDelegate, GADBannerViewDelegate, SettingsViewControllerDelegate>
 
@@ -27,6 +28,11 @@
 @property (strong, nonatomic) PreviewFeed *tempPreviewFeed;
 
 @property (strong, nonatomic) Category *category;
+
+@property (strong, nonatomic) NASegmentedControl *segmentControlPortrait;
+@property (strong, nonatomic) NASegmentedControl *segmentControlLandscape;
+@property (strong, nonatomic) NSArray *toolbarItemsPortrait;
+@property (strong, nonatomic) NSArray *toolbarItemsLandscape;
 
 - (IBAction)refresh:(id)sender;
 - (IBAction)changeMode:(id)sender;

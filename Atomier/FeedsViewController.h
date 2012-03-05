@@ -30,6 +30,9 @@
 
 @property (strong, nonatomic) UIActionSheet *actionSheet;
 
+@property (strong, nonatomic) NSArray *toolbarItemsPortrait;
+@property (strong, nonatomic) NSArray *toolbarItemsLandscape;
+
 - (void)unsubscribe;
 
 // for ad

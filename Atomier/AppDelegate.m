@@ -15,6 +15,7 @@
 #import "Content.h"
 #import "ContentOrganizer.h"
 #import "SSKeychain.h"
+#import "CoverViewController.h"
 
 #define REFRESH_COUNT_IMMEDIATE 1
 
@@ -115,10 +116,7 @@
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{	
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-	    
-	}
+{
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
 															 [NSNumber numberWithBool:YES], DEFAULT_KEY_AD,
 															 [NSNumber numberWithInt:1], DEFAULT_KEY_SYNC_RULE,
@@ -184,6 +182,8 @@
 			[self.savedTags setValue:aTag forKey:aTag.tag];
 		}
 	}	
+	
+	[[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1]];
 	
     return YES;
 }
@@ -423,6 +423,13 @@
 	[SSKeychain deletePasswordForService:kKEYCHAIN_SERVICE account:kKEYCHAIN_ACCOUNT_PASSWORD];
 	
 	[self deleteAllData];
+	
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+	[userDefaults removeObjectForKey:DEFAULT_KEY_LAST_UPDATE];
+	[userDefaults synchronize];
+	
+	CoverViewController *viewController = (CoverViewController *)self.window.rootViewController;
+	[viewController notifyUpdateDone];
 	
 //	NSArray *stores = [self.persistentStoreCoordinator persistentStores];
 //	for (NSPersistentStore *store in stores) {
@@ -829,6 +836,9 @@
 	loadingForSubscriptions = YES;
 	loadingForUnreads = YES;
 	loadingForStarreds = YES;
+	
+	CoverViewController *viewController = (CoverViewController *)self.window.rootViewController;
+	[viewController notifyUpdating];
 }
 
 - (void)refreshUnreadAndStarred:(int)state {
@@ -877,6 +887,12 @@
 	NSLog(@"check load done: %@, %@, %@", loadingForSubscriptions ? @"YES" : @"NO", loadingForUnreads ? @"YES" : @"NO", loadingForStarreds ? @"YES" : @"NO");
 	if (loadingForSubscriptions == NO && loadingForUnreads == NO && loadingForStarreds == NO) {
 		// loading complete
+		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+		[userDefaults setObject:[NSDate date] forKey:DEFAULT_KEY_LAST_UPDATE];
+		[userDefaults synchronize];
+		
+		CoverViewController *viewController = (CoverViewController *)self.window.rootViewController;
+		[viewController notifyUpdateDone];
 		
 		[[NSUserDefaults standardUserDefaults] setValue:[NSDate date] forKey:DEFAULT_KEY_SYNCDATE];
 		[[NSUserDefaults standardUserDefaults] synchronize];

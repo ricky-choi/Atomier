@@ -99,9 +99,12 @@
 	self.badgeSwitch.on = [appDelegate isBadge];
 
 	_readyPurchase = NO;
-	if ([self showAD] && [SKPaymentQueue canMakePayments] && self.productsToSell == nil) {
+#ifdef FREE_FOR_PROMOTION
+    if ([self showAD] && [SKPaymentQueue canMakePayments] && self.productsToSell == nil) {
 		[self requestProductData];
 	}
+#endif
+	
 }
 
 - (void)done:(id)sender {

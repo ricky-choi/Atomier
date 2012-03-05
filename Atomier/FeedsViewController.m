@@ -44,10 +44,54 @@
 @synthesize subscription = _subscription;
 @synthesize sortDateAscending = _sortDateAscending;
 @synthesize actionSheet = _actionSheet;
+@synthesize toolbarItemsPortrait = _toolbarItemsPortrait;
+@synthesize toolbarItemsLandscape = _toolbarItemsLandscape;
 
 @synthesize adView = _adView;
 @synthesize gadView = _gadView;
 @synthesize gadBannerLoaded = _gadBannerLoaded;
+
+- (NSArray *)toolbarItemsPortrait {
+	if (_toolbarItemsPortrait == nil) {
+		UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+		
+		UIButton *checkAllButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		UIImage *checkAllImage = [UIImage imageNamed:@"checkall_portrait"];
+		[checkAllButton setImage:checkAllImage forState:UIControlStateNormal];
+		checkAllButton.imageEdgeInsets = UIEdgeInsetsMake(2, 0, -2, 0);
+		checkAllButton.showsTouchWhenHighlighted = YES;
+		checkAllButton.frame = CGRectMake(0, 0, checkAllImage.size.width, checkAllImage.size.height);
+		[checkAllButton addTarget:self action:@selector(markAllAsRead:) forControlEvents:UIControlEventTouchUpInside];
+		UIBarButtonItem *checkAllItem = [[UIBarButtonItem alloc] initWithCustomView:checkAllButton];
+		
+		CGFloat shadowOffset = 1.0f / checkAllImage.scale;
+		
+		UIButton *sortButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		sortButton.frame = CGRectMake(0, 0, 60, 44);
+		sortButton.showsTouchWhenHighlighted = YES;
+		[sortButton setBackgroundImage:[UIImage imageNamed:@"transparent"] forState:UIControlStateNormal];
+		[sortButton setTitle:NSLocalizedString(@"Sort", nil) forState:UIControlStateNormal];
+		[sortButton setTitleColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1] forState:UIControlStateNormal];
+		[sortButton setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		sortButton.titleLabel.font = [UIFont boldSystemFontOfSize:14];
+		sortButton.titleLabel.shadowOffset = CGSizeMake(0, shadowOffset);
+		sortButton.titleEdgeInsets = UIEdgeInsetsMake(7, 0, 0, 0);
+		[sortButton addTarget:self action:@selector(sort:) forControlEvents:UIControlEventTouchUpInside];
+		UIBarButtonItem *sortItem = [[UIBarButtonItem alloc] initWithCustomView:sortButton];
+		
+		_toolbarItemsPortrait = [NSArray arrayWithObjects:checkAllItem, flexibleSpace, sortItem, nil];
+	}
+	
+	return _toolbarItemsPortrait;
+}
+
+- (NSArray *)toolbarItemsLandscape {
+	if (_toolbarItemsLandscape == nil) {
+		
+	}
+	
+	return _toolbarItemsLandscape;
+}
 
 - (void)removeAd {
 	if (self.adView) {
@@ -318,10 +362,10 @@
 //																				action:@selector(showOldestFeed)];
 	UIBarButtonItem *showOldest = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"arrow_down"] style:UIBarButtonItemStylePlain target:self action:@selector(showOldestFeed)];
 	UIBarButtonItem *sortItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Sort", nil)
-																 style:UIBarButtonItemStyleBordered
+																 style:UIBarButtonItemStylePlain
 																target:self
 																action:@selector(sort:)];
-	self.toolbarItems = [NSArray arrayWithObjects:markAll, flexibleSpace, showOldest, flexibleSpace, sortItem, nil];
+	self.toolbarItems = self.toolbarItemsPortrait;// [NSArray arrayWithObjects:markAll, flexibleSpace, showOldest, flexibleSpace, sortItem, nil];
 	
 #ifdef FREE_FOR_PROMOTION
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adFreeNotified:) name:DEFAULT_KEY_AD object:nil];

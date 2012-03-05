@@ -267,6 +267,8 @@
 {
     [super viewDidLoad];
 	
+	self.webView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"whitenoise"]];
+	
 #if USE_CUSTOM_BACKGROUND
 	UIImage *backgroundImage = [UIImage imageNamed:@"oldpaper"];
 	self.webView.backgroundColor = [UIColor colorWithPatternImage:backgroundImage];

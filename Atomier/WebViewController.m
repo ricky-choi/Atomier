@@ -141,7 +141,7 @@
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 	    CGFloat barHeight = self.navigationController.navigationBar.frame.size.height;
 		CGFloat barWidth = self.webView.frame.size.width;
-		CGFloat statusBarHeight = 20.0;
+		CGFloat statusBarHeight = 0;//20.0;
 		self.navigationController.navigationBar.frame = CGRectMake(0, statusBarHeight, barWidth, barHeight);
 	} 
 }
@@ -219,7 +219,7 @@
 	    CGPoint offset = scrollView.contentOffset;
 		CGFloat barHeight = self.navigationController.navigationBar.frame.size.height;
 		CGFloat barWidth = self.webView.frame.size.width;
-		CGFloat statusBarHeight = 20.0;
+		CGFloat statusBarHeight = 0;//20.0;
 		if (offset.y > -(scrollView.contentInset.top)) {
 			CGFloat newY = -offset.y - barHeight + statusBarHeight;
 			self.navigationController.navigationBar.frame = CGRectMake(0, newY, barWidth, barHeight);

@@ -15,7 +15,7 @@
 #import "Feed.h"
 #import "ContentOrganizer.h"
 #import "FeedsViewController.h"
-
+#import "NASegmentedControl.h"
 
 #define TAG_ACTIONSHEET_CHANGEMODE 101
 #define TAG_ACTUINSHEET_SETTINGS 100
@@ -51,9 +51,148 @@
 @synthesize tempPreviewFeed = _tempPreviewFeed;
 @synthesize category = _category;
 
+@synthesize segmentControlPortrait = _segmentControlPortrait;
+@synthesize segmentControlLandscape = _segmentControlLandscape;
+@synthesize toolbarItemsPortrait = _toolbarItemsPortrait;
+@synthesize toolbarItemsLandscape = _toolbarItemsLandscape;
+
 @synthesize adView = _adView;
 @synthesize gadView = _gadView;
 @synthesize gadBannerLoaded = _gadBannerLoaded;
+
+- (NASegmentedControl *)segmentControlPortrait {
+	if (_segmentControlPortrait == nil) {
+		UIButton *segButton1 = [UIButton buttonWithType:UIButtonTypeCustom];
+		UIImage *segNormalImage1 = [UIImage imageNamed:@"segment_1_normal_portrait"];
+		
+		CGFloat shadowOffset = 1.0f / segNormalImage1.scale;
+		
+		UIImage *segSelectedImage1 = [UIImage imageNamed:@"segment_1_selected_portrait"];
+		[segButton1 setFrame:CGRectMake(0, 0, segNormalImage1.size.width, segNormalImage1.size.height)];
+		[segButton1 setBackgroundImage:segNormalImage1 forState:UIControlStateNormal];
+		[segButton1 setBackgroundImage:segSelectedImage1 forState:UIControlStateHighlighted]; 
+		[segButton1 setTitle:[TopViewController modeNameForSegment:0] forState:UIControlStateNormal];
+		[segButton1 setTitleColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1] forState:UIControlStateNormal];
+		[segButton1 setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		segButton1.titleLabel.font = [UIFont boldSystemFontOfSize:14];
+		segButton1.titleLabel.shadowOffset = CGSizeMake(0, shadowOffset);
+		segButton1.titleEdgeInsets = UIEdgeInsetsMake(7, 0, 0, 0);
+		
+		UIButton *segButton2 = [UIButton buttonWithType:UIButtonTypeCustom];
+		UIImage *segNormalImage2 = [UIImage imageNamed:@"segment_2_normal_portrait"];
+		UIImage *segSelectedImage2 = [UIImage imageNamed:@"segment_2_selected_portrait"];
+		[segButton2 setFrame:CGRectMake(0, 0, segNormalImage2.size.width, segNormalImage2.size.height)];
+		[segButton2 setBackgroundImage:segNormalImage2 forState:UIControlStateNormal];
+		[segButton2 setBackgroundImage:segSelectedImage2 forState:UIControlStateHighlighted];
+		[segButton2 setTitle:[TopViewController modeNameForSegment:1] forState:UIControlStateNormal];
+		[segButton2 setTitleColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1] forState:UIControlStateNormal];
+		[segButton2 setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		segButton2.titleLabel.font = [UIFont boldSystemFontOfSize:14];
+		segButton2.titleLabel.shadowOffset = CGSizeMake(0, shadowOffset);
+		segButton2.titleEdgeInsets = UIEdgeInsetsMake(7, 0, 0, 0);
+		
+		UIButton *segButton3 = [UIButton buttonWithType:UIButtonTypeCustom];
+		UIImage *segNormalImage3 = [UIImage imageNamed:@"segment_3_normal_portrait"];
+		UIImage *segSelectedImage3 = [UIImage imageNamed:@"segment_3_selected_portrait"];
+		[segButton3 setFrame:CGRectMake(0, 0, segNormalImage3.size.width, segNormalImage3.size.height)];
+		[segButton3 setBackgroundImage:segNormalImage3 forState:UIControlStateNormal];
+		[segButton3 setBackgroundImage:segSelectedImage3 forState:UIControlStateHighlighted];
+		[segButton3 setTitle:[TopViewController modeNameForSegment:2] forState:UIControlStateNormal];
+		[segButton3 setTitleColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1] forState:UIControlStateNormal];
+		[segButton3 setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		segButton3.titleLabel.font = [UIFont boldSystemFontOfSize:14];
+		segButton3.titleLabel.shadowOffset = CGSizeMake(0, shadowOffset);
+		segButton3.titleEdgeInsets = UIEdgeInsetsMake(7, 0, 0, 0);
+		
+		_segmentControlPortrait = [[NASegmentedControl alloc] initWithButtons:
+											  [NSArray arrayWithObjects:
+											   segButton1, segButton2, segButton3, nil]];
+		
+		_segmentControlPortrait.selectedSegmentIndex = _currentSegment;
+		
+		[_segmentControlPortrait addTarget:self action:@selector(changeMode:) forControlEvents:UIControlEventValueChanged];
+	}
+	
+	return _segmentControlPortrait;
+}
+
+- (NASegmentedControl *)segmentControlLandscape {
+	if (_segmentControlLandscape == nil) {
+		UIButton *segButton1 = [UIButton buttonWithType:UIButtonTypeCustom];
+		UIImage *segNormalImage1 = [UIImage imageNamed:@"segment_1_normal_landscape"];
+		
+		CGFloat shadowOffset = 1.0f / segNormalImage1.scale;
+		
+		UIImage *segSelectedImage1 = [UIImage imageNamed:@"segment_1_selected_landscape"];
+		[segButton1 setFrame:CGRectMake(0, 0, segNormalImage1.size.width, segNormalImage1.size.height)];
+		[segButton1 setBackgroundImage:segNormalImage1 forState:UIControlStateNormal];
+		[segButton1 setBackgroundImage:segSelectedImage1 forState:UIControlStateHighlighted]; 
+		[segButton1 setTitle:[TopViewController modeNameForSegment:0] forState:UIControlStateNormal];
+		[segButton1 setTitleColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1] forState:UIControlStateNormal];
+		[segButton1 setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		segButton1.titleLabel.font = [UIFont boldSystemFontOfSize:14];
+		segButton1.titleLabel.shadowOffset = CGSizeMake(0, shadowOffset);
+		segButton1.titleEdgeInsets = UIEdgeInsetsMake(4, 0, 0, 0);
+		
+		UIButton *segButton2 = [UIButton buttonWithType:UIButtonTypeCustom];
+		UIImage *segNormalImage2 = [UIImage imageNamed:@"segment_2_normal_landscape"];
+		UIImage *segSelectedImage2 = [UIImage imageNamed:@"segment_2_selected_landscape"];
+		[segButton2 setFrame:CGRectMake(0, 0, segNormalImage2.size.width, segNormalImage2.size.height)];
+		[segButton2 setBackgroundImage:segNormalImage2 forState:UIControlStateNormal];
+		[segButton2 setBackgroundImage:segSelectedImage2 forState:UIControlStateHighlighted];
+		[segButton2 setTitle:[TopViewController modeNameForSegment:1] forState:UIControlStateNormal];
+		[segButton2 setTitleColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1] forState:UIControlStateNormal];
+		[segButton2 setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		segButton2.titleLabel.font = [UIFont boldSystemFontOfSize:14];
+		segButton2.titleLabel.shadowOffset = CGSizeMake(0, shadowOffset);
+		segButton2.titleEdgeInsets = UIEdgeInsetsMake(4, 0, 0, 0);
+		
+		UIButton *segButton3 = [UIButton buttonWithType:UIButtonTypeCustom];
+		UIImage *segNormalImage3 = [UIImage imageNamed:@"segment_3_normal_landscape"];
+		UIImage *segSelectedImage3 = [UIImage imageNamed:@"segment_3_selected_landscape"];
+		[segButton3 setFrame:CGRectMake(0, 0, segNormalImage3.size.width, segNormalImage3.size.height)];
+		[segButton3 setBackgroundImage:segNormalImage3 forState:UIControlStateNormal];
+		[segButton3 setBackgroundImage:segSelectedImage3 forState:UIControlStateHighlighted];
+		[segButton3 setTitle:[TopViewController modeNameForSegment:2] forState:UIControlStateNormal];
+		[segButton3 setTitleColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1] forState:UIControlStateNormal];
+		[segButton3 setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		segButton3.titleLabel.font = [UIFont boldSystemFontOfSize:14];
+		segButton3.titleLabel.shadowOffset = CGSizeMake(0, shadowOffset);
+		segButton3.titleEdgeInsets = UIEdgeInsetsMake(4, 0, 0, 0);
+		
+		_segmentControlLandscape = [[NASegmentedControl alloc] initWithButtons:
+								   [NSArray arrayWithObjects:
+									segButton1, segButton2, segButton3, nil]];
+		
+		_segmentControlLandscape.selectedSegmentIndex = _currentSegment;
+		
+		[_segmentControlLandscape addTarget:self action:@selector(changeMode:) forControlEvents:UIControlEventValueChanged];
+	}
+	
+	return _segmentControlLandscape;
+}
+
+- (NSArray *)toolbarItemsPortrait {
+	if (_toolbarItemsPortrait == nil) {
+		UIBarButtonItem *segmentItem = [[UIBarButtonItem alloc] initWithCustomView:self.segmentControlPortrait];
+		UIBarButtonItem *flexibleSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+		
+		_toolbarItemsPortrait = [NSArray arrayWithObjects:flexibleSpaceItem, segmentItem, flexibleSpaceItem, nil];
+	}
+	
+	return _toolbarItemsPortrait;
+}
+
+- (NSArray *)toolbarItemsLandscape {
+	if (_toolbarItemsLandscape == nil) {
+		UIBarButtonItem *segmentItem = [[UIBarButtonItem alloc] initWithCustomView:self.segmentControlLandscape];
+		UIBarButtonItem *flexibleSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+		
+		_toolbarItemsLandscape = [NSArray arrayWithObjects:flexibleSpaceItem, segmentItem, flexibleSpaceItem, nil];
+	}
+	
+	return _toolbarItemsLandscape;
+}
 
 - (void)removeAd {
 	if (self.adView) {
@@ -333,9 +472,41 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-		
+	
 	if (self.category) {
 		self.title = self.category.label;
+	}
+	else {
+		// design
+		[self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"syndi_nav_portrait"] 
+													  forBarMetrics:UIBarMetricsDefault];
+		[self.navigationController.toolbar setBackgroundImage:[UIImage imageNamed:@"syndi_toolbar_portrait"]
+										   forToolbarPosition:UIToolbarPositionBottom
+												   barMetrics:UIBarMetricsDefault];
+		
+		if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+			
+		} else {
+			[self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"syndi_nav_landscape"] 
+														  forBarMetrics:UIBarMetricsLandscapePhone];
+			[self.navigationController.toolbar setBackgroundImage:[UIImage imageNamed:@"syndi_toolbar_landscape"]
+											   forToolbarPosition:UIToolbarPositionBottom
+													   barMetrics:UIBarMetricsLandscapePhone];
+		}
+		
+		UIBarButtonItem *goHomeItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"syndi_tohome_portrait"]
+														 landscapeImagePhone:[UIImage imageNamed:@"syndi_tohome_landscape"]
+																	   style:UIBarButtonItemStylePlain
+																	  target:self
+																	  action:@selector(toHome:)];
+		[goHomeItem setBackgroundImage:[UIImage imageNamed:@"transparent"] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+		self.navigationItem.leftBarButtonItem = goHomeItem;
+		
+		UIImageView *titleImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"syndi_title"]];
+		self.navigationItem.titleView = titleImageView;
+		
+//		UIBarButtonItem *twoOptionItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Settings"] style:UIBarButtonItemStylePlain target:self action:@selector(settingWithOption:)];
+//		self.navigationItem.leftBarButtonItem = twoOptionItem;
 	}
 	
 	
@@ -352,26 +523,18 @@
 #endif
 	} 	
 	
+//	UISegmentedControl *segmentControl = [[UISegmentedControl alloc] initWithItems:
+//										  [NSArray arrayWithObjects:
+//										   [TopViewController modeNameForSegment:0],
+//										   [TopViewController modeNameForSegment:1],
+//										   [TopViewController modeNameForSegment:2], nil]];
+//	segmentControl.segmentedControlStyle = UISegmentedControlStyleBar;
 	
-	if (self.category == nil) {
-		UIBarButtonItem *twoOptionItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Settings"] style:UIBarButtonItemStylePlain target:self action:@selector(settingWithOption:)];
-		self.navigationItem.leftBarButtonItem = twoOptionItem;
-
-	}
 	
-	UISegmentedControl *segmentControl = [[UISegmentedControl alloc] initWithItems:
-										  [NSArray arrayWithObjects:
-										   [TopViewController modeNameForSegment:0],
-										   [TopViewController modeNameForSegment:1],
-										   [TopViewController modeNameForSegment:2], nil]];
-	segmentControl.segmentedControlStyle = UISegmentedControlStyleBar;
-	segmentControl.selectedSegmentIndex = _currentSegment;
-	[segmentControl addTarget:self action:@selector(changeMode:) forControlEvents:UIControlEventValueChanged];
 	
-	UIBarButtonItem *segmentItem = [[UIBarButtonItem alloc] initWithCustomView:segmentControl];
-	UIBarButtonItem *flexibleSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 	
-	self.toolbarItems = [NSArray arrayWithObjects:flexibleSpaceItem, segmentItem, flexibleSpaceItem, nil];
+	
+	self.toolbarItems = self.toolbarItemsPortrait;
 	
 #ifdef FREE_FOR_PROMOTION
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adFreeNotified:) name:DEFAULT_KEY_AD object:nil];
@@ -382,6 +545,10 @@
 		//[self createGADBannerView];
 	}
 #endif
+}
+
+- (void)toHome:(UIBarButtonItem *)item {
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)adFreeNotified:(NSNotification *)notification {
@@ -441,6 +608,16 @@
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 	    [self.navigationController setToolbarHidden:YES animated:animated];
 	}
+	else {
+		if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+			self.toolbarItems = self.toolbarItemsPortrait;
+			self.segmentControlPortrait.selectedSegmentIndex = _currentSegment;
+		} else {
+			self.toolbarItems = self.toolbarItemsLandscape;
+			self.segmentControlLandscape.selectedSegmentIndex = _currentSegment;
+		}
+	}
+	
 #ifdef FREE_FOR_PROMOTION
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 		if (self.navigationController.toolbarHidden == NO) {
@@ -482,6 +659,18 @@
 #ifdef FREE_FOR_PROMOTION
     [self layoutForCurrentOrientation:duration];
 #endif
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+	    
+	} else {
+	    if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation)) {
+			self.toolbarItems = self.toolbarItemsPortrait;
+			self.segmentControlPortrait.selectedSegmentIndex = _currentSegment;
+		} else {
+			self.toolbarItems = self.toolbarItemsLandscape;
+			self.segmentControlLandscape.selectedSegmentIndex = _currentSegment;
+		}
+	}
+	
 }
 
 #pragma mark - UITableView Datasource and Delegate
