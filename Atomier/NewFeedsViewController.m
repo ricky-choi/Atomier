@@ -25,13 +25,14 @@
 @end
 
 @implementation NewFeedsViewController {
-	NSInteger pageIndex;
+	
     NSInteger pageCount;
     BOOL pendingOrientationChange;
 }
 
 @synthesize feeds = _feeds;
 @synthesize pages = _pages;
+@synthesize pageIndex;
 
 @synthesize delegate = _delegate;
 @synthesize scrollView = _scrollView;

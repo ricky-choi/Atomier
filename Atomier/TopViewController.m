@@ -477,6 +477,16 @@
 		self.title = self.category.label;
 	}
 	else {
+//		[self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"syndi_nav_portrait"] 
+//													  forBarMetrics:UIBarMetricsDefault];
+//		[self.navigationController.toolbar setBackgroundImage:[UIImage imageNamed:@"syndi_toolbar_portrait"]
+//										   forToolbarPosition:UIToolbarPositionBottom
+//												   barMetrics:UIBarMetricsDefault];
+//		[self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"syndi_nav_landscape"] 
+//													  forBarMetrics:UIBarMetricsLandscapePhone];
+//		[self.navigationController.toolbar setBackgroundImage:[UIImage imageNamed:@"syndi_toolbar_landscape"]
+//										   forToolbarPosition:UIToolbarPositionBottom
+//												   barMetrics:UIBarMetricsLandscapePhone];
 		
 		UIBarButtonItem *goHomeItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"newback_portrait"]
 														 landscapeImagePhone:[UIImage imageNamed:@"newback_landscape"]
@@ -488,9 +498,6 @@
 		
 		UIImageView *titleImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"syndi_title"]];
 		self.navigationItem.titleView = titleImageView;
-		
-//		UIBarButtonItem *twoOptionItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Settings"] style:UIBarButtonItemStylePlain target:self action:@selector(settingWithOption:)];
-//		self.navigationItem.leftBarButtonItem = twoOptionItem;
 	}
 	
 	
@@ -505,18 +512,8 @@
 		self.navigationItem.rightBarButtonItem = self.editButtonItem;
 		[self invalidateEditButton];   
 #endif
+		
 	} 	
-	
-//	UISegmentedControl *segmentControl = [[UISegmentedControl alloc] initWithItems:
-//										  [NSArray arrayWithObjects:
-//										   [TopViewController modeNameForSegment:0],
-//										   [TopViewController modeNameForSegment:1],
-//										   [TopViewController modeNameForSegment:2], nil]];
-//	segmentControl.segmentedControlStyle = UISegmentedControlStyleBar;
-	
-	
-	
-	
 	
 	self.toolbarItems = self.toolbarItemsPortrait;
 	
@@ -529,6 +526,8 @@
 		//[self createGADBannerView];
 	}
 #endif
+	
+	
 }
 
 - (void)toHome:(UIBarButtonItem *)item {
@@ -611,11 +610,7 @@
 		[self layoutForCurrentOrientation:0];
 	}
 #endif
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-	[super viewDidAppear:animated];
-
+	
 }
 
 - (void)viewDidUnload

@@ -83,6 +83,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+	
+	[self.navigationController.navigationBar setBackgroundImage:nil 
+												  forBarMetrics:UIBarMetricsDefault];
+	[self.navigationController.toolbar setBackgroundImage:nil
+									   forToolbarPosition:UIToolbarPositionBottom
+											   barMetrics:UIBarMetricsDefault];
+	[self.navigationController.navigationBar setBackgroundImage:nil 
+												  forBarMetrics:UIBarMetricsLandscapePhone];
+	[self.navigationController.toolbar setBackgroundImage:nil
+									   forToolbarPosition:UIToolbarPositionBottom
+											   barMetrics:UIBarMetricsLandscapePhone];
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -93,6 +104,7 @@
 	self.title = NSLocalizedString(@"Settings", nil);
 	
 	UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done:)];
+	[doneItem setTintColor:nil];
 	self.navigationItem.leftBarButtonItem = doneItem;
 	
 	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];

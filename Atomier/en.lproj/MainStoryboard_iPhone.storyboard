@@ -571,6 +571,7 @@
                         <outlet property="tableView" destination="5YE-p0-a2m" id="va8-dx-Vva"/>
                         <segue destination="u3a-qc-MQH" kind="custom" identifier="ModalForIPad" customClass="ModalFromViewSegue" id="Sbs-RO-QDQ"/>
                         <segue destination="Yfp-Y5-ehB" kind="push" identifier="PushForIPhone" id="UWo-KZ-XIP"/>
+                        <segue destination="WQ7-dI-7zI" kind="modal" identifier="NewPushForIPhone" modalTransitionStyle="crossDissolve" id="cbg-YJ-uI5"/>
                     </connections>
                 </viewController>
             </objects>
@@ -649,6 +650,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="zEl-DW-v2t"/>
                     <connections>
                         <outlet property="bottomImageView" destination="2cZ-CZ-eyH" id="oLe-Dj-5lF"/>
                         <outlet property="nextButton" destination="rGL-mq-Pbb" id="zx3-dR-sGx"/>
@@ -939,6 +941,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="k6g-R1-5kB"/>
         <segue reference="mbf-9g-Yn7"/>
+        <segue reference="cbg-YJ-uI5"/>
         <segue reference="UWo-KZ-XIP"/>
     </inferredMetricsTieBreakers>
 </document>

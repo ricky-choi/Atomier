@@ -27,6 +27,18 @@
 @synthesize recommendeds = _recommendeds;
 @synthesize managedObjectContext = __managedObjectContext;
 
+@synthesize hasnextpage;
+@synthesize nextpagestart;
+@synthesize keywordSearchResults = _keywordSearchResults;
+
+- (NSMutableArray *)keywordSearchResults {
+	if (_keywordSearchResults == nil) {
+		_keywordSearchResults = [NSMutableArray arrayWithCapacity:10];
+	}
+	
+	return _keywordSearchResults;
+}
+
 - (NSManagedObjectContext *)managedObjectContext {
 	if (__managedObjectContext == nil) {
 		AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -53,6 +65,10 @@
 }
  */
 
+- (void)dealloc {
+	[[GoogleReader sharedInstance] setSubscribeDelegate:nil];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -68,10 +84,13 @@
 		self.title = NSLocalizedString(@"Subscribe", nil);
 		self.searchDisplayController.searchBar.placeholder = NSLocalizedString(@"Search term or Enter feed URL", nil);
 	}
+	
+	[[GoogleReader sharedInstance] setSubscribeDelegate:self];
 }
 
 - (void)viewDidUnload
 {
+	[[GoogleReader sharedInstance] setSubscribeDelegate:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -95,6 +114,12 @@
 	}
 }
 
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+	if (self.mode == SearchViewControllerModeSubscription) {
+		[[GoogleReader sharedInstance] quickSubscribeToRSSFeedURL:searchBar.text];
+	}
+}
+
 - (IBAction)done:(id)sender {
 	[self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -112,7 +137,7 @@
 		}
 	} else {
 		if (tableView == self.searchDisplayController.searchResultsTableView) {
-			return [self.searchResults count];
+			return [self.keywordSearchResults count] + self.hasnextpage;
 		} else {
 			return [self.recommendeds count];
 		}
@@ -124,7 +149,7 @@
 {
 	if (tableView == self.searchDisplayController.searchResultsTableView) {
 		if (self.mode == SearchViewControllerModeSearch) {
-			static NSString *kCellID = @"";
+			static NSString *kCellID = @"CellID";
 			
 			UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellID];
 			if (cell == nil) {
@@ -152,6 +177,34 @@
 				cell.detailTextLabel.text = [[ContentOrganizer sharedInstance] summaryForID:[item.keyId lastPathComponent]];
 				cell.imageView.image = [UIImage imageNamed:@"rss_source"];
 				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			}
+			
+			return cell;
+		}
+		else {
+			static NSString *kCellID = @"CellID";
+			
+			UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellID];
+			if (cell == nil) {
+				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kCellID];
+			}
+			
+			if (indexPath.row < [self.keywordSearchResults count]) {
+				NSDictionary *aSource = [self.keywordSearchResults objectAtIndex:indexPath.row];
+				cell.textLabel.text = [aSource valueForKey:@"title"];
+				NSString *streamid = [aSource valueForKey:@"streamid"];
+				cell.detailTextLabel.text = [streamid substringFromIndex:5];
+				cell.textLabel.textAlignment = UITextAlignmentLeft;
+				cell.imageView.image = [UIImage imageNamed:@"rss_source"];
+				
+				cell.selectionStyle = UITableViewCellSelectionStyleNone;
+			} else {
+				cell.textLabel.text = NSLocalizedString(@"More...", nil);
+				cell.detailTextLabel.text = nil;
+				cell.textLabel.textAlignment = UITextAlignmentCenter;
+				cell.imageView.image = nil;
+				
+				cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 			}
 			
 			return cell;
@@ -264,6 +317,36 @@
     
     // Return YES to cause the search result table view to be reloaded.
     return YES;
+}
+
+#pragma mark - Google Reader Subscribe Delegate
+
+- (void)googleReaderSubscribeNoResults {
+	NSLog(@"googleReaderSubscribeNoResults");
+}
+
+- (void)googleReaderSubscribeDone {
+	NSLog(@"googleReaderSubscribeDone");
+}
+
+- (void)googleReaderStartSearch {
+	NSLog(@"googleReaderStartSearch");
+}
+
+- (void)googleReaderSearchFailed {
+	NSLog(@"googleReaderSearchFailed");
+}
+
+- (void)googleReaderSearchDone:(NSDictionary *)searchData {
+	NSLog(@"googleReaderSearchDone: %@", searchData);
+	
+	NSDictionary *pagestatus = [searchData valueForKey:@"pagestatus"];
+	self.hasnextpage = [[pagestatus valueForKey:@"hasnextpage"] intValue];
+	self.nextpagestart = [[pagestatus valueForKey:@"nextpagestart"] intValue];
+	
+	[self.keywordSearchResults addObjectsFromArray:[searchData valueForKey:@"results"]];
+	
+	[self.searchDisplayController.searchResultsTableView reloadData];
 }
 
 @end

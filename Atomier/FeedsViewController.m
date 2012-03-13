@@ -19,6 +19,7 @@
 #import "Element.h"
 #import "DocumentRoot.h"
 
+
 #define SORT_DATE @"sortDateAscending"
 
 @interface FeedsViewController ()
@@ -340,32 +341,16 @@
 	
 	[self refreshTitle];
 	
-	if (self.subscription.htmlUrl) {
-		UIBarButtonItem *siteItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Homepage", nil)
-																	 style:UIBarButtonItemStyleBordered
-																	target:self
-																	action:@selector(goSourceOfSubscription)];
+//	if (self.subscription.htmlUrl) {
+//		UIBarButtonItem *siteItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Homepage", nil)
+//																	 style:UIBarButtonItemStyleBordered
+//																	target:self
+//																	action:@selector(goSourceOfSubscription)];
+//
+//		self.navigationItem.rightBarButtonItem = siteItem;
+//	}
 
-		self.navigationItem.rightBarButtonItem = siteItem;
-	}
-	
-	
-	
-//	UIBarButtonItem *markAll = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Mark all as read", nil) 
-//																style:UIBarButtonItemStyleBordered 
-//															   target:self
-//															   action:@selector(markAllAsRead:)];
-	UIBarButtonItem *markAll = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"checkmark"] style:UIBarButtonItemStylePlain target:self action:@selector(markAllAsRead:)];
-	UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-//	UIBarButtonItem *showOldest = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFastForward
-//																				target:self
-//																				action:@selector(showOldestFeed)];
-	UIBarButtonItem *showOldest = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"arrow_down"] style:UIBarButtonItemStylePlain target:self action:@selector(showOldestFeed)];
-	UIBarButtonItem *sortItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Sort", nil)
-																 style:UIBarButtonItemStylePlain
-																target:self
-																action:@selector(sort:)];
-	self.toolbarItems = self.toolbarItemsPortrait;// [NSArray arrayWithObjects:markAll, flexibleSpace, showOldest, flexibleSpace, sortItem, nil];
+	self.toolbarItems = self.toolbarItemsPortrait;
 	
 #ifdef FREE_FOR_PROMOTION
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adFreeNotified:) name:DEFAULT_KEY_AD object:nil];
@@ -641,30 +626,51 @@
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 		[self performSegueWithIdentifier:@"ModalForIPad" sender:feed];
 	} else {
-		[self performSegueWithIdentifier:@"PushForIPhone" sender:feed];
+		[self performSegueWithIdentifier:@"NewPushForIPhone" sender:feed];
 	}
 
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-	FeedViewController *viewController = nil;
 	
 	if ([segue.identifier isEqualToString:@"ModalForIPad"]) {
+		FeedViewController *viewController = nil;
 		UINavigationController *navigationController = (UINavigationController *)segue.destinationViewController;
 		viewController = (FeedViewController *)navigationController.topViewController;	
 		viewController.delegate = self;
 		navigationController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+		Feed *feed = (Feed *)sender;
+		viewController.feed = feed;
+		viewController.feeds = [self.fetchedResultsController fetchedObjects];
 	}
 	else if ([segue.identifier isEqualToString:@"PushForIPhone"]) {
+		FeedViewController *viewController = nil;
 		viewController = (FeedViewController *)segue.destinationViewController;
+		Feed *feed = (Feed *)sender;
+		viewController.feed = feed;
+		viewController.feeds = [self.fetchedResultsController fetchedObjects];
+	}
+	else if ([segue.identifier isEqualToString:@"NewPushForIPhone"]) {
+		NewFeedsViewController *feedsViewController = (NewFeedsViewController *)segue.destinationViewController;
+		feedsViewController.feeds = [self.fetchedResultsController fetchedObjects];
+		
+		Feed *feed = (Feed *)sender;
+		feedsViewController.pageIndex = [feedsViewController.feeds indexOfObject:feed];
+		feedsViewController.delegate = self;
+		
+//		[self.navigationController setNavigationBarHidden:YES animated:NO];
+//		[self.navigationController setToolbarHidden:YES animated:NO];
 	}
 	
-	Feed *feed = (Feed *)sender;
-	viewController.feed = feed;
-	viewController.feeds = [self.fetchedResultsController fetchedObjects];
-	//viewController.title = feed.title;
+}
+
+- (void)feedsViewControllerWillDismiss:(NewFeedsViewController *)viewController {
+//	[self.navigationController setNavigationBarHidden:NO animated:NO];
+//	[self.navigationController setToolbarHidden:NO animated:NO];
 	
+	//[self.navigationController popViewControllerAnimated:YES];
 	
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Fetched results controller

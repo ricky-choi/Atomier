@@ -22,6 +22,7 @@
 
 @property (strong, nonatomic) NSArray *feeds;
 @property (strong, nonatomic) NSMutableArray *pages;
+@property (assign, nonatomic) NSInteger pageIndex;
 
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIButton *nextButton;

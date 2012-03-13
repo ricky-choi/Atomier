@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 #import "FeedViewController.h"
+#import "NewFeedsViewController.h"
 
 #import <iAd/ADBannerView.h>
 #import "GADBannerView.h"
@@ -16,7 +17,7 @@
 @class Category;
 @class Subscription;
 
-@interface FeedsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, UIActionSheetDelegate, FeedViewControllerDelegate, ADBannerViewDelegate, GADBannerViewDelegate>
+@interface FeedsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, UIActionSheetDelegate, FeedViewControllerDelegate, ADBannerViewDelegate, GADBannerViewDelegate, NewFeedsViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;

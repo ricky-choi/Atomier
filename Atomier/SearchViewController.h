@@ -7,19 +7,24 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GoogleReader.h"
 
 typedef enum {
 	SearchViewControllerModeSearch,
 	SearchViewControllerModeSubscription
 } SearchViewControllerMode;
 
-@interface SearchViewController : UIViewController
+@interface SearchViewController : UIViewController <GoogleReaderSubscribeDelegate>
 
 @property (assign, nonatomic) SearchViewControllerMode mode;
 
 @property (strong, nonatomic) NSArray *searchResults;
 @property (strong, nonatomic) NSArray *recommendeds;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+
+@property (assign, nonatomic) int hasnextpage;
+@property (assign, nonatomic) int nextpagestart;
+@property (strong, nonatomic) NSMutableArray *keywordSearchResults;
 
 - (IBAction)done:(id)sender;
 
