@@ -63,8 +63,10 @@
 																	NSLocalizedString(@"Category", nil),
 																	NSLocalizedString(@"Subscription", nil),
 																	NSLocalizedString(@"Feed", nil), nil];
+		self.title = NSLocalizedString(@"Search", nil);
 	} else {
-		
+		self.title = NSLocalizedString(@"Subscribe", nil);
+		self.searchDisplayController.searchBar.placeholder = NSLocalizedString(@"Search term or Enter feed URL", nil);
 	}
 }
 

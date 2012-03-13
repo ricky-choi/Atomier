@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 #import "SearchViewController.h"
 
+
 @interface CoverViewController ()
 
 - (void)showUpdateStatus;
@@ -20,10 +21,20 @@
 
 @implementation CoverViewController
 
+@synthesize managedObjectContext = __managedObjectContext;
 @synthesize segmentControlPortrait = _segmentControlPortrait;
 @synthesize updateLabel;
 @synthesize statusLabel;
 @synthesize spinner = _spinner;
+
+- (NSManagedObjectContext *)managedObjectContext {
+	if (__managedObjectContext == nil) {
+		AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		__managedObjectContext = appDelegate.managedObjectContext;
+	}
+	
+	return __managedObjectContext;
+}
 	
 - (NASegmentedControl *)segmentControlPortrait {
 	if (_segmentControlPortrait == nil) {
@@ -103,6 +114,33 @@
 		SearchViewController *searchController = (SearchViewController *)navigationController.topViewController;
 		searchController.mode = SearchViewControllerModeSubscription;
 	}
+	else if ([segue.identifier isEqualToString:@"ShowAllUnreads"]) {
+		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+		NSEntityDescription *entity = [NSEntityDescription entityForName:@"Feed" inManagedObjectContext:self.managedObjectContext];
+		[fetchRequest setEntity:entity];
+		
+		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"unread = 1"];
+		[fetchRequest setPredicate:predicate];
+		
+		BOOL ascending = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULT_KEY_SORT_DATE];
+		NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"updatedDate" ascending:ascending];
+		NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+		[fetchRequest setSortDescriptors:sortDescriptors];
+		
+		NSArray *feeds = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
+		
+		if ([feeds count] > 0) {
+			NewFeedsViewController *feedsViewController = (NewFeedsViewController *)segue.destinationViewController;
+			feedsViewController.feeds = feeds;
+			//feedsViewController.feeds = [NSArray arrayWithObjects:[feeds objectAtIndex:0], [feeds objectAtIndex:1], [feeds objectAtIndex:2], nil];
+			feedsViewController.delegate = self;
+		}
+		
+	}
+}
+
+- (void)feedsViewControllerWillDismiss:(NewFeedsViewController *)viewController {
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -171,7 +209,7 @@
 		[alertView show];
 	}
 	else {
-		[self performSegueWithIdentifier:@"ShowFeeds" sender:sender];
+		[self performSegueWithIdentifier:@"ShowAllUnreads" sender:sender];
 	}
 }
 

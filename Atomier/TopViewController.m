@@ -477,25 +477,9 @@
 		self.title = self.category.label;
 	}
 	else {
-		// design
-		[self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"syndi_nav_portrait"] 
-													  forBarMetrics:UIBarMetricsDefault];
-		[self.navigationController.toolbar setBackgroundImage:[UIImage imageNamed:@"syndi_toolbar_portrait"]
-										   forToolbarPosition:UIToolbarPositionBottom
-												   barMetrics:UIBarMetricsDefault];
 		
-		if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-			
-		} else {
-			[self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"syndi_nav_landscape"] 
-														  forBarMetrics:UIBarMetricsLandscapePhone];
-			[self.navigationController.toolbar setBackgroundImage:[UIImage imageNamed:@"syndi_toolbar_landscape"]
-											   forToolbarPosition:UIToolbarPositionBottom
-													   barMetrics:UIBarMetricsLandscapePhone];
-		}
-		
-		UIBarButtonItem *goHomeItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"syndi_tohome_portrait"]
-														 landscapeImagePhone:[UIImage imageNamed:@"syndi_tohome_landscape"]
+		UIBarButtonItem *goHomeItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"newback_portrait"]
+														 landscapeImagePhone:[UIImage imageNamed:@"newback_landscape"]
 																	   style:UIBarButtonItemStylePlain
 																	  target:self
 																	  action:@selector(toHome:)];

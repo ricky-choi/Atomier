@@ -183,6 +183,18 @@
 		}
 	}	
 	
+	// design
+	[[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"syndi_nav_portrait"] 
+												  forBarMetrics:UIBarMetricsDefault];
+	[[UIToolbar appearance] setBackgroundImage:[UIImage imageNamed:@"syndi_toolbar_portrait"]
+									   forToolbarPosition:UIToolbarPositionBottom
+											   barMetrics:UIBarMetricsDefault];
+	[[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"syndi_nav_landscape"] 
+									   forBarMetrics:UIBarMetricsLandscapePhone];
+	[[UIToolbar appearance] setBackgroundImage:[UIImage imageNamed:@"syndi_toolbar_landscape"]
+							forToolbarPosition:UIToolbarPositionBottom
+									barMetrics:UIBarMetricsLandscapePhone];
+	
 	[[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1]];
 	
     return YES;

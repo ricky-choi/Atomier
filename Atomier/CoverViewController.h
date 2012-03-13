@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NewFeedsViewController.h"
 
 @class NASegmentedControl;
 
-@interface CoverViewController : UIViewController
+@interface CoverViewController : UIViewController <NewFeedsViewControllerDelegate>
+
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @property (strong, nonatomic) NASegmentedControl *segmentControlPortrait;
 

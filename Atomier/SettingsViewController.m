@@ -52,6 +52,7 @@
 	
 	_badgeSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
 	[_badgeSwitch addTarget:self action:@selector(toggleSwitch:) forControlEvents:UIControlEventValueChanged];
+	_badgeSwitch.onTintColor = [UIColor redColor];
 	
 	return _badgeSwitch;
 }
