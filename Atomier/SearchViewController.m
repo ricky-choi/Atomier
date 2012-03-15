@@ -15,8 +15,11 @@
 #import "TopViewController.h"
 #import "FeedsViewController.h"
 #import "FeedViewController.h"
+#import "ATMHud.h"
 
 @interface SearchViewController ()
+
+- (void)cleanKeywordSearches;
 
 @end
 
@@ -30,6 +33,16 @@
 @synthesize hasnextpage;
 @synthesize nextpagestart;
 @synthesize keywordSearchResults = _keywordSearchResults;
+
+@synthesize hud = _hud;
+
+- (ATMHud *)hud {
+	if (_hud == nil) {
+		_hud = [[ATMHud alloc] initWithDelegate:self];
+	}
+	
+	return _hud;
+}
 
 - (NSMutableArray *)keywordSearchResults {
 	if (_keywordSearchResults == nil) {
@@ -74,6 +87,13 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 	
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+	    
+	} else {
+	    UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done:)];
+		self.navigationItem.leftBarButtonItem = doneItem;
+	}
+	
 	if (self.mode == SearchViewControllerModeSearch) {
 		self.searchDisplayController.searchBar.scopeButtonTitles = [NSArray arrayWithObjects:
 																	NSLocalizedString(@"Category", nil),
@@ -98,9 +118,7 @@
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
 	
-	if (self.mode == SearchViewControllerModeSearch) {
-		[self.searchDisplayController.searchBar becomeFirstResponder];
-	}
+	[self.searchDisplayController.searchBar becomeFirstResponder];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -108,15 +126,27 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+- (void)cleanKeywordSearches {
+	[self.keywordSearchResults removeAllObjects];
+	self.hasnextpage = 0;
+	self.nextpagestart = 0;
+}
+
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-	if (self.mode == SearchViewControllerModeSearch) {
-		[self done:nil];
-	}
+	[self done:nil];
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
 	if (self.mode == SearchViewControllerModeSubscription) {
+		[self.view addSubview:self.hud.view];
+		[self.hud setCaption:NSLocalizedString(@"Subscribing...", nil)];
+		[self.hud setActivity:YES];
+		[self.hud show];
+		
+		[[GoogleReader sharedInstance] setSubscribeDelegate:self];
 		[[GoogleReader sharedInstance] quickSubscribeToRSSFeedURL:searchBar.text];
+		
+		[self cleanKeywordSearches];
 	}
 }
 
@@ -198,6 +228,17 @@
 				cell.imageView.image = [UIImage imageNamed:@"rss_source"];
 				
 				cell.selectionStyle = UITableViewCellSelectionStyleNone;
+				
+				int issubscribed = [[aSource valueForKey:@"issubscribed"] intValue];
+				if (issubscribed == 0) {
+					UIButton *addButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+					addButton.tag = indexPath.row;
+					[addButton addTarget:self action:@selector(subscribeFromSearchingResult:) forControlEvents:UIControlEventTouchUpInside];
+					cell.accessoryView = addButton;
+				} else {
+					cell.accessoryView = nil;
+				}
+				
 			} else {
 				cell.textLabel.text = NSLocalizedString(@"More...", nil);
 				cell.detailTextLabel.text = nil;
@@ -205,6 +246,8 @@
 				cell.imageView.image = nil;
 				
 				cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+				
+				cell.accessoryView = nil;
 			}
 			
 			return cell;
@@ -212,6 +255,17 @@
 	}
 	
 	return nil;
+}
+
+- (void)subscribeFromSearchingResult:(UIButton *)button {
+	NSLog(@"button: %d", button.tag);
+	[self.view addSubview:self.hud.view];
+	[self.hud setCaption:NSLocalizedString(@"Subscribing...", nil)];
+	[self.hud setActivity:YES];
+	[self.hud show];
+	
+	NSDictionary *aSource = [self.keywordSearchResults objectAtIndex:button.tag];
+	[[GoogleReader sharedInstance] quickSubscribeToRSSFeedURL:[[aSource valueForKey:@"streamid"] substringFromIndex:5] moreSearch:NO];
 }
 
 
@@ -238,12 +292,32 @@
 			}
 			else if (scope == 2) {
 				Feed *feed = [self.searchResults objectAtIndex:indexPath.row];
-				FeedViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"FeedViewController"];
-				viewController.feed = feed;
-				viewController.feeds = self.searchResults;
-				[self.navigationController pushViewController:viewController animated:YES];
+				NewFeedsViewController *feedsViewController = nil;
+				if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+					feedsViewController = [[UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:nil] instantiateViewControllerWithIdentifier:@"NewFeedsViewController"];
+				} else {
+					feedsViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"NewFeedsViewController"];
+				}
+				feedsViewController.feeds = self.searchResults;
+				feedsViewController.pageIndex = [feedsViewController.feeds indexOfObject:feed];
+				feedsViewController.delegate = nil;
+				feedsViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+				[self presentViewController:feedsViewController animated:YES completion:nil];
 			}
 		}		
+		else {
+			if (indexPath.row < [self.keywordSearchResults count]) {
+			}
+			else {
+				// more
+				[self.view addSubview:self.hud.view];
+				[self.hud setCaption:NSLocalizedString(@"Searching keyword...", nil)];
+				[self.hud setActivity:YES];
+				[self.hud show];
+				
+				[[GoogleReader sharedInstance] searchKeyword:self.searchDisplayController.searchBar.text start:self.nextpagestart];
+			}
+		}
 	}
 }
 
@@ -323,22 +397,57 @@
 
 - (void)googleReaderSubscribeNoResults {
 	NSLog(@"googleReaderSubscribeNoResults");
+	[self.hud setCaption:NSLocalizedString(@"Subscribe Failed.", nil)];
+	[self.hud setImage:[UIImage imageNamed:@"11-x"]];
+	[self.hud setActivity:NO];
+	[self.hud update];
+	[self.hud hideAfter:1.0];
 }
 
 - (void)googleReaderSubscribeDone {
 	NSLog(@"googleReaderSubscribeDone");
+	[self.hud setCaption:NSLocalizedString(@"Subscribed.", nil)];
+	[self.hud setImage:[UIImage imageNamed:@"19-check"]];
+	[self.hud setActivity:NO];
+	[self.hud update];
+	[self.hud hideAfter:1.0];
+	
+	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	[appDelegate refresh];
+}
+
+- (void)googleReaderSubscribeFailed {
+	NSLog(@"googleReaderSubscribeFailed");
+	[self.hud setCaption:NSLocalizedString(@"Subscribe Failed.", nil)];
+	[self.hud setImage:[UIImage imageNamed:@"11-x"]];
+	[self.hud setActivity:NO];
+	[self.hud update];
+	[self.hud hideAfter:1.0];
 }
 
 - (void)googleReaderStartSearch {
 	NSLog(@"googleReaderStartSearch");
+	[self.hud setCaption:NSLocalizedString(@"Searching keyword...", nil)];
+	[self.hud setActivity:YES];
+	[self.hud update];
 }
 
 - (void)googleReaderSearchFailed {
 	NSLog(@"googleReaderSearchFailed");
+	[self.hud setCaption:NSLocalizedString(@"Searching Failed.", nil)];
+	[self.hud setImage:[UIImage imageNamed:@"11-x"]];
+	[self.hud setActivity:NO];
+	[self.hud update];
+	[self.hud hideAfter:1.0];
 }
 
 - (void)googleReaderSearchDone:(NSDictionary *)searchData {
 	NSLog(@"googleReaderSearchDone: %@", searchData);
+	[self.hud setCaption:NSLocalizedString(@"Searching Done.", nil)];
+	[self.hud setImage:[UIImage imageNamed:@"19-check"]];
+	[self.hud setActivity:NO];
+	[self.hud update];
+	[self.hud hideAfter:1.0];
 	
 	NSDictionary *pagestatus = [searchData valueForKey:@"pagestatus"];
 	self.hasnextpage = [[pagestatus valueForKey:@"hasnextpage"] intValue];

@@ -14,7 +14,7 @@
 
 "Mark all as read" = "모두 읽음으로 표시";
 
-"Mark all items from this list as read?" = "이 리스트의 모든 글들을 읽음으로 표시할까요?";
+"Mark all items from this list as read\?" = "이 리스트의 모든 글들을 읽음으로 표시할까요\?";
 
 "Share" = "공유";
 
@@ -85,4 +85,58 @@
 "Buy Full Version" = "풀버전 구매 (앱스토어로 이동)";
 
 "Remove Ad" = "광고 더 이상 안 보기";
+
+/* No comment provided by engineer. */
+"%d new items" = "%d개의 새 글";
+
+/* No comment provided by engineer. */
+"%d of %d" = "%d / %d";
+
+/* No comment provided by engineer. */
+"1 new item" = "1개의 새 글";
+
+/* No comment provided by engineer. */
+"Error" = "에러";
+
+/* No comment provided by engineer. */
+"Feed" = "피드";
+
+/* No comment provided by engineer. */
+"More..." = "더 보기...";
+
+/* No comment provided by engineer. */
+"No More Feeds" = "더 이상 글이 없습니다.";
+
+/* No comment provided by engineer. */
+"Search term or Enter feed URL" = "검색어 또는 피드 URL을 입력하세요.";
+
+/* No comment provided by engineer. */
+"Search" = "검색";
+
+/* No comment provided by engineer. */
+"Searching Done." = "검색 완료.";
+
+/* No comment provided by engineer. */
+"Searching Failed." = "검색 실패.";
+
+/* No comment provided by engineer. */
+"Searching keyword..." = "키워드 검색 중...";
+
+/* No comment provided by engineer. */
+"Subscribe Failed." = "구독 실패.";
+
+/* No comment provided by engineer. */
+"Subscribed." = "구독되었습니다.";
+
+/* No comment provided by engineer. */
+"Subscribing..." = "구독 중...";
+
+/* No comment provided by engineer. */
+"Update: %@" = "업데이트: %@";
+
+/* No comment provided by engineer. */
+"Updating..." = "업데이트 중...";
+
+/* No comment provided by engineer. */
+"You have no unread items." = "읽을 새 글이 없습니다.";
 

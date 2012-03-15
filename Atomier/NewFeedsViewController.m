@@ -45,12 +45,12 @@
 - (void)layoutForOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 	    if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {
-			self.topImageView.image = [UIImage imageNamed:@""];
-			self.bottomImageView.image = [UIImage imageNamed:@""];
+			self.topImageView.image = [UIImage imageNamed:@"feedsTop-Portrait~ipad"];
+			self.bottomImageView.image = [UIImage imageNamed:@"feedsBottom-Portrait~ipad"];
 		}
 		else {
-			self.topImageView.image = [UIImage imageNamed:@""];
-			self.bottomImageView.image = [UIImage imageNamed:@""];
+			self.topImageView.image = [UIImage imageNamed:@"feedsTop-Landscape~ipad"];
+			self.bottomImageView.image = [UIImage imageNamed:@"feedsBottom-Landscape~ipad"];
 		}
 	}
 	else {
@@ -226,6 +226,9 @@
 - (IBAction)goHome:(id)sender {
 	if (_delegate && [_delegate respondsToSelector:@selector(feedsViewControllerWillDismiss:)]) {
 		[_delegate feedsViewControllerWillDismiss:self];
+	}
+	else {
+		[self dismissViewControllerAnimated:YES completion:nil];
 	}
 }
 

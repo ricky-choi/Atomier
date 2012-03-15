@@ -257,6 +257,19 @@
 	if (self.navigationController.topViewController == self) {
 		self.navigationItem.leftBarButtonItem = self.doneItem;
 	}
+	
+	[self.navigationController.navigationBar setBackgroundImage:nil 
+									   forBarMetrics:UIBarMetricsDefault];
+	[self.navigationController.toolbar setBackgroundImage:nil
+							forToolbarPosition:UIToolbarPositionBottom
+									barMetrics:UIBarMetricsDefault];
+	[self.navigationController.navigationBar setBackgroundImage:nil 
+									   forBarMetrics:UIBarMetricsLandscapePhone];
+	[self.navigationController.toolbar setBackgroundImage:nil
+							forToolbarPosition:UIToolbarPositionBottom
+									barMetrics:UIBarMetricsLandscapePhone];
+	
+	[self.navigationItem.leftBarButtonItem setTintColor:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

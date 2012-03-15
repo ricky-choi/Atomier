@@ -15,6 +15,7 @@
 
 @class Category;
 @class FeedsViewController;
+@class NASegmentedControl;
 
 @interface StandViewController : UIViewController <NSFetchedResultsControllerDelegate, UIActionSheetDelegate, ADBannerViewDelegate, GADBannerViewDelegate, SettingsViewControllerDelegate>
 
@@ -34,8 +35,22 @@
 
 @property (strong, nonatomic) UIActionSheet *actionSheet;
 
+@property (strong, nonatomic) NASegmentedControl *segmentControl;
+@property (weak, nonatomic) IBOutlet UIView *segmentView;
+
+@property (strong, nonatomic) UIPopoverController *popover;
+@property (weak, nonatomic) IBOutlet UILabel *updateLabel;
+
 - (IBAction)refresh:(id)sender;
 - (IBAction)changeMode:(id)sender;
+- (IBAction)subscribe:(id)sender;
+- (IBAction)search:(id)sender;
+- (IBAction)setting:(id)sender;
+- (IBAction)next:(id)sender;
+
+- (void)notifyUpdating;
+- (void)notifyUpdateDone;
+- (void)refreshUnreadCount;
 
 // for ad
 @property (strong, nonatomic) ADBannerView *adView;

@@ -14,7 +14,7 @@
 
 "Mark all as read" = "Mark all as read";
 
-"Mark all items from this list as read?" = "Mark all items from this list as read?";
+"Mark all items from this list as read\?" = "Mark all items from this list as read\?";
 
 "Share" = "Share";
 
@@ -85,4 +85,58 @@
 "Buy Full Version" = "Buy Full Version";
 
 "Remove Ad" = "Remove Ad";
+
+/* No comment provided by engineer. */
+"%d new items" = "%d new items";
+
+/* No comment provided by engineer. */
+"%d of %d" = "%1$d of %2$d";
+
+/* No comment provided by engineer. */
+"1 new item" = "1 new item";
+
+/* No comment provided by engineer. */
+"Error" = "Error";
+
+/* No comment provided by engineer. */
+"Feed" = "Feed";
+
+/* No comment provided by engineer. */
+"More..." = "More...";
+
+/* No comment provided by engineer. */
+"No More Feeds" = "No More Feeds";
+
+/* No comment provided by engineer. */
+"Search term or Enter feed URL" = "Search term or Enter feed URL";
+
+/* No comment provided by engineer. */
+"Search" = "Search";
+
+/* No comment provided by engineer. */
+"Searching Done." = "Searching Done.";
+
+/* No comment provided by engineer. */
+"Searching Failed." = "Searching Failed.";
+
+/* No comment provided by engineer. */
+"Searching keyword..." = "Searching keyword...";
+
+/* No comment provided by engineer. */
+"Subscribe Failed." = "Subscribe Failed.";
+
+/* No comment provided by engineer. */
+"Subscribed." = "Subscribed.";
+
+/* No comment provided by engineer. */
+"Subscribing..." = "Subscribing...";
+
+/* No comment provided by engineer. */
+"Update: %@" = "Updated: %@";
+
+/* No comment provided by engineer. */
+"Updating..." = "Updating...";
+
+/* No comment provided by engineer. */
+"You have no unread items." = "You have no unread items.";
 

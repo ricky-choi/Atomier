@@ -15,7 +15,8 @@
 #import "FeedsViewController.h"
 #import "UIBezierPath+ShadowPath.h"
 #import "UIView+Wiggle.h"
-
+#import "NASegmentedControl.h"
+#import "SearchViewController.h"
 
 #define IPHONE_STORYBOARD [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil]
 
@@ -31,6 +32,11 @@
 - (void)invalidateItemsForOrientation:(UIInterfaceOrientation)interfaceOrientation;
 
 - (NSString *)currentModeName;
+
+- (void)navbarImageChangeForOrientation:(UIInterfaceOrientation)interfaceOrientation;
+- (void)customizeInnerNavigationBar:(UINavigationBar *)navigationBar;
+
+- (void)showUpdateStatus;
 
 // for Ad
 - (void)layoutForCurrentOrientation:(NSTimeInterval)duration;
@@ -52,11 +58,67 @@
 @synthesize chipSize = _chipSize;
 @synthesize selectedFeedsViewController = _selectedFeedsViewController;
 @synthesize actionSheet = _actionSheet;
+@synthesize segmentControl = _segmentControl;
+@synthesize segmentView = _segmentView;
+@synthesize popover = _popover;
+@synthesize updateLabel = _updateLabel;
 
 @synthesize adView = _adView;
 @synthesize gadView = _gadView;
 @synthesize gadBannerLoaded = _gadBannerLoaded;
 @synthesize firstAttempIsiAd;
+
+- (NASegmentedControl *)segmentControl {
+	if (_segmentControl == nil) {
+		UIImage *normalImage = [UIImage imageNamed:@"transparent"];
+		UIImage *selectedImage = [UIImage imageNamed:@"SegButton~ipad"];
+		
+		CGFloat shadowOffset = 1.0f / selectedImage.scale;
+		
+		UIButton *segButton1 = [UIButton buttonWithType:UIButtonTypeCustom];
+		[segButton1 setFrame:CGRectMake(0, 0, selectedImage.size.width, selectedImage.size.height)];
+		[segButton1 setBackgroundImage:normalImage forState:UIControlStateNormal];
+		[segButton1 setBackgroundImage:selectedImage forState:UIControlStateHighlighted]; 
+		[segButton1 setTitle:[TopViewController modeNameForSegment:0] forState:UIControlStateNormal];
+		[segButton1 setTitleColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1] forState:UIControlStateNormal];
+		[segButton1 setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		segButton1.titleLabel.font = [UIFont boldSystemFontOfSize:14];
+		segButton1.titleLabel.shadowOffset = CGSizeMake(0, shadowOffset);
+		//segButton1.titleEdgeInsets = UIEdgeInsetsMake(7, 0, 0, 0);
+		
+		UIButton *segButton2 = [UIButton buttonWithType:UIButtonTypeCustom];
+		[segButton2 setFrame:CGRectMake(0, 0, selectedImage.size.width, selectedImage.size.height)];
+		[segButton2 setBackgroundImage:normalImage forState:UIControlStateNormal];
+		[segButton2 setBackgroundImage:selectedImage forState:UIControlStateHighlighted];
+		[segButton2 setTitle:[TopViewController modeNameForSegment:1] forState:UIControlStateNormal];
+		[segButton2 setTitleColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1] forState:UIControlStateNormal];
+		[segButton2 setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		segButton2.titleLabel.font = [UIFont boldSystemFontOfSize:14];
+		segButton2.titleLabel.shadowOffset = CGSizeMake(0, shadowOffset);
+		//segButton2.titleEdgeInsets = UIEdgeInsetsMake(7, 0, 0, 0);
+		
+		UIButton *segButton3 = [UIButton buttonWithType:UIButtonTypeCustom];
+		[segButton3 setFrame:CGRectMake(0, 0, selectedImage.size.width, selectedImage.size.height)];
+		[segButton3 setBackgroundImage:normalImage forState:UIControlStateNormal];
+		[segButton3 setBackgroundImage:selectedImage forState:UIControlStateHighlighted];
+		[segButton3 setTitle:[TopViewController modeNameForSegment:2] forState:UIControlStateNormal];
+		[segButton3 setTitleColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1] forState:UIControlStateNormal];
+		[segButton3 setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		segButton3.titleLabel.font = [UIFont boldSystemFontOfSize:14];
+		segButton3.titleLabel.shadowOffset = CGSizeMake(0, shadowOffset);
+		//segButton3.titleEdgeInsets = UIEdgeInsetsMake(7, 0, 0, 0);
+		
+		_segmentControl = [[NASegmentedControl alloc] initWithButtons:
+								   [NSArray arrayWithObjects:
+									segButton1, segButton2, segButton3, nil]];
+		
+		_segmentControl.selectedSegmentIndex = _currentSegment;
+		
+		[_segmentControl addTarget:self action:@selector(changeMode:) forControlEvents:UIControlEventValueChanged];
+	}
+	
+	return _segmentControl;
+}
 
 - (void)removeAd {
 	if (self.adView) {
@@ -293,23 +355,26 @@
 }
 
 - (void)addShadowRightAngle:(CALayer *)layer {
-	layer.shadowOffset = CGSizeMake(0, 3);
+	layer.shadowOffset = CGSizeMake(0, 2);
 	layer.shadowOpacity = 0.7;
 	layer.shadowPath = [UIBezierPath bezierPathWithShadowForRect:layer.bounds].CGPath;
 }
 
+- (void)customizeInnerNavigationBar:(UINavigationBar *)navigationBar {
+	[navigationBar setBackgroundImage:[UIImage imageNamed:@"syndi_nav_portrait"] forBarMetrics:UIBarMetricsDefault];
+	[navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+										   [UIColor whiteColor], UITextAttributeTextColor, nil]];
+}
+
+#define SHOW_ALL 0
+
 - (void)invalidateItemsForOrientation:(UIInterfaceOrientation)interfaceOrientation changeMode:(BOOL)changeMode {
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-	    NSLog(@"subscription: %@", self.fetchedResultsControllerForSubscription);
-		NSLog(@"category: %@", self.fetchedResultsControllerForCategory);
-		
-		//		for (UIViewController *childViewController in self.childViewControllers) {
-		//			[childViewController removeFromParentViewController];
-		//			[childViewController.view removeFromSuperview];
-		//		}
+	    //NSLog(@"subscription: %@", self.fetchedResultsControllerForSubscription);
+		//NSLog(@"category: %@", self.fetchedResultsControllerForCategory);
 		
 		CGFloat scrollViewWidth = 0.0;
-		if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {
+		if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {			
 			scrollViewWidth = 768.0f;
 		} else {
 			scrollViewWidth = 1024.0f;
@@ -319,6 +384,7 @@
 		NSArray *cateogries = [self.fetchedResultsControllerForCategory fetchedObjects];
 		
 		NSUInteger chipCount = [subscriptions count] + [cateogries count];
+#if SHOW_ALL
 		if (chipCount > 0) {
 			chipCount++;
 #ifdef FREE_FOR_PROMOTION
@@ -327,6 +393,7 @@
 			}
 #endif
 		}
+#endif
 		
 		if (chipCount <= 1) {
 			if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {
@@ -366,7 +433,7 @@
 		CGPoint nextOrigin = CGPointMake(paddingInt, paddingInt);
 		
 		NSMutableDictionary *newChilds = [NSMutableDictionary dictionaryWithCapacity:chipCount];
-		
+#if SHOW_ALL
 		if (chipCount > 0) {
 			// all
 			UINavigationController *exist = [self.childs valueForKey:@"ALL"];
@@ -383,6 +450,8 @@
 				
 				navigationController = [[UINavigationController alloc] initWithRootViewController:feedsViewController];
 				navigationController.view.autoresizingMask = UIViewAutoresizingNone;
+				
+				[self customizeInnerNavigationBar:navigationController.navigationBar];
 				
 				[self addChildViewController:navigationController];
 				[self.scrollView addSubview:navigationController.view];
@@ -401,7 +470,7 @@
 			
 			nextOrigin = [self nextOrigin:nextOrigin padding:(CGFloat)paddingInt scrollViewWidth:scrollViewWidth];
 		}
-		
+#endif
 		int tag = 3;
 		for (Subscription *subscription in subscriptions) {
 			UINavigationController *exist = [self.childs valueForKey:subscription.keyId];
@@ -421,6 +490,9 @@
 				
 				navigationController = [[UINavigationController alloc] initWithRootViewController:feedsViewController];
 				navigationController.view.autoresizingMask = UIViewAutoresizingNone;
+				navigationController.view.tag = ++tag;
+				
+				[self customizeInnerNavigationBar:navigationController.navigationBar];
 				
 				//[self.childs setValue:navigationController forKey:subscription.keyId];
 				
@@ -434,7 +506,6 @@
 			[newChilds setValue:navigationController forKey:subscription.keyId];
 			
 			navigationController.view.frame = CGRectMake(nextOrigin.x, nextOrigin.y, viewControllerSize.width, viewControllerSize.height);
-			navigationController.view.tag = ++tag;
 			
 			if ([navigationController.view superview] == nil) {
 				[self.scrollView addSubview:navigationController.view];
@@ -463,6 +534,8 @@
 				
 				navigationController = [[UINavigationController alloc] initWithRootViewController:topViewController];
 				navigationController.view.autoresizingMask = UIViewAutoresizingNone;
+				
+				[self customizeInnerNavigationBar:navigationController.navigationBar];
 				
 				[self addChildViewController:navigationController];
 				[self.scrollView addSubview:navigationController.view];
@@ -564,12 +637,32 @@
 {
     [super viewDidLoad];
 	
-	//self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-	//self.navigationController.toolbar.barStyle = self.navigationController.navigationBar.barStyle;
-	//self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"wood"]];
-	
 	self.navigationController.navigationBar.clipsToBounds = NO;
 	[self addShadowRightAngle:self.navigationController.navigationBar.layer];
+	
+	[self navbarImageChangeForOrientation:self.interfaceOrientation];
+	
+	[self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"wood"]]];
+
+	[self.segmentView addSubview:self.segmentControl];
+	
+	UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	nextButton.frame = CGRectMake(0, 0, 60, 30);
+	[nextButton setImage:[UIImage imageNamed:@"feedsNext_Portrait"] forState:UIControlStateNormal];
+	nextButton.showsTouchWhenHighlighted = YES;
+	[nextButton addTarget:self action:@selector(next:) forControlEvents:UIControlEventTouchUpInside];
+	UIBarButtonItem *nextItem = [[UIBarButtonItem alloc] initWithCustomView:nextButton];
+	
+//	UILabel *statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 240, 30)];
+//	statusLabel.text = @"test";
+//	statusLabel.backgroundColor = [UIColor clearColor];
+//	UIBarButtonItem *labelItem = [[UIBarButtonItem alloc] initWithCustomView:statusLabel];
+	
+	self.navigationItem.leftBarButtonItem = nextItem;
+	//self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:nextItem, labelItem, nil];
+	
+	[self showUpdateStatus];
+	[self refreshUnreadCount];
 
 #ifdef FREE_FOR_PROMOTION	
 	self.navigationController.toolbarHidden = YES;
@@ -584,27 +677,9 @@
 	[self invalidateEditButton];
 #endif
 	
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad || self.category == nil) {
-		UIBarButtonItem *refreshItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresh:)];
-		UIBarButtonItem *settingItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Settings"] style:UIBarButtonItemStylePlain target:self action:@selector(setting:)];
-		self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:refreshItem, settingItem, nil];
-	}
-	
-	UISegmentedControl *segmentControl = [[UISegmentedControl alloc] initWithItems:
-										  [NSArray arrayWithObjects:
-										   [TopViewController modeNameForSegment:0],
-										   [TopViewController modeNameForSegment:1],
-										   [TopViewController modeNameForSegment:2], nil]];
-	segmentControl.segmentedControlStyle = UISegmentedControlStyleBar;
-	segmentControl.selectedSegmentIndex = _currentSegment;
-	[segmentControl addTarget:self action:@selector(changeMode:) forControlEvents:UIControlEventValueChanged];
-	
-	UIBarButtonItem *segmentItem = [[UIBarButtonItem alloc] initWithCustomView:segmentControl];
-	UIBarButtonItem *flexibleSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-	
-	self.toolbarItems = [NSArray arrayWithObjects:flexibleSpaceItem, segmentItem, flexibleSpaceItem, nil];
-	
-	self.scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+	CGRect contentFrame = self.view.bounds;
+	contentFrame.size.height -= 50.0f;
+	self.scrollView = [[UIScrollView alloc] initWithFrame:contentFrame];
 	self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	//self.scrollView.contentInset = UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height, 0, self.navigationController.toolbar.frame.size.height, 0);
 	//self.scrollView.scrollIndicatorInsets = self.scrollView.contentInset;
@@ -628,6 +703,54 @@
 #endif
 }
 
+- (IBAction)next:(id)sender {
+	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	NSUInteger count = [appDelegate unreadCount];
+	
+	if (count == 0) {
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"You have no unread items.", nil)
+															message:nil 
+														   delegate:self 
+												  cancelButtonTitle:NSLocalizedString(@"OK", nil)
+												  otherButtonTitles:NSLocalizedString(@"Refresh All", nil), nil];
+		[alertView show];
+	}
+	else {
+		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+		NSEntityDescription *entity = [NSEntityDescription entityForName:@"Feed" inManagedObjectContext:self.managedObjectContext];
+		[fetchRequest setEntity:entity];
+		
+		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"unread = 1"];
+		[fetchRequest setPredicate:predicate];
+		
+		BOOL ascending = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULT_KEY_SORT_DATE];
+		NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"updatedDate" ascending:ascending];
+		NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+		[fetchRequest setSortDescriptors:sortDescriptors];
+		
+		NSArray *feeds = [self.managedObjectContext executeFetchRequest:fetchRequest error:nil];
+		
+		if ([feeds count] > 0) {
+			NewFeedsViewController *feedsViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"NewFeedsViewController"];
+			feedsViewController.feeds = feeds;
+			//feedsViewController.delegate = self;
+			feedsViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+			[self presentViewController:feedsViewController animated:YES completion:nil];
+		}
+	}
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if (buttonIndex == alertView.firstOtherButtonIndex) {
+		[self refresh:nil];
+	}
+}
+
+- (IBAction)refresh:(id)sender {
+	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	[appDelegate refresh];
+}
+
 - (void)adFreeNotified:(NSNotification *)notification {
 	[self removeAd];
 	[self layoutForCurrentOrientation:0];
@@ -648,19 +771,16 @@
 	}
 }
 
-- (void)setting:(UIBarButtonItem *)sender {
-	SettingsViewController *viewController = [IPHONE_STORYBOARD instantiateViewControllerWithIdentifier:@"SettingsViewController"];
-	viewController.delegate = self;
-	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
-	navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-	[self presentViewController:navigationController animated:YES completion:nil];
-
-}
-
 - (void)purchaseAdFreeDone {
 	[self removeAd];
 	[self layoutForCurrentOrientation:0];
 	[self invalidateItemsForOrientation:self.interfaceOrientation];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	
+	[self navbarImageChangeForOrientation:self.interfaceOrientation];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -682,14 +802,15 @@
 		UINavigationController *navigationController = (UINavigationController *)viewController;
 		UIViewController *nestedViewController = navigationController.visibleViewController;
 		if ([nestedViewController isKindOfClass:[FeedsViewController class]]) {
-			self.selectedFeedsViewController = (FeedsViewController *)nestedViewController;
+			//self.selectedFeedsViewController = (FeedsViewController *)nestedViewController;
 			
 			UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-			button.tag = CLOSE_BUTTON_TAG;
+			button.tag = navigationController.view.tag + CLOSE_BUTTON_TAG;
+			button.contentMode = UIViewContentModeTopLeft;
 			[button setImage:[UIImage imageNamed:@"closebox"] forState:UIControlStateNormal];
 			[button setImage:[UIImage imageNamed:@"closebox_pressed"] forState:UIControlStateHighlighted];
-			button.frame = CGRectMake(0, 0, 32, 33);
-			button.center = viewController.view.bounds.origin;
+			button.frame = CGRectMake(0, 0, 44, 44);
+			//button.center = viewController.view.bounds.origin;
 			[button addTarget:self action:@selector(unsubscribe:) forControlEvents:UIControlEventTouchUpInside];
 			[viewController.view addSubview:button];
 		}
@@ -703,6 +824,15 @@
 		[self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:YES];
 	}
 	else {
+		for (UIViewController *viewController in self.childViewControllers) {			
+			if (viewController.view.tag == [sender tag] - CLOSE_BUTTON_TAG) {
+				UINavigationController *navigationController = (UINavigationController *)viewController;
+				UIViewController *nestedViewController = navigationController.visibleViewController;
+				self.selectedFeedsViewController = (FeedsViewController *)nestedViewController;
+				break;
+			}
+		}
+		
 		self.actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) destructiveButtonTitle:NSLocalizedString(@"Unsubscribe", nil) otherButtonTitles:nil];
 		self.actionSheet.tag = TAG_ACTUINSHEET_UNSUBSCRIBE;
 		[self.actionSheet showFromRect:[sender bounds] inView:sender animated:YES];
@@ -736,7 +866,7 @@
 }
 
 - (void)removeCloseButton:(UIViewController *)viewController {
-	UIView *buttonView = [viewController.view viewWithTag:CLOSE_BUTTON_TAG];
+	UIView *buttonView = [viewController.view viewWithTag:viewController.view.tag + CLOSE_BUTTON_TAG];
 	if (buttonView) {
 		[buttonView removeFromSuperview];
 	}
@@ -766,6 +896,8 @@
 	self.adView.delegate = nil;
 	self.gadView.delegate = nil;
 	
+	[self setSegmentView:nil];
+	[self setUpdateLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -777,11 +909,21 @@
 	return YES;
 }
 
+- (void)navbarImageChangeForOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {
+		[self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"SyndiNav-Portrait~ipad"] forBarMetrics:UIBarMetricsDefault];
+	} else {
+		[self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"SyndiNav-Landscape~ipad"] forBarMetrics:UIBarMetricsDefault];
+	}
+}
+
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
 	
 	[UIView animateWithDuration:duration 
 					 animations:^{
-						 [self invalidateItemsForOrientation:toInterfaceOrientation]; 
+						 [self invalidateItemsForOrientation:toInterfaceOrientation];
+						 
+						 [self navbarImageChangeForOrientation:toInterfaceOrientation];
 					 }
 					 completion:^(BOOL finished){
 						 [self addShadowRightAngle:self.navigationController.navigationBar.layer];
@@ -795,17 +937,39 @@
 #endif
 }
 
-- (IBAction)refresh:(id)sender {
-	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	[appDelegate refresh];
-}
-
 - (IBAction)changeMode:(id)sender {
 	self.editing = NO;
 	
 	UISegmentedControl *segmentedControl = (UISegmentedControl *)sender;
 	NSInteger segment = [segmentedControl selectedSegmentIndex];
 	self.currentSegment = segment;
+}
+
+- (IBAction)subscribe:(id)sender {
+	SearchViewController *viewController = [IPHONE_STORYBOARD instantiateViewControllerWithIdentifier:@"SearchViewController"];
+	viewController.mode = SearchViewControllerModeSubscription;
+	UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
+	UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:navController];
+	self.popover = popoverController;
+	[popoverController presentPopoverFromRect:[sender bounds] inView:sender permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+}
+
+- (IBAction)search:(id)sender {
+	SearchViewController *viewController = [IPHONE_STORYBOARD instantiateViewControllerWithIdentifier:@"SearchViewController"];
+	viewController.mode = SearchViewControllerModeSearch;
+	UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
+	UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:navController];
+	self.popover = popoverController;
+	[popoverController presentPopoverFromRect:[sender bounds] inView:sender permittedArrowDirections:UIPopoverArrowDirectionDown animated:YES];
+}
+
+- (IBAction)setting:(id)sender {
+	SettingsViewController *viewController = [IPHONE_STORYBOARD instantiateViewControllerWithIdentifier:@"SettingsViewController"];
+	viewController.delegate = self;
+	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+	navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+	[self presentViewController:navigationController animated:YES completion:nil];
+	
 }
 
 - (void)setCurrentSegment:(NSInteger)segment {
@@ -1005,5 +1169,50 @@
 }
 
 #endif
+
+#pragma mark - 
+
+- (void)notifyUpdating {
+	self.updateLabel.text = NSLocalizedString(@"Updating...", nil);
+//	[self.spinner startAnimating];
+}
+
+- (void)notifyUpdateDone {
+	[self showUpdateStatus];
+	[self refreshUnreadCount];
+//	[self.spinner stopAnimating];
+}
+
+- (void)refreshUnreadCount {
+//	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//	NSUInteger count = [appDelegate unreadCount];
+//	
+//	if (count == 0) {
+//		self.statusLabel.text = NSLocalizedString(@"You have no unread items.", nil);
+//	}
+//	else if (count == 1) {
+//		self.statusLabel.text = NSLocalizedString(@"1 new item", nil);
+//	} 
+//	else {
+//		self.statusLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%d new items", nil), count];
+//	}
+}
+
+- (void)showUpdateStatus {
+	NSDate *lastUpdateDate = [[NSUserDefaults standardUserDefaults] objectForKey:DEFAULT_KEY_LAST_UPDATE];
+	if (lastUpdateDate) {
+		static NSDateFormatter *dateFormatter = nil;
+		if (dateFormatter == nil) {
+			dateFormatter = [[NSDateFormatter alloc] init];
+			[dateFormatter setDoesRelativeDateFormatting:YES];
+			[dateFormatter setDateStyle:NSDateFormatterShortStyle];
+			[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+		}
+		
+		self.updateLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Update: %@", nil), [dateFormatter stringFromDate:lastUpdateDate]];
+	} else {
+		self.updateLabel.text = @"";
+	}
+}
 
 @end

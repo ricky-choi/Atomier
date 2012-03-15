@@ -14,6 +14,8 @@ typedef enum {
 	SearchViewControllerModeSubscription
 } SearchViewControllerMode;
 
+@class ATMHud;
+
 @interface SearchViewController : UIViewController <GoogleReaderSubscribeDelegate>
 
 @property (assign, nonatomic) SearchViewControllerMode mode;
@@ -25,6 +27,8 @@ typedef enum {
 @property (assign, nonatomic) int hasnextpage;
 @property (assign, nonatomic) int nextpagestart;
 @property (strong, nonatomic) NSMutableArray *keywordSearchResults;
+
+@property (strong, nonatomic) ATMHud *hud;
 
 - (IBAction)done:(id)sender;
 

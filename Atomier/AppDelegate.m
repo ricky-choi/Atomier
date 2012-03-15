@@ -16,6 +16,7 @@
 #import "ContentOrganizer.h"
 #import "SSKeychain.h"
 #import "CoverViewController.h"
+#import "StandViewController.h"
 
 #define REFRESH_COUNT_IMMEDIATE 1
 
@@ -117,6 +118,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+	    application.statusBarHidden = NO;
+	} else {
+	    application.statusBarHidden = YES;
+	}
+	
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
 															 [NSNumber numberWithBool:YES], DEFAULT_KEY_AD,
 															 [NSNumber numberWithInt:1], DEFAULT_KEY_SYNC_RULE,
@@ -184,18 +191,22 @@
 	}	
 	
 	// design
-	[[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"syndi_nav_portrait"] 
-												  forBarMetrics:UIBarMetricsDefault];
-	[[UIToolbar appearance] setBackgroundImage:[UIImage imageNamed:@"syndi_toolbar_portrait"]
-									   forToolbarPosition:UIToolbarPositionBottom
-											   barMetrics:UIBarMetricsDefault];
-	[[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"syndi_nav_landscape"] 
-									   forBarMetrics:UIBarMetricsLandscapePhone];
-	[[UIToolbar appearance] setBackgroundImage:[UIImage imageNamed:@"syndi_toolbar_landscape"]
-							forToolbarPosition:UIToolbarPositionBottom
-									barMetrics:UIBarMetricsLandscapePhone];
-	
-	[[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1]];
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+	    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1]];
+	} else {
+	    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"syndi_nav_portrait"] 
+										   forBarMetrics:UIBarMetricsDefault];
+		[[UIToolbar appearance] setBackgroundImage:[UIImage imageNamed:@"syndi_toolbar_portrait"]
+								forToolbarPosition:UIToolbarPositionBottom
+										barMetrics:UIBarMetricsDefault];
+		[[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"syndi_nav_landscape"] 
+										   forBarMetrics:UIBarMetricsLandscapePhone];
+		[[UIToolbar appearance] setBackgroundImage:[UIImage imageNamed:@"syndi_toolbar_landscape"]
+								forToolbarPosition:UIToolbarPositionBottom
+										barMetrics:UIBarMetricsLandscapePhone];
+		
+		[[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1]];
+	}	
 	
     return YES;
 }
@@ -440,23 +451,14 @@
 	[userDefaults removeObjectForKey:DEFAULT_KEY_LAST_UPDATE];
 	[userDefaults synchronize];
 	
-	CoverViewController *viewController = (CoverViewController *)self.window.rootViewController;
-	[viewController notifyUpdateDone];
-	
-//	NSArray *stores = [self.persistentStoreCoordinator persistentStores];
-//	for (NSPersistentStore *store in stores) {
-//		NSError *error = nil;
-//		if ([self.persistentStoreCoordinator removePersistentStore:store error:&error]) {
-//			if ([[NSFileManager defaultManager] removeItemAtURL:[self storeURL] error:&error]) {
-//				// Success
-//			}
-//		}
-//	}
-//	
-//	__persistentStoreCoordinator = nil;
-//	__managedObjectModel = nil;
-//	__managedObjectContext = nil;
-
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+		UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
+	    StandViewController *viewController = (StandViewController *)navigationController.topViewController;
+		[viewController notifyUpdateDone];
+	} else {
+	    CoverViewController *viewController = (CoverViewController *)self.window.rootViewController;
+		[viewController notifyUpdateDone];
+	}
 	
 	[self requestSession];
 }
@@ -849,8 +851,15 @@
 	loadingForUnreads = YES;
 	loadingForStarreds = YES;
 	
-	CoverViewController *viewController = (CoverViewController *)self.window.rootViewController;
-	[viewController notifyUpdating];
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+	    UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
+	    StandViewController *viewController = (StandViewController *)navigationController.topViewController;
+		[viewController notifyUpdating];
+	} else {
+	    CoverViewController *viewController = (CoverViewController *)self.window.rootViewController;
+		[viewController notifyUpdating];
+	}
+	
 }
 
 - (void)refreshUnreadAndStarred:(int)state {
@@ -903,8 +912,14 @@
 		[userDefaults setObject:[NSDate date] forKey:DEFAULT_KEY_LAST_UPDATE];
 		[userDefaults synchronize];
 		
-		CoverViewController *viewController = (CoverViewController *)self.window.rootViewController;
-		[viewController notifyUpdateDone];
+		if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+			UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
+			StandViewController *viewController = (StandViewController *)navigationController.topViewController;
+			[viewController notifyUpdateDone];
+		} else {
+			CoverViewController *viewController = (CoverViewController *)self.window.rootViewController;
+			[viewController notifyUpdateDone];
+		}
 		
 		[[NSUserDefaults standardUserDefaults] setValue:[NSDate date] forKey:DEFAULT_KEY_SYNCDATE];
 		[[NSUserDefaults standardUserDefaults] synchronize];

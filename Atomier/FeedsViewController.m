@@ -477,7 +477,7 @@
 	[self layoutForCurrentOrientation:0];
 #else
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-	    [self.navigationController setToolbarHidden:NO animated:animated];
+	    [self.navigationController setToolbarHidden:YES animated:animated];
 	}
 #endif
 	
@@ -624,11 +624,20 @@
 	Feed *feed = [self.fetchedResultsController objectAtIndexPath:indexPath];
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-		[self performSegueWithIdentifier:@"ModalForIPad" sender:feed];
+		//[self performSegueWithIdentifier:@"ModalForIPad" sender:feed];
+		
+		UIStoryboard *ipadStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:nil];
+		
+		NewFeedsViewController *feedsViewController = [ipadStoryboard instantiateViewControllerWithIdentifier:@"NewFeedsViewController"];
+		feedsViewController.feeds = [self.fetchedResultsController fetchedObjects];
+		feedsViewController.pageIndex = [feedsViewController.feeds indexOfObject:feed];
+		feedsViewController.delegate = self;
+		feedsViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+		
+		[self presentViewController:feedsViewController animated:YES completion:nil];
 	} else {
 		[self performSegueWithIdentifier:@"NewPushForIPhone" sender:feed];
 	}
-
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
