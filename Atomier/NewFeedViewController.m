@@ -38,11 +38,18 @@
 		NSURL *sourceURL = [NSURL URLWithString:alternate.href];
 		if (sourceURL) {
 			
+			NSString *markString = nil;
+			if ([[self.feed unread] boolValue]) {
+				markString = NSLocalizedString(@"Mark as read", nil);
+			} else {
+				markString = NSLocalizedString(@"Mark as unread", nil);
+			}
+			
 			if ([TWTweetComposeViewController canSendTweet]) {
 				self.actionSheet = [[UIActionSheet alloc] initWithTitle:alternate.href 
 															   delegate:self
 													  cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-												 destructiveButtonTitle:nil
+												 destructiveButtonTitle:markString
 													  otherButtonTitles:NSLocalizedString(@"Open in Safari", nil)
 									, NSLocalizedString(@"Copy Link", nil)
 									, NSLocalizedString(@"Mail Link", nil)
@@ -54,7 +61,7 @@
 				self.actionSheet = [[UIActionSheet alloc] initWithTitle:alternate.href 
 															   delegate:self
 													  cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-												 destructiveButtonTitle:nil
+												 destructiveButtonTitle:markString
 													  otherButtonTitles:NSLocalizedString(@"Open in Safari", nil)
 									, NSLocalizedString(@"Copy Link", nil)
 									, NSLocalizedString(@"Mail Link", nil)
@@ -135,66 +142,71 @@
 		return;
 	}
 	
-	Alternate *alternate = [self.feed.alternates anyObject];
-	NSURL *sourceURL = [NSURL URLWithString:alternate.href];
-	
-	UIApplication *app = [UIApplication sharedApplication];
-	
-	if (buttonIndex == actionSheet.firstOtherButtonIndex) {
-		// Open in Safari
-		if ([app canOpenURL:sourceURL]) {
-			[app openURL:sourceURL];
-		}
-	}
-	else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
-		// Copy Link
-		UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-		pasteboard.URL = sourceURL;
-	}
-	else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2) {
-		// Mail Link
-		NSString *link = [NSString stringWithFormat:@"<a href=\"%@\">%@</a>", alternate.href, alternate.href];
-		[self mail:[self feedTitle] body:link];
-	}
-	else if (buttonIndex == actionSheet.firstOtherButtonIndex + 3) {
-		// Mail Article
-		[self mail:[self feedTitle] body:[self contentForFeed:self.feed]];
-	}
-	else if (buttonIndex == actionSheet.firstOtherButtonIndex + 4) {
-		// Send to Twitter
-		// Set up the built-in twitter composition view controller.
-		TWTweetComposeViewController *tweetViewController = [[TWTweetComposeViewController alloc] init];
+	if (buttonIndex == actionSheet.destructiveButtonIndex) {
+		[self markAsRead:[[self.feed unread] boolValue]];		
+	} else {
+		Alternate *alternate = [self.feed.alternates anyObject];
+		NSURL *sourceURL = [NSURL URLWithString:alternate.href];
 		
-		// Set the initial tweet text. See the framework for additional properties that can be set.
-		[tweetViewController setInitialText:[self feedTitle]];
-		[tweetViewController addURL:sourceURL];
+		UIApplication *app = [UIApplication sharedApplication];
 		
-		// Create the completion handler block.
-		[tweetViewController setCompletionHandler:^(TWTweetComposeViewControllerResult result) {
-			//NSString *output;
-			
-			switch (result) {
-				case TWTweetComposeViewControllerResultCancelled:
-					// The cancel button was tapped.
-					//output = @"Tweet cancelled.";
-					break;
-				case TWTweetComposeViewControllerResultDone:
-					// The tweet was sent.
-					//output = @"Tweet done.";
-					break;
-				default:
-					break;
+		if (buttonIndex == actionSheet.firstOtherButtonIndex) {
+			// Open in Safari
+			if ([app canOpenURL:sourceURL]) {
+				[app openURL:sourceURL];
 			}
+		}
+		else if (buttonIndex == actionSheet.firstOtherButtonIndex + 1) {
+			// Copy Link
+			UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+			pasteboard.URL = sourceURL;
+		}
+		else if (buttonIndex == actionSheet.firstOtherButtonIndex + 2) {
+			// Mail Link
+			NSString *link = [NSString stringWithFormat:@"<a href=\"%@\">%@</a><br><br>Sent with <a href=\"%@\">%@</a>", alternate.href, alternate.href, @"http://itunes.apple.com/us/app/syndi-rss-reader/id498935649?ls=1&mt=8", @"Syndi RSS"];
+			[self mail:[self feedTitle] body:link];
+		}
+		else if (buttonIndex == actionSheet.firstOtherButtonIndex + 3) {
+			// Mail Article
+			NSString *body = [self contentForFeed:self.feed];
+			[self mail:[self feedTitle] body:[body stringByAppendingFormat:@"<p>Sent with <a href=\"%@\">%@</a></p>", @"http://itunes.apple.com/us/app/syndi-rss-reader/id498935649?ls=1&mt=8", @"Syndi RSS"]];
+		}
+		else if (buttonIndex == actionSheet.firstOtherButtonIndex + 4) {
+			// Send to Twitter
+			// Set up the built-in twitter composition view controller.
+			TWTweetComposeViewController *tweetViewController = [[TWTweetComposeViewController alloc] init];
 			
-			//[self performSelectorOnMainThread:@selector(displayText:) withObject:output waitUntilDone:NO];
+			// Set the initial tweet text. See the framework for additional properties that can be set.
+			[tweetViewController setInitialText:[self feedTitle]];
+			[tweetViewController addURL:sourceURL];
 			
-			// Dismiss the tweet composition view controller.
-			[self dismissModalViewControllerAnimated:YES];
-		}];
-		
-		// Present the tweet composition view controller modally.
-		[self presentModalViewController:tweetViewController animated:YES];
-		
+			// Create the completion handler block.
+			[tweetViewController setCompletionHandler:^(TWTweetComposeViewControllerResult result) {
+				//NSString *output;
+				
+				switch (result) {
+					case TWTweetComposeViewControllerResultCancelled:
+						// The cancel button was tapped.
+						//output = @"Tweet cancelled.";
+						break;
+					case TWTweetComposeViewControllerResultDone:
+						// The tweet was sent.
+						//output = @"Tweet done.";
+						break;
+					default:
+						break;
+				}
+				
+				//[self performSelectorOnMainThread:@selector(displayText:) withObject:output waitUntilDone:NO];
+				
+				// Dismiss the tweet composition view controller.
+				[self dismissModalViewControllerAnimated:YES];
+			}];
+			
+			// Present the tweet composition view controller modally.
+			[self presentModalViewController:tweetViewController animated:YES];
+			
+		}
 	}
 }
 
@@ -359,6 +371,8 @@
 	}
 	
 	[appDelegate saveContext];
+	
+	self.actionSheet = nil;
 }
 
 - (void)prepare {
@@ -448,6 +462,14 @@
 
 - (void)webViewControllerAttempClose {
 	[self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (NSString *)description {
+	if (self.feed) {
+		return [self contentForFeed:self.feed];
+	}
+	
+	return [super description];
 }
 
 @end

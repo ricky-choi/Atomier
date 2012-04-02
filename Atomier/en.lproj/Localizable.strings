@@ -140,3 +140,13 @@
 /* No comment provided by engineer. */
 "You have no unread items." = "You have no unread items.";
 
+/* No comment provided by engineer. */
+"Mark as read" = "Mark as read";
+
+/* No comment provided by engineer. */
+"Mark as unread" = "Mark as unread";
+
+"If you enjoy using %@, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!" = "If you enjoy using %@, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!";
+"Rate %@" = "Rate %@";
+"No, Thanks" = "No, Thanks";
+"Remind me later" = "Remind me later";

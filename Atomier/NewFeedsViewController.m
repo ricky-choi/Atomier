@@ -40,6 +40,7 @@
 @synthesize previousButton;
 @synthesize topImageView = _topImageView;
 @synthesize bottomImageView = _bottomImageView;
+@synthesize bottomView = _bottomView;
 @synthesize pageLabel = _pageLabel;
 
 - (void)layoutForOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -55,10 +56,14 @@
 	}
 	else {
 		if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {
+			self.bottomView.frame = CGRectMake(0, 480.0f - 44.0f, 320.0f, 44.0f);
+			
 			self.topImageView.image = [UIImage imageNamed:@"feedsTop_portrait"];
 			self.bottomImageView.image = [UIImage imageNamed:@"syndi_toolbar_portrait"];
 		}
 		else {
+			self.bottomView.frame = CGRectMake(0, 320.0f - 32.0f, 480.0f, 32.0f);
+			
 			self.topImageView.image = [UIImage imageNamed:@"feedsTop_landscape"];
 			self.bottomImageView.image = [UIImage imageNamed:@"syndi_toolbar_landscape"];
 		}
@@ -183,6 +188,7 @@
 	
     [self setPageLabel:nil];
 	
+	[self setBottomView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }

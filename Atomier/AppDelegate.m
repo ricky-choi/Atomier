@@ -17,6 +17,7 @@
 #import "SSKeychain.h"
 #import "CoverViewController.h"
 #import "StandViewController.h"
+#import "Appirater.h"
 
 #define REFRESH_COUNT_IMMEDIATE 1
 
@@ -208,6 +209,8 @@
 		[[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1]];
 	}	
 	
+	[Appirater appLaunched:YES];
+	
     return YES;
 }
 
@@ -283,6 +286,7 @@
 	/*
 	 Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 	 */
+	[Appirater appEnteredForeground:YES];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

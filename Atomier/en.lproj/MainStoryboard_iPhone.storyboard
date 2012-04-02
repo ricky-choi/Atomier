@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11D50b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="jGB-ZA-mfV">
     <dependencies>
+        <deployment defaultVersion="1296" identifier="iOS"/>
         <development defaultVersion="4200" identifier="xcode"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1179"/>
     </dependencies>
@@ -361,7 +362,7 @@
                                 <color key="shadowColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.95686274510000002" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
@@ -591,7 +592,7 @@
                             </imageView>
                             <view contentMode="scaleToFill" id="vmC-9R-k4M">
                                 <rect key="frame" x="0.0" y="436" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="bottom" image="syndi_toolbar_portrait.png" id="2cZ-CZ-eyH">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -647,11 +648,12 @@
                                 </connections>
                             </scrollView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.95686274509803915" green="0.95686274509803915" blue="0.95686274509803915" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="zEl-DW-v2t"/>
                     <connections>
                         <outlet property="bottomImageView" destination="2cZ-CZ-eyH" id="oLe-Dj-5lF"/>
+                        <outlet property="bottomView" destination="vmC-9R-k4M" id="LQD-7i-wiA"/>
                         <outlet property="nextButton" destination="rGL-mq-Pbb" id="zx3-dR-sGx"/>
                         <outlet property="pageLabel" destination="FPM-M9-uRs" id="8fE-MU-08U"/>
                         <outlet property="scrollView" destination="jIJ-GB-cst" id="Sve-QZ-zoZ"/>
@@ -1002,6 +1004,7 @@
                 <relationship kind="action" name="goNext:"/>
                 <relationship kind="action" name="goPrevious:"/>
                 <relationship kind="outlet" name="bottomImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="bottomView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="nextButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="pageLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="previousButton" candidateClass="UIButton"/>

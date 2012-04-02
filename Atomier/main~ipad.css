@@ -3,13 +3,15 @@
 	width:auto;
 	height:auto;
 	-webkit-text-size-adjust:none;
-	-webkit-tap-highlight-color:rgba(0,100,220,0.4);
+	//-webkit-tap-highlight-color:rgba(0,100,220,0.4);
 }
 
 a {
-	color:#404040;
+	//color:#404040;
 	font-weight:bold;
 	text-decoration:none;
+	
+	color: #A50000;
 }
 
 #header {
@@ -17,50 +19,25 @@ a {
 	display: block;
 	margin-bottom: 10px;
 	padding: 10px 0px 10px 0px; /* with disclosure padding-right = 25 */
-	//background: #fff  repeat-x top center;
-	//-webkit-box-shadow: #333 0 0 2px;
-	
-	//border: 0;
-	//-webkit-border-radius: 4px;
 	border-bottom: 2px solid #000;
 	border-top: 2px solid #000;
-	
-	//opacity: 0.6;
-	
-	//-webkit-background-size: 100%%;
-	//background-size: 100%%;
-	
-	//font-family:"Times New Roman";
 }
 
 #header:active {
-	/*color: rgb(40,99,200);*/
-	//-webkit-box-shadow: rgb(81%,80%,78%) 0 0 4px;
-	//border-color: transparent;
-	//opacity: 0.85;
-	
+
 }
 
 #header #title {
-	
 	display: block;
 	position: relative;
-	
-	//display: block;
-	//font-weight: bold;
-	
 	text-decoration: none;
-	
-	
 	font-size: 1.4em;
 	font-weight: bold;
-	
 	color: #000000; /*color: header title */
-	
 }
 
 #header:active #title {
-	//color: #666;/*color: header title active*/
+
 }
 
 #author {
@@ -69,7 +46,6 @@ a {
 	color: #888;
 	padding-bottom: 1px;
 	min-height: 1px;
-	
 }
 
 #date {
@@ -91,27 +67,64 @@ a {
 	min-height: 1px;
 }
 
+img, embed, object, video, iframe {
+
+
+
+	padding: 5px;
+    margin:0px;
+    border:1px solid #DCDCDC;
+	max-width:98%;
+}
+
+.img-1,
+.wp-smiley,
+.feedflare img,
+img[src*='/smilies/'],
+img[src*='.feedburner.com/~ff/'],
+img[data-src*='/smilies/'],
+img[data-src*='.feedburner.com/~ff/'] {
+	border: 0 !important;
+	outline: 0 !important;
+	margin: 0 !important;
+	background-color: transparent;
+}
+
+img[src*='.feedburner.com/~r/'],
+img[data-src*='.feedburner.com/~r/'] {
+	display: none
+}
+
 body {
-	//background: -webkit-gradient( linear, left top, left bottom, from(#E6E3DE), to(#FFFFFF));
-	
 	border-style:initial;
 	font-family:sans-serif;
-//	border-top-width:20px;
-//	border-bottom-width:20px;
-//	border-right-width:50px;
-//	border-left-width:50px;
-	margin:50px;
+	//margin:50px;
 	margin-top:10px;
-	//background-color:#E6E3DE;
 	text-rendering:auto;
-	font-size:1.2em;//11pt;
-	//color:#3F3F3F;
+	font-size:1.3em;//11pt;
+	
+	margin: 50px 80px;
+	color: #0A0A0A;
+	background-color: #F4F4F4
+}
 
+@media only screen and (max-device-width: 480px) {
+	body {
+		margin:0px 30px;
+	}
 }
 
 .syndi-content {
-	//margin:50px;
 	font-size:1em;
 	line-height:1.8em;
 }
 
+
+
+
+hr {
+    height: 1px;
+    color: #DCDCDC;
+    background-color: #DCDCDC;
+    border: 0;
+}

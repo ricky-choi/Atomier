@@ -20,7 +20,7 @@
 @property (weak, nonatomic) id <SettingsViewControllerDelegate> delegate;
 
 @property (strong, nonatomic) IBOutlet UISwitch *badgeSwitch;
-
+@property (assign, nonatomic) BOOL sortDateAscending;
 @property (assign, nonatomic) BOOL readyPurchase;
 @property (strong, nonatomic) NSArray *productsToSell;
 @property (strong, nonatomic) NSString *productPrice;

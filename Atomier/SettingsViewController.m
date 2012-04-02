@@ -24,7 +24,7 @@
 @synthesize delegate = _delegate;
 
 @synthesize badgeSwitch = _badgeSwitch;
-
+@synthesize sortDateAscending = _sortDateAscending;
 @synthesize readyPurchase = _readyPurchase;
 @synthesize productsToSell = _productsToSell;
 @synthesize productPrice = _productPrice;
@@ -55,6 +55,13 @@
 	_badgeSwitch.onTintColor = [UIColor redColor];
 	
 	return _badgeSwitch;
+}
+
+- (void)changeSortByDate:(BOOL)ascending {
+	self.sortDateAscending = ascending;
+	[[NSUserDefaults standardUserDefaults] setBool:ascending forKey:DEFAULT_KEY_SORT_DATE];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -111,6 +118,8 @@
 	
 	self.badgeSwitch.on = [appDelegate isBadge];
 
+	self.sortDateAscending = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULT_KEY_SORT_DATE];
+	
 	_readyPurchase = NO;
 #ifdef FREE_FOR_PROMOTION
     if ([self showAD] && [SKPaymentQueue canMakePayments] && self.productsToSell == nil) {
@@ -175,9 +184,9 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 #ifdef FREE_FOR_PROMOTION
-    return 4;
+    return 5;
 #endif
-	return 3;
+	return 4;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -193,6 +202,9 @@
 		return NSLocalizedString(@"Home Screen", nil);
 	}
 	else if (section == 3) {
+		return NSLocalizedString(@"Sort", nil);
+	}
+	else if (section == 4) {
 		return NSLocalizedString(@"Upgrade", nil);
 	}
 	
@@ -205,6 +217,9 @@
 		return 3;
 	}
 	else if (section == 3) {
+		return 2;
+	}
+	else if (section == 4) {
 		if ([self showAD] && [SKPaymentQueue canMakePayments]) {
 			return 2;
 		} else {
@@ -257,6 +272,17 @@
 	}
 	else if (section == 3) {
 		if (row == 0) {
+			cell.textLabel.text = NSLocalizedString(@"Ascending", nil);
+		} else {
+			cell.textLabel.text = NSLocalizedString(@"Descending", nil);
+		}
+		
+		if (row == (self.sortDateAscending ? 0 : 1)) {
+			cell.accessoryType = UITableViewCellAccessoryCheckmark;
+		}
+	}
+	else if (section == 4) {
+		if (row == 0) {
 			cell.textLabel.text = NSLocalizedString(@"Buy Full Version", nil);
 			cell.imageView.image = [UIImage imageNamed:@"promote-Icon-Small"];
 		} else {
@@ -295,6 +321,19 @@
 		}
 	}
 	else if (indexPath.section == 3) {
+		int newSort = indexPath.row;
+		int oldSort = self.sortDateAscending ? 0 : 1;
+		if (newSort != oldSort) {
+			UITableViewCell *oldSortCell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:oldSort inSection:indexPath.section]];
+			UITableViewCell *newSortCell = [tableView cellForRowAtIndexPath:indexPath];
+			
+			oldSortCell.accessoryType = UITableViewCellAccessoryNone;
+			newSortCell.accessoryType = UITableViewCellAccessoryCheckmark;
+			
+			[self changeSortByDate:(indexPath.row == 0)];
+		}
+	}
+	else if (indexPath.section == 4) {
 		if (indexPath.row == 0) {
 			// go appstore
 			UIApplication *app = [UIApplication sharedApplication];
