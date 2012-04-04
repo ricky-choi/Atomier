@@ -11,6 +11,7 @@
 #import "Subscription.h"
 #import "Reachability.h"
 #import "LoginViewController.h"
+#import "FBConnect.h"
 
 #define DEFAULT_KEY_LAST_UPDATE @"DEFAULT_KEY_LAST_UPDATE"
 #define DEFAULT_KEY_SORT_DATE @"sortDateAscending"
@@ -32,7 +33,7 @@
 
 @class LoginViewController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, GoogleReaderDelegate, LoginViewControllerDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, GoogleReaderDelegate, LoginViewControllerDelegate, FBSessionDelegate, FBRequestDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
@@ -48,6 +49,11 @@
 @property (strong, nonatomic) NSMutableArray *readyGetIcons;
 
 @property (strong, nonatomic) LoginViewController *loginViewController;
+
+@property (strong, nonatomic) Facebook *facebook;
+
+- (BOOL)facebookAuthorize;
+- (void)facebookRequestGraphPath:(NSString *)path andParams:(NSMutableDictionary *)params andHttpMethod:(NSString *)httpMethod;
 
 - (NSString *)savedGoogleID;
 

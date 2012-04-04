@@ -477,16 +477,16 @@
 		self.title = self.category.label;
 	}
 	else {
-//		[self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"syndi_nav_portrait"] 
-//													  forBarMetrics:UIBarMetricsDefault];
-//		[self.navigationController.toolbar setBackgroundImage:[UIImage imageNamed:@"syndi_toolbar_portrait"]
-//										   forToolbarPosition:UIToolbarPositionBottom
-//												   barMetrics:UIBarMetricsDefault];
-//		[self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"syndi_nav_landscape"] 
-//													  forBarMetrics:UIBarMetricsLandscapePhone];
-//		[self.navigationController.toolbar setBackgroundImage:[UIImage imageNamed:@"syndi_toolbar_landscape"]
-//										   forToolbarPosition:UIToolbarPositionBottom
-//												   barMetrics:UIBarMetricsLandscapePhone];
+		[self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"syndi_nav_portrait"] 
+													  forBarMetrics:UIBarMetricsDefault];
+		[self.navigationController.toolbar setBackgroundImage:[UIImage imageNamed:@"syndi_toolbar_portrait"]
+										   forToolbarPosition:UIToolbarPositionBottom
+												   barMetrics:UIBarMetricsDefault];
+		[self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"syndi_nav_landscape"] 
+													  forBarMetrics:UIBarMetricsLandscapePhone];
+		[self.navigationController.toolbar setBackgroundImage:[UIImage imageNamed:@"syndi_toolbar_landscape"]
+										   forToolbarPosition:UIToolbarPositionBottom
+												   barMetrics:UIBarMetricsLandscapePhone];
 		
 		UIBarButtonItem *goHomeItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"newback_portrait"]
 														 landscapeImagePhone:[UIImage imageNamed:@"newback_landscape"]

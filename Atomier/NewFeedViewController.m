@@ -54,6 +54,7 @@
 									, NSLocalizedString(@"Copy Link", nil)
 									, NSLocalizedString(@"Mail Link", nil)
 									, NSLocalizedString(@"Mail Article", nil)
+									, NSLocalizedString(@"Send to Facebook", nil)
 									, NSLocalizedString(@"Send to Twitter", nil)
 									, nil];
 			}
@@ -66,6 +67,7 @@
 									, NSLocalizedString(@"Copy Link", nil)
 									, NSLocalizedString(@"Mail Link", nil)
 									, NSLocalizedString(@"Mail Article", nil)
+									, NSLocalizedString(@"Send to Facebook", nil)
 									, nil];
 			}
 		}
@@ -84,6 +86,8 @@
 -(void)displayComposerSheet:(NSString *)title body:(NSString *)body
 {
 	MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];
+	[picker.navigationItem.leftBarButtonItem setTintColor:[UIColor redColor]];
+	[picker.navigationItem.rightBarButtonItem setTintColor:nil];
 	picker.mailComposeDelegate = self;
 	
 	[picker setSubject:title];
@@ -172,6 +176,22 @@
 			[self mail:[self feedTitle] body:[body stringByAppendingFormat:@"<p>Sent with <a href=\"%@\">%@</a></p>", @"http://itunes.apple.com/us/app/syndi-rss-reader/id498935649?ls=1&mt=8", @"Syndi RSS"]];
 		}
 		else if (buttonIndex == actionSheet.firstOtherButtonIndex + 4) {
+			AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+			if ([appDelegate facebookAuthorize]) {
+				// send
+				NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+											   [self feedTitle], @"message"
+											   , [sourceURL absoluteString], @"link"
+											   , nil];
+				if (0) {
+					[appDelegate facebookRequestGraphPath:@"me/feed" andParams:params andHttpMethod:@"POST"];
+				} else {
+					[appDelegate.facebook dialog:@"feed" andParams:params andDelegate:nil];
+				}
+				
+			}
+		}
+		else if (buttonIndex == actionSheet.firstOtherButtonIndex + 5) {
 			// Send to Twitter
 			// Set up the built-in twitter composition view controller.
 			TWTweetComposeViewController *tweetViewController = [[TWTweetComposeViewController alloc] init];

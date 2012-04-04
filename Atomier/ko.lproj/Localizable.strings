@@ -14,7 +14,7 @@
 
 "Mark all as read" = "모두 읽음으로 표시";
 
-"Mark all items from this list as read\?" = "이 리스트의 모든 글들을 읽음으로 표시할까요\?";
+"Mark all items from this list as read?" = "이 리스트의 모든 글들을 읽음으로 표시할까요?";
 
 "Share" = "공유";
 
@@ -147,6 +147,13 @@
 "Mark as unread" = "안 읽음으로 표시";
 
 "If you enjoy using %@, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!" = "%@ 사용이 맘에 드셨나요? 잠시만 시간을 내서 평가를 부탁드리겠습니다. 감사합니다!";
+
 "Rate %@" = "%@ 평가하기";
+
 "No, Thanks" = "평가하지 않겠습니다";
+
 "Remind me later" = "다음에 평가하겠습니다";
+
+/* No comment provided by engineer. */
+"Send to Facebook" = "페이스북으로 보내기";
+
