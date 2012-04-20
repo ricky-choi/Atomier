@@ -62,7 +62,7 @@
 	    self.emailField.frame =			CGRectMake(110, 357, 320, 31);
 		self.passwordField.frame =		CGRectMake(110, 405, 320, 31);
 		self.descriptionLabel.frame =	CGRectMake(110, 300, 320, 30);
-		self.alertField.frame =			CGRectMake(110, 275, 320, 20);
+		self.alertField.frame =			CGRectMake(110, 255, 320, 40);
 		self.spinner.center =			CGPointMake(270, 240);
 		self.signInButton.frame =		CGRectMake(100, 465, 340, 44);
 	}
@@ -198,8 +198,49 @@
 }
 
 - (void)loginFailed:(NSNotification *)notification {
+	NSLog(@"loginView - failed : %@", notification.userInfo);
+	
 	[self.spinner stopAnimating];
 	
+	NSString *message = NSLocalizedString(@"SignInFailedGeneral", nil);
+	NSString *errorCode = [notification.userInfo valueForKey:@"Error"];
+	if ([errorCode isEqualToString:@"BadAuthentication"]) {
+		NSString *errorInfo = [notification.userInfo valueForKey:@"Info"];
+		if ([errorInfo isEqualToString:@"InvalidSecondFactor"]) {
+			// 2-step error
+			message = NSLocalizedString(@"SignInFailed2Step", nil);
+		}
+		else {
+			// typical error
+			message = NSLocalizedString(@"BadAuthentication", nil);
+		}
+	}
+	else if ([errorCode isEqualToString:@"NotVerified"]) {
+		message = NSLocalizedString(@"NotVerified", nil);
+	}
+	else if ([errorCode isEqualToString:@"TermsNotAgreed"]) {
+		message = NSLocalizedString(@"TermsNotAgreed", nil);
+	}
+	else if ([errorCode isEqualToString:@"CaptchaRequired"]) {
+		message = NSLocalizedString(@"CaptchaRequired", nil);
+	}
+	else if ([errorCode isEqualToString:@"Unknown"]) {
+		message = NSLocalizedString(@"Unknown", nil);
+	}
+	else if ([errorCode isEqualToString:@"AccountDeleted"]) {
+		message = NSLocalizedString(@"AccountDeleted", nil);
+	}
+	else if ([errorCode isEqualToString:@"AccountDisabled"]) {
+		message = NSLocalizedString(@"AccountDisabled", nil);
+	}
+	else if ([errorCode isEqualToString:@"ServiceDisabled"]) {
+		message = NSLocalizedString(@"ServiceDisabled", nil);
+	}
+	else if ([errorCode isEqualToString:@"ServiceUnavailable"]) {
+		 message = NSLocalizedString(@"ServiceUnavailable", nil);
+	}
+	
+	self.alertField.text = message;
 	[self.alertField setHidden:NO];
 	
 	//self.emailField.text = @"";

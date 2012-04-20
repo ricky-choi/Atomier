@@ -508,6 +508,7 @@
 		6914292F149DAF010096C5AE /* URLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = URLParser.m; sourceTree = "<group>"; };
 		69142941149DC8550096C5AE /* PreviewFeed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreviewFeed.h; sourceTree = "<group>"; };
 		69142942149DC8550096C5AE /* PreviewFeed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreviewFeed.m; sourceTree = "<group>"; };
+		69175597153BC24100733019 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		691B2DAF14D2D9EB00CB5AA0 /* free_Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "free_Icon-72.png"; sourceTree = "<group>"; };
 		691B2DB014D2D9EB00CB5AA0 /* free_Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "free_Icon-Small-50.png"; sourceTree = "<group>"; };
 		691B2DB114D2D9EB00CB5AA0 /* free_Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "free_Icon-Small.png"; sourceTree = "<group>"; };
@@ -2164,6 +2165,7 @@
 			children = (
 				6902A92314AAAB14001A594A /* en */,
 				6902A92614AAAB20001A594A /* ko */,
+				69175597153BC24100733019 /* es */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

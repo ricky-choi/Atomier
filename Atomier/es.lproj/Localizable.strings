@@ -1,0 +1,171 @@
+/* Localizable.strings
+  Atomier
+
+  Created by Choi Jaeyoung on 12/28/11.
+  Copyright (c) 2011 Appcid. All rights reserved. */
+
+
+"Unread" = "Sin leer";
+
+"Starred" = "Favoritos";
+
+"Subscribe" = "Suscribirse";
+
+"Unsubscribe" = "De suscribirse";
+
+"Mark all as read" = "Marcar todo como leÌdo";
+
+"Mark all items from this list as read?" = "Marcar todos los artÌculos de es lista como leÌdos?";
+
+"Share" = "Compartir";
+
+"Shared" = "Compartido";
+
+"Open in Safari" = "Abrir en Safari";
+
+"Copy Link" = "Copiar Enlace";
+
+"Mail Link" = "Enviar Enlace";
+
+"Mail Article" = "Enviar ArtÌculo";
+
+"Send to Twitter" = "Publicar en Twitter";
+
+"Sort" = "Orden";
+
+"Ascending" = "Ascendente";
+
+"Descending" = "Descendente";
+
+"Refresh All" = "Refrescar Todo";
+
+"Settings" = "Ajustes";
+
+"No Internet" = "Sin Internet";
+
+"No Internet Message" = "Sin Mensaje de Internet";
+
+"Invalid Login Info" = "Info de Acceso Inv·lida";
+
+"All" = "Todo";
+
+"Subscription" = "SuscripciÛn";
+
+"Category" = "CategorÌa";
+
+"Cancel" = "Cancelar";
+
+"Homepage" = "Inicio";
+
+"OK" = "OK";
+
+"All Items" = "Todos los ArtÌculos";
+
+"Folders" = "Carpetas";
+
+"Subscriptions" = "Suscripciones";
+
+"Account: %@" = "Cuenta: %@";
+
+"Sync" = "Sincronizar";
+
+"Home Screen" = "Pantalla de Inicio";
+
+"Upgrade" = "Mejorar";
+
+"Sign out" = "Salir";
+
+"Automatic" = "Autom·tico";
+
+"Automatic if Wi-Fi" = "Autom·tico con Wi-Fi";
+
+"Manual" = "Manual";
+
+"Show Unread Badge" = "Mostrar Indicador Icono";
+
+"Buy Full Version" = "Comprar VersiÛn Completa";
+
+"Remove Ad" = "Eliminar Publicidad";
+
+"%d of %d" = "%d de %d";
+
+"1 new item" = "1 nuevo artÌculos";
+
+"Error" = "Error";
+
+"Feed" = "Fuentes";
+
+"More..." = "Mas...";
+
+"No More Feeds" = "No hay mas Fuentes";
+
+"Search term or Enter feed URL" = "Buscar tÈrminos o Introducir URL";
+
+"Search" = "Buscar";
+
+"Searching Done." = "B˙squeda completa";
+
+"Searching Failed." = "B˙squeda fallida";
+
+"Searching keyword..." = "Buscando palabras...";
+
+"Subscribe Failed." = "SuscripciÛn Fallida";
+
+"Subscribed." = "Suscrito";
+
+"Subscribing..." = "Suscribiendo...";
+
+"Update: %@" = "ActualizaciÛn: %@";
+
+"Updating..." = "Actualizando...";
+
+"You have no unread items." = "No tiene artÌculos sin leer";
+
+"Mark as read" = "Marcar como leÌdo";
+
+"Mark as unread" = "Marcar no leÌdo";
+
+"If you enjoy using %@, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!" = "Si le gusta usar %@, le importarÌa tomarse un momento para valorarnos? No le tomar· mas de un minuto. Gracias por su apoyo!";
+
+"Rate %@" = "Valorar %@";
+
+"No, Thanks" = "No, Gracias";
+
+"Remind me later" = "RecuÈrdamelo mas tarde";
+
+"2-step application-specific password required" = "AplicaciÛn especÌfica requiere dos pasos de validaciÛn";
+
+"Send to Facebook" = "Publicar en Facebook";
+
+
+
+
+
+// accounts server error GMClientAuthErrorBadAuthentication
+"BadAuthentication" = "Incorrect account name or password.";
+// accounts server error GMClientAuthErrorNotVerified
+"NotVerified" = "User verification is required. Sign in to Google Calendar in a web browser to verify.";
+// accounts server error GMClientAuthErrorTermsNotAgreed
+"TermsNotAgreed" = "Sign in to Google Calendar in a web browser to agree to the terms of service.";
+// accounts server error GMClientAuthErrorCaptchaRequired (We treat this the same as NotVerified.)
+"CaptchaRequired" = "The account email address has not been verified. Sign in to Google Calendar in a web browser to verify.";
+// accounts server error GMClientAuthErrorUnknown (We treat this the same as NotVerified.)
+"Unknown" = "The account email address has not been verified. Sign in to Google Calendar in a web browser to verify.";
+// accounts server error GMClientAuthErrorAccountDeleted
+"AccountDeleted" = "The account has been deleted.";
+// accounts server error GMClientAuthErrorAccountDisabled
+"AccountDisabled" = "The account has been disabled.";
+// accounts server error GMClientAuthErrorServiceDisabled
+"ServiceDisabled" = "Access to the specified service has been disabled. (The account may still be valid.)";
+// accounts server error GMClientAuthErrorServiceUnavailable
+"ServiceUnavailable" = "The service is not available; try again later.";
+
+"SignInFailedGeneral" = "Sign-In Failed";
+
+"SignInFailed2Step" = "2-step application-specific password required";
+
+"SignInFailedGeneralParam" = "Sign-In Failed";
+
+"SignInFailedCaptcha" = "User Verification Required for Sign-In";
+
+"SignInFailedProxy" = "Proxy Authentication Required";

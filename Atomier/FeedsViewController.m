@@ -341,6 +341,10 @@
 	
 	[self refreshTitle];
 	
+	UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
+	[backItem setTintColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1]];
+	self.navigationItem.backBarButtonItem = backItem;
+	
 //	if (self.subscription.htmlUrl) {
 //		UIBarButtonItem *siteItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Homepage", nil)
 //																	 style:UIBarButtonItemStyleBordered

@@ -487,6 +487,9 @@
 		[self.navigationController.toolbar setBackgroundImage:[UIImage imageNamed:@"syndi_toolbar_landscape"]
 										   forToolbarPosition:UIToolbarPositionBottom
 												   barMetrics:UIBarMetricsLandscapePhone];
+		UIBarButtonItem *backItem = [[UIBarButtonItem alloc] init];
+		[backItem setTintColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1]];
+		self.navigationItem.backBarButtonItem = backItem;
 		
 		UIBarButtonItem *goHomeItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"newback_portrait"]
 														 landscapeImagePhone:[UIImage imageNamed:@"newback_landscape"]
@@ -510,6 +513,7 @@
 		self.navigationItem.rightBarButtonItem = modeItem;
 #else
 		self.navigationItem.rightBarButtonItem = self.editButtonItem;
+		[self.navigationItem.rightBarButtonItem setTintColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1]];
 		[self invalidateEditButton];   
 #endif
 		
@@ -973,7 +977,6 @@
 			viewController.category = category;
 			viewController.title = category.label;
 		}
-
 	}
 }
 

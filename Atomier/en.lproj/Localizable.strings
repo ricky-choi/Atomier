@@ -86,64 +86,42 @@
 
 "Remove Ad" = "Remove Ad";
 
-/* No comment provided by engineer. */
-"%d new items" = "%d new items";
-
-/* No comment provided by engineer. */
 "%d of %d" = "%1$d of %2$d";
 
-/* No comment provided by engineer. */
 "1 new item" = "1 new item";
 
-/* No comment provided by engineer. */
 "Error" = "Error";
 
-/* No comment provided by engineer. */
 "Feed" = "Feed";
 
-/* No comment provided by engineer. */
 "More..." = "More...";
 
-/* No comment provided by engineer. */
 "No More Feeds" = "No More Feeds";
 
-/* No comment provided by engineer. */
 "Search term or Enter feed URL" = "Search term or Enter feed URL";
 
-/* No comment provided by engineer. */
 "Search" = "Search";
 
-/* No comment provided by engineer. */
 "Searching Done." = "Searching Done.";
 
-/* No comment provided by engineer. */
 "Searching Failed." = "Searching Failed.";
 
-/* No comment provided by engineer. */
 "Searching keyword..." = "Searching keyword...";
 
-/* No comment provided by engineer. */
 "Subscribe Failed." = "Subscribe Failed.";
 
-/* No comment provided by engineer. */
 "Subscribed." = "Subscribed.";
 
-/* No comment provided by engineer. */
 "Subscribing..." = "Subscribing...";
 
-/* No comment provided by engineer. */
 "Update: %@" = "Updated: %@";
 
-/* No comment provided by engineer. */
 "Updating..." = "Updating...";
 
-/* No comment provided by engineer. */
 "You have no unread items." = "You have no unread items.";
 
-/* No comment provided by engineer. */
 "Mark as read" = "Mark as read";
 
-/* No comment provided by engineer. */
 "Mark as unread" = "Mark as unread";
 
 "If you enjoy using %@, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!" = "If you enjoy using %@, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!";
@@ -154,6 +132,35 @@
 
 "Remind me later" = "Remind me later";
 
-/* No comment provided by engineer. */
+"2-step application-specific password required" = "2-step application-specific password required";
+
 "Send to Facebook" = "Send to Facebook";
 
+// accounts server error GMClientAuthErrorBadAuthentication
+"BadAuthentication" = "Incorrect account name or password.";
+// accounts server error GMClientAuthErrorNotVerified
+"NotVerified" = "User verification is required. Sign in to Google Calendar in a web browser to verify.";
+// accounts server error GMClientAuthErrorTermsNotAgreed
+"TermsNotAgreed" = "Sign in to Google Calendar in a web browser to agree to the terms of service.";
+// accounts server error GMClientAuthErrorCaptchaRequired (We treat this the same as NotVerified.)
+"CaptchaRequired" = "The account email address has not been verified. Sign in to Google Calendar in a web browser to verify.";
+// accounts server error GMClientAuthErrorUnknown (We treat this the same as NotVerified.)
+"Unknown" = "The account email address has not been verified. Sign in to Google Calendar in a web browser to verify.";
+// accounts server error GMClientAuthErrorAccountDeleted
+"AccountDeleted" = "The account has been deleted.";
+// accounts server error GMClientAuthErrorAccountDisabled
+"AccountDisabled" = "The account has been disabled.";
+// accounts server error GMClientAuthErrorServiceDisabled
+"ServiceDisabled" = "Access to the specified service has been disabled. (The account may still be valid.)";
+// accounts server error GMClientAuthErrorServiceUnavailable
+"ServiceUnavailable" = "The service is not available; try again later.";
+
+"SignInFailedGeneral" = "Sign-In Failed";
+
+"SignInFailed2Step" = "2-step application-specific password required";
+
+"SignInFailedGeneralParam" = "Sign-In Failed";
+
+"SignInFailedCaptcha" = "User Verification Required for Sign-In";
+
+"SignInFailedProxy" = "Proxy Authentication Required";

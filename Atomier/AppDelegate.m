@@ -232,7 +232,7 @@ static NSString* kAppId = @"164714413630639";
 //								forToolbarPosition:UIToolbarPositionBottom
 //										barMetrics:UIBarMetricsLandscapePhone];
 		
-		[[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1]];
+//		[[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTintColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1]];
 	}	
 	
 	[Appirater appLaunched:YES];
@@ -674,12 +674,12 @@ static NSString* kAppId = @"164714413630639";
 													  userInfo:nil];
 	
 }
-- (void)googleReaderAuthenticateFailed {
-	NSLog(@"googleReaderAuthenticateFailed");
+- (void)googleReaderAuthenticateFailed:(id)info {
+	NSLog(@"googleReaderAuthenticateFailed: %@", info);
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_LOGIN_FAILED
 														object:nil
-													  userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Authenticate", @"Kind", nil]];
+													  userInfo:info];//[NSDictionary dictionaryWithObjectsAndKeys:@"Authenticate", @"Kind", nil]];
 	[self showSignInView];
 }
 

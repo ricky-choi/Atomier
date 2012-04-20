@@ -86,64 +86,42 @@
 
 "Remove Ad" = "광고 더 이상 안 보기";
 
-/* No comment provided by engineer. */
-"%d new items" = "%d개의 새 글";
-
-/* No comment provided by engineer. */
 "%d of %d" = "%d / %d";
 
-/* No comment provided by engineer. */
 "1 new item" = "1개의 새 글";
 
-/* No comment provided by engineer. */
 "Error" = "에러";
 
-/* No comment provided by engineer. */
 "Feed" = "피드";
 
-/* No comment provided by engineer. */
 "More..." = "더 보기...";
 
-/* No comment provided by engineer. */
 "No More Feeds" = "더 이상 글이 없습니다.";
 
-/* No comment provided by engineer. */
 "Search term or Enter feed URL" = "검색어 또는 피드 URL을 입력하세요.";
 
-/* No comment provided by engineer. */
 "Search" = "검색";
 
-/* No comment provided by engineer. */
 "Searching Done." = "검색 완료.";
 
-/* No comment provided by engineer. */
 "Searching Failed." = "검색 실패.";
 
-/* No comment provided by engineer. */
 "Searching keyword..." = "키워드 검색 중...";
 
-/* No comment provided by engineer. */
 "Subscribe Failed." = "구독 실패.";
 
-/* No comment provided by engineer. */
 "Subscribed." = "구독되었습니다.";
 
-/* No comment provided by engineer. */
 "Subscribing..." = "구독 중...";
 
-/* No comment provided by engineer. */
 "Update: %@" = "업데이트: %@";
 
-/* No comment provided by engineer. */
 "Updating..." = "업데이트 중...";
 
-/* No comment provided by engineer. */
 "You have no unread items." = "읽을 새 글이 없습니다.";
 
-/* No comment provided by engineer. */
 "Mark as read" = "읽음으로 표시";
 
-/* No comment provided by engineer. */
 "Mark as unread" = "안 읽음으로 표시";
 
 "If you enjoy using %@, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!" = "%@ 사용이 맘에 드셨나요? 잠시만 시간을 내서 평가를 부탁드리겠습니다. 감사합니다!";
@@ -154,6 +132,35 @@
 
 "Remind me later" = "다음에 평가하겠습니다";
 
-/* No comment provided by engineer. */
+"2-step application-specific password required" = "2단계 인증을 위한 앱 전용 비밀번호가 필요합니다.";
+
 "Send to Facebook" = "페이스북으로 보내기";
 
+// accounts server error GMClientAuthErrorBadAuthentication
+"BadAuthentication" = "ID 또는 비밀번호가 틀렸습니다.";
+// accounts server error GMClientAuthErrorNotVerified
+"NotVerified" = "사용자 인증이 필요합니다. 웹브라우저를 이용해 구글 사이트로 가서 인증하세요.";
+// accounts server error GMClientAuthErrorTermsNotAgreed
+"TermsNotAgreed" = "웹브라우저를 이용해 구글 사이트에서 서비스 사용 동의를 해야 합니다.";
+// accounts server error GMClientAuthErrorCaptchaRequired (We treat this the same as NotVerified.)
+"CaptchaRequired" = "사용하신 이메일 주소는 인증되지 않았습니다. 웹브라우저를 이용해 구글 사이트로 가서 인증하세요.";
+// accounts server error GMClientAuthErrorUnknown (We treat this the same as NotVerified.)
+"Unknown" = "사용하신 이메일 주소는 인증되지 않았습니다. 웹브라우저를 이용해 구글 사이트로 가서 인증하세요.";
+// accounts server error GMClientAuthErrorAccountDeleted
+"AccountDeleted" = "이 계정은 삭제된 계정입니다.";
+// accounts server error GMClientAuthErrorAccountDisabled
+"AccountDisabled" = "이 계정은 사용할 수 없습니다.";
+// accounts server error GMClientAuthErrorServiceDisabled
+"ServiceDisabled" = "이 서비스에 접근할 수 없습니다.";
+// accounts server error GMClientAuthErrorServiceUnavailable
+"ServiceUnavailable" = "서비스를 사용할 수 없습니다. 다음에 다시 시도하세요.";
+
+"SignInFailedGeneral" = "로그인 실패";
+
+"SignInFailed2Step" = "2단계 인증을 위한 앱 전용 비밀번호가 필요합니다.";
+
+"SignInFailedGeneralParam" = "로그인 실패";
+
+"SignInFailedCaptcha" = "로그인을 위해선 사용자 인증이 필요합니다.";
+
+"SignInFailedProxy" = "프록시 인증이 필요합니다.";
