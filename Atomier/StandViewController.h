@@ -40,6 +40,7 @@
 
 @property (strong, nonatomic) UIPopoverController *popover;
 @property (weak, nonatomic) IBOutlet UILabel *updateLabel;
+@property (weak, nonatomic) IBOutlet UILabel *messageLabel;
 
 - (IBAction)refresh:(id)sender;
 - (IBAction)changeMode:(id)sender;

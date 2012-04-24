@@ -2248,7 +2248,7 @@
 		69339967149B141100DD4E53 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jaeyoung CHOI (544PMM4TRQ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jae Young Choi (4LMV242P9S)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "Atomier/Atomier-Info.plist";
@@ -2257,7 +2257,7 @@
 					"\"$(SRCROOT)\"",
 				);
 				PRODUCT_NAME = Syndi;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CE63909C-EA38-4172-B674-77FAEB22EA9E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F642287B-6528-4F84-9A93-528B7F3D6667";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2265,7 +2265,7 @@
 		69339968149B141100DD4E53 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jaeyoung CHOI (544PMM4TRQ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jae Young Choi (4LMV242P9S)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "Atomier/Atomier-Info.plist";
@@ -2274,7 +2274,7 @@
 					"\"$(SRCROOT)\"",
 				);
 				PRODUCT_NAME = Syndi;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CE63909C-EA38-4172-B674-77FAEB22EA9E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F642287B-6528-4F84-9A93-528B7F3D6667";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

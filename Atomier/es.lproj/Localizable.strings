@@ -4,7 +4,6 @@
   Created by Choi Jaeyoung on 12/28/11.
   Copyright (c) 2011 Appcid. All rights reserved. */
 
-
 "Unread" = "Sin leer";
 
 "Starred" = "Favoritos";
@@ -137,27 +136,31 @@
 
 "Send to Facebook" = "Publicar en Facebook";
 
-
-
-
-
-// accounts server error GMClientAuthErrorBadAuthentication
+/* accounts server error GMClientAuthErrorBadAuthentication */
 "BadAuthentication" = "Incorrect account name or password.";
-// accounts server error GMClientAuthErrorNotVerified
+
+/* accounts server error GMClientAuthErrorNotVerified */
 "NotVerified" = "User verification is required. Sign in to Google Calendar in a web browser to verify.";
-// accounts server error GMClientAuthErrorTermsNotAgreed
+
+/* accounts server error GMClientAuthErrorTermsNotAgreed */
 "TermsNotAgreed" = "Sign in to Google Calendar in a web browser to agree to the terms of service.";
-// accounts server error GMClientAuthErrorCaptchaRequired (We treat this the same as NotVerified.)
+
+/* accounts server error GMClientAuthErrorCaptchaRequired (We treat this the same as NotVerified.) */
 "CaptchaRequired" = "The account email address has not been verified. Sign in to Google Calendar in a web browser to verify.";
-// accounts server error GMClientAuthErrorUnknown (We treat this the same as NotVerified.)
+
+/* accounts server error GMClientAuthErrorUnknown (We treat this the same as NotVerified.) */
 "Unknown" = "The account email address has not been verified. Sign in to Google Calendar in a web browser to verify.";
-// accounts server error GMClientAuthErrorAccountDeleted
+
+/* accounts server error GMClientAuthErrorAccountDeleted */
 "AccountDeleted" = "The account has been deleted.";
-// accounts server error GMClientAuthErrorAccountDisabled
+
+/* accounts server error GMClientAuthErrorAccountDisabled */
 "AccountDisabled" = "The account has been disabled.";
-// accounts server error GMClientAuthErrorServiceDisabled
+
+/* accounts server error GMClientAuthErrorServiceDisabled */
 "ServiceDisabled" = "Access to the specified service has been disabled. (The account may still be valid.)";
-// accounts server error GMClientAuthErrorServiceUnavailable
+
+/* accounts server error GMClientAuthErrorServiceUnavailable */
 "ServiceUnavailable" = "The service is not available; try again later.";
 
 "SignInFailedGeneral" = "Sign-In Failed";
@@ -169,3 +172,11 @@
 "SignInFailedCaptcha" = "User Verification Required for Sign-In";
 
 "SignInFailedProxy" = "Proxy Authentication Required";
+
+/* No comment provided by engineer. */
+"%d new items" = "%d nuevo artÌculos";
+
+"No unread items" = "No hay elementos no leídos";
+
+"No starred items" = "No tienes ningún elemento destacado";
+

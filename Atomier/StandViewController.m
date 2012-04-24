@@ -62,6 +62,7 @@
 @synthesize segmentView = _segmentView;
 @synthesize popover = _popover;
 @synthesize updateLabel = _updateLabel;
+@synthesize messageLabel = _messageLabel;
 
 @synthesize adView = _adView;
 @synthesize gadView = _gadView;
@@ -589,6 +590,18 @@
 		}
 		
 		self.childs = newChilds;
+		
+		if (chipCount > 0) {
+			self.messageLabel.text = @"";
+		}
+		else {
+			if (self.currentSegment == 1) {
+				self.messageLabel.text = NSLocalizedString(@"No starred items", nil);
+			}
+			else {
+				self.messageLabel.text = NSLocalizedString(@"No unread items", nil);
+			}
+		}
 	}	
 }
 
@@ -653,13 +666,7 @@
 	[nextButton addTarget:self action:@selector(next:) forControlEvents:UIControlEventTouchUpInside];
 	UIBarButtonItem *nextItem = [[UIBarButtonItem alloc] initWithCustomView:nextButton];
 	
-//	UILabel *statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 240, 30)];
-//	statusLabel.text = @"test";
-//	statusLabel.backgroundColor = [UIColor clearColor];
-//	UIBarButtonItem *labelItem = [[UIBarButtonItem alloc] initWithCustomView:statusLabel];
-	
 	self.navigationItem.leftBarButtonItem = nextItem;
-	//self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:nextItem, labelItem, nil];
 	
 	[self showUpdateStatus];
 	[self refreshUnreadCount];
@@ -674,6 +681,7 @@
 	self.navigationItem.rightBarButtonItem = modeItem;
 #else
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	[self.navigationItem.rightBarButtonItem setTintColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1]];
 	[self invalidateEditButton];
 #endif
 	
@@ -681,8 +689,6 @@
 	contentFrame.size.height -= 50.0f;
 	self.scrollView = [[UIScrollView alloc] initWithFrame:contentFrame];
 	self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	//self.scrollView.contentInset = UIEdgeInsetsMake(self.navigationController.navigationBar.frame.size.height, 0, self.navigationController.toolbar.frame.size.height, 0);
-	//self.scrollView.scrollIndicatorInsets = self.scrollView.contentInset;
 	[self.view addSubview:self.scrollView];
 	
 #ifdef FREE_FOR_PROMOTION
@@ -898,6 +904,7 @@
 	
 	[self setSegmentView:nil];
 	[self setUpdateLabel:nil];
+    [self setMessageLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;

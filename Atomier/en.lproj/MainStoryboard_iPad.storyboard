@@ -3,7 +3,7 @@
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <development defaultVersion="4200" identifier="xcode"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1179"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1181"/>
     </dependencies>
     <scenes>
         <!--Stand View Controller-->
@@ -88,11 +88,21 @@
                                 <color key="shadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <size key="shadowOffset" width="0.0" height="1"/>
                             </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="VI5-M0-39R">
+                                <rect key="frame" x="20" y="446" width="728" height="88"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <color key="textColor" red="0.25098040700000002" green="0.1411764771" blue="0.03529411927" alpha="1" colorSpace="deviceRGB"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <size key="shadowOffset" width="0.0" height="1"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="jZg-90-czi"/>
                     <connections>
+                        <outlet property="messageLabel" destination="VI5-M0-39R" id="XhC-AR-iZx"/>
                         <outlet property="segmentView" destination="atg-IX-aLc" id="EJe-m1-twb"/>
                         <outlet property="updateLabel" destination="6Dq-Of-vb9" id="E4i-Oi-tKe"/>
                     </connections>
@@ -280,47 +290,6 @@
         <image name="settings~ipad.png" width="32" height="32"/>
         <image name="subscribe~ipad.png" width="30" height="32"/>
     </resources>
-    <classes>
-        <class className="NewFeedViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NewFeedViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="action:"/>
-                <relationship kind="action" name="toggleStar:"/>
-                <relationship kind="outlet" name="starButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="titleLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="topBarImageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
-            </relationships>
-        </class>
-        <class className="NewFeedsViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NewFeedsViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="goHome:"/>
-                <relationship kind="action" name="goNext:"/>
-                <relationship kind="action" name="goPrevious:"/>
-                <relationship kind="outlet" name="bottomImageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="bottomView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="nextButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="pageLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="previousButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="topImageView" candidateClass="UIImageView"/>
-            </relationships>
-        </class>
-        <class className="StandViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/StandViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="changeMode:"/>
-                <relationship kind="action" name="next:"/>
-                <relationship kind="action" name="refresh:"/>
-                <relationship kind="action" name="search:"/>
-                <relationship kind="action" name="setting:"/>
-                <relationship kind="action" name="subscribe:"/>
-                <relationship kind="outlet" name="segmentView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="updateLabel" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <nil key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

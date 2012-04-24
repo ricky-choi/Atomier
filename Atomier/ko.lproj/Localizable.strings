@@ -136,23 +136,31 @@
 
 "Send to Facebook" = "페이스북으로 보내기";
 
-// accounts server error GMClientAuthErrorBadAuthentication
+/* accounts server error GMClientAuthErrorBadAuthentication */
 "BadAuthentication" = "ID 또는 비밀번호가 틀렸습니다.";
-// accounts server error GMClientAuthErrorNotVerified
+
+/* accounts server error GMClientAuthErrorNotVerified */
 "NotVerified" = "사용자 인증이 필요합니다. 웹브라우저를 이용해 구글 사이트로 가서 인증하세요.";
-// accounts server error GMClientAuthErrorTermsNotAgreed
+
+/* accounts server error GMClientAuthErrorTermsNotAgreed */
 "TermsNotAgreed" = "웹브라우저를 이용해 구글 사이트에서 서비스 사용 동의를 해야 합니다.";
-// accounts server error GMClientAuthErrorCaptchaRequired (We treat this the same as NotVerified.)
+
+/* accounts server error GMClientAuthErrorCaptchaRequired (We treat this the same as NotVerified.) */
 "CaptchaRequired" = "사용하신 이메일 주소는 인증되지 않았습니다. 웹브라우저를 이용해 구글 사이트로 가서 인증하세요.";
-// accounts server error GMClientAuthErrorUnknown (We treat this the same as NotVerified.)
+
+/* accounts server error GMClientAuthErrorUnknown (We treat this the same as NotVerified.) */
 "Unknown" = "사용하신 이메일 주소는 인증되지 않았습니다. 웹브라우저를 이용해 구글 사이트로 가서 인증하세요.";
-// accounts server error GMClientAuthErrorAccountDeleted
+
+/* accounts server error GMClientAuthErrorAccountDeleted */
 "AccountDeleted" = "이 계정은 삭제된 계정입니다.";
-// accounts server error GMClientAuthErrorAccountDisabled
+
+/* accounts server error GMClientAuthErrorAccountDisabled */
 "AccountDisabled" = "이 계정은 사용할 수 없습니다.";
-// accounts server error GMClientAuthErrorServiceDisabled
+
+/* accounts server error GMClientAuthErrorServiceDisabled */
 "ServiceDisabled" = "이 서비스에 접근할 수 없습니다.";
-// accounts server error GMClientAuthErrorServiceUnavailable
+
+/* accounts server error GMClientAuthErrorServiceUnavailable */
 "ServiceUnavailable" = "서비스를 사용할 수 없습니다. 다음에 다시 시도하세요.";
 
 "SignInFailedGeneral" = "로그인 실패";
@@ -164,3 +172,11 @@
 "SignInFailedCaptcha" = "로그인을 위해선 사용자 인증이 필요합니다.";
 
 "SignInFailedProxy" = "프록시 인증이 필요합니다.";
+
+/* No comment provided by engineer. */
+"%d new items" = "% 개의 새 글";
+
+"No unread items" = "읽지 않은 글이 없습니다.";
+
+"No starred items" = "별표한 글이 없습니다.";
+
