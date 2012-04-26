@@ -63,6 +63,7 @@
 @synthesize popover = _popover;
 @synthesize updateLabel = _updateLabel;
 @synthesize messageLabel = _messageLabel;
+@synthesize statusLabel = _statusLabel;
 
 @synthesize adView = _adView;
 @synthesize gadView = _gadView;
@@ -370,239 +371,236 @@
 #define SHOW_ALL 0
 
 - (void)invalidateItemsForOrientation:(UIInterfaceOrientation)interfaceOrientation changeMode:(BOOL)changeMode {
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-	    //NSLog(@"subscription: %@", self.fetchedResultsControllerForSubscription);
-		//NSLog(@"category: %@", self.fetchedResultsControllerForCategory);
-		
-		CGFloat scrollViewWidth = 0.0;
-		if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {			
-			scrollViewWidth = 768.0f;
-		} else {
-			scrollViewWidth = 1024.0f;
-		}
-		
-		NSArray *subscriptions = [self.fetchedResultsControllerForSubscription fetchedObjects];
-		NSArray *cateogries = [self.fetchedResultsControllerForCategory fetchedObjects];
-		
-		NSUInteger chipCount = [subscriptions count] + [cateogries count];
+	CGFloat scrollViewWidth = 0.0;
+	if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {			
+		scrollViewWidth = 768.0f;
+	} else {
+		scrollViewWidth = 1024.0f;
+	}
+	
+	NSArray *subscriptions = [self.fetchedResultsControllerForSubscription fetchedObjects];
+	NSArray *cateogries = [self.fetchedResultsControllerForCategory fetchedObjects];
+	
+	NSUInteger chipCount = [subscriptions count] + [cateogries count];
 #if SHOW_ALL
-		if (chipCount > 0) {
+	if (chipCount > 0) {
+		chipCount++;
+#ifdef FREE_FOR_PROMOTION
+		if (self.gadBannerLoaded && chipCount >= 5) {
 			chipCount++;
-#ifdef FREE_FOR_PROMOTION
-			if (self.gadBannerLoaded && chipCount >= 5) {
-				chipCount++;
-			}
-#endif
 		}
 #endif
-		
-		if (chipCount <= 1) {
-			if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {
-				self.chipSize = CGSizeMake(680, 820);
-			} else {
-				self.chipSize = CGSizeMake(940, 580);
-			}
-			
-		}
-		else if (chipCount == 2) {
-			if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {
-				self.chipSize = CGSizeMake(680, 400);
-			} else {
-				self.chipSize = CGSizeMake(460, 600);
-			}
-		}
-		else if (chipCount == 3 || chipCount == 4) {
-			if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {
-				self.chipSize = CGSizeMake(320, 400);
-			} else {
-				self.chipSize = CGSizeMake(460, 300);
-			}
-			
-		}
-		else {
-			if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {
-				self.chipSize = CGSizeMake(320, 320);
-			} else {
-				self.chipSize = CGSizeMake(300, 300);
-			}
-		}
-		
-		CGSize viewControllerSize = self.chipSize;
-		int numberOfViewControllerPerRow = scrollViewWidth / viewControllerSize.width;
-		CGFloat padding = (float)(scrollViewWidth - viewControllerSize.width * numberOfViewControllerPerRow) / (float)(numberOfViewControllerPerRow + 1);
-		int paddingInt = (int)padding;
-		CGPoint nextOrigin = CGPointMake(paddingInt, paddingInt);
-		
-		NSMutableDictionary *newChilds = [NSMutableDictionary dictionaryWithCapacity:chipCount];
-#if SHOW_ALL
-		if (chipCount > 0) {
-			// all
-			UINavigationController *exist = [self.childs valueForKey:@"ALL"];
-			UINavigationController *navigationController;
-			FeedsViewController *feedsViewController;
-			if (exist) {
-				navigationController = exist;
-				feedsViewController = (FeedsViewController *)[navigationController topViewController];
-				feedsViewController.currentSegment = self.currentSegment;
-			}
-			else {
-				feedsViewController = [IPHONE_STORYBOARD instantiateViewControllerWithIdentifier:@"FeedsViewController"];
-				feedsViewController.currentSegment = self.currentSegment;
-				
-				navigationController = [[UINavigationController alloc] initWithRootViewController:feedsViewController];
-				navigationController.view.autoresizingMask = UIViewAutoresizingNone;
-				
-				[self customizeInnerNavigationBar:navigationController.navigationBar];
-				
-				[self addChildViewController:navigationController];
-				[self.scrollView addSubview:navigationController.view];
-			}
-			
-			[self.childs removeObjectForKey:@"ALL"];
-			[newChilds setValue:navigationController forKey:@"ALL"];
-			
-			navigationController.view.frame = CGRectMake(nextOrigin.x, nextOrigin.y, viewControllerSize.width, viewControllerSize.height);
-			
-			if ([navigationController.view superview] == nil) {
-				[self.scrollView addSubview:navigationController.view];
-			}
-			
-			[self addShadow:navigationController.view.layer];
-			
-			nextOrigin = [self nextOrigin:nextOrigin padding:(CGFloat)paddingInt scrollViewWidth:scrollViewWidth];
-		}
+	}
 #endif
-		int tag = 3;
-		for (Subscription *subscription in subscriptions) {
-			UINavigationController *exist = [self.childs valueForKey:subscription.keyId];
-			UINavigationController *navigationController;
-			FeedsViewController *feedsViewController;
-			if (exist) {
-				navigationController = exist;
-				if (changeMode) {
-					[navigationController popToRootViewControllerAnimated:YES];
-				}
-				feedsViewController = (FeedsViewController *)[navigationController topViewController];
-				feedsViewController.currentSegment = self.currentSegment;
-			} else {
-				feedsViewController = [IPHONE_STORYBOARD instantiateViewControllerWithIdentifier:@"FeedsViewController"];
-				feedsViewController.subscription = subscription;
-				feedsViewController.currentSegment = self.currentSegment;
-				
-				navigationController = [[UINavigationController alloc] initWithRootViewController:feedsViewController];
-				navigationController.view.autoresizingMask = UIViewAutoresizingNone;
-				navigationController.view.tag = ++tag;
-				
-				[self customizeInnerNavigationBar:navigationController.navigationBar];
-				
-				//[self.childs setValue:navigationController forKey:subscription.keyId];
-				
-				[self addChildViewController:navigationController];
-				[self.scrollView addSubview:navigationController.view];
-			}			
-			
-			
-			
-			[self.childs removeObjectForKey:subscription.keyId];
-			[newChilds setValue:navigationController forKey:subscription.keyId];
-			
-			navigationController.view.frame = CGRectMake(nextOrigin.x, nextOrigin.y, viewControllerSize.width, viewControllerSize.height);
-			
-			if ([navigationController.view superview] == nil) {
-				[self.scrollView addSubview:navigationController.view];
-			}
-			
-			[self addShadow:navigationController.view.layer];
-			
-			nextOrigin = [self nextOrigin:nextOrigin padding:(CGFloat)paddingInt scrollViewWidth:scrollViewWidth];
-		}
-		
-		for (Category *category in cateogries) {
-			UINavigationController *exist = [self.childs valueForKey:category.keyId];
-			UINavigationController *navigationController;
-			TopViewController *topViewController;
-			if (exist) {
-				navigationController = exist;
-				if (changeMode) {
-					[navigationController popToRootViewControllerAnimated:YES];
-				}
-				topViewController = (TopViewController *)[navigationController topViewController];
-				topViewController.currentSegment = self.currentSegment;
-			} else {
-				TopViewController *topViewController = [IPHONE_STORYBOARD instantiateViewControllerWithIdentifier:@"TopViewController"];
-				topViewController.category = category;
-				topViewController.currentSegment = self.currentSegment;
-				
-				navigationController = [[UINavigationController alloc] initWithRootViewController:topViewController];
-				navigationController.view.autoresizingMask = UIViewAutoresizingNone;
-				
-				[self customizeInnerNavigationBar:navigationController.navigationBar];
-				
-				[self addChildViewController:navigationController];
-				[self.scrollView addSubview:navigationController.view];
-			}
-			
-			
-			
-			[self.childs removeObjectForKey:category.keyId];
-			[newChilds setValue:navigationController forKey:category.keyId];
-			
-			navigationController.view.frame = CGRectMake(nextOrigin.x, nextOrigin.y, viewControllerSize.width, viewControllerSize.height);
-			
-			if ([navigationController.view superview] == nil) {
-				[self.scrollView addSubview:navigationController.view];
-			}
-			
-			[self addShadow:navigationController.view.layer];
-			
-			nextOrigin = [self nextOrigin:nextOrigin padding:(CGFloat)paddingInt scrollViewWidth:scrollViewWidth];
-		}
-		
-#ifdef FREE_FOR_PROMOTION
-		if (chipCount >= 5 && self.gadBannerLoaded) {
-			// 마지막 위치에 광고 삽입
-			CGRect nextFrame = CGRectMake(nextOrigin.x, nextOrigin.y, viewControllerSize.width, viewControllerSize.height);
-			self.gadView.center = CGPointMake(CGRectGetMidX(nextFrame), CGRectGetMidY(nextFrame));
-			if ([self.gadView superview] == nil) {
-				[self.scrollView addSubview:self.gadView];
-			}
-			
-			[self addShadow:self.gadView.layer];
-			
-			nextOrigin = [self nextOrigin:nextOrigin padding:(CGFloat)paddingInt scrollViewWidth:scrollViewWidth];
-		}
-#endif
-		
-		if (nextOrigin.x == paddingInt) {
-			self.scrollView.contentSize = CGSizeMake(scrollViewWidth, nextOrigin.y);
+	
+	if (chipCount <= 1) {
+		if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {
+			self.chipSize = CGSizeMake(680, 820);
 		} else {
-			self.scrollView.contentSize = CGSizeMake(scrollViewWidth, nextOrigin.y + viewControllerSize.height + paddingInt);
+			self.chipSize = CGSizeMake(940, 580);
 		}
 		
-		if ([self.childs count] > 0) {
-			for (NSString *key in self.childs) {
-				UINavigationController *exist = [self.childs valueForKey:key];
-				if (exist) {
-					[exist removeFromParentViewController];
-					[exist.view removeFromSuperview];
-				}
-			}
+	}
+	else if (chipCount == 2) {
+		if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {
+			self.chipSize = CGSizeMake(680, 400);
+		} else {
+			self.chipSize = CGSizeMake(460, 600);
+		}
+	}
+	else if (chipCount == 3 || chipCount == 4) {
+		if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {
+			self.chipSize = CGSizeMake(320, 400);
+		} else {
+			self.chipSize = CGSizeMake(460, 300);
 		}
 		
-		self.childs = newChilds;
-		
-		if (chipCount > 0) {
-			self.messageLabel.text = @"";
+	}
+	else {
+		if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {
+			self.chipSize = CGSizeMake(320, 320);
+		} else {
+			self.chipSize = CGSizeMake(300, 300);
+		}
+	}
+	
+	CGSize viewControllerSize = self.chipSize;
+	int numberOfViewControllerPerRow = scrollViewWidth / viewControllerSize.width;
+	CGFloat padding = (float)(scrollViewWidth - viewControllerSize.width * numberOfViewControllerPerRow) / (float)(numberOfViewControllerPerRow + 1);
+	int paddingInt = (int)padding;
+	CGPoint nextOrigin = CGPointMake(paddingInt, paddingInt);
+	
+	NSMutableDictionary *newChilds = [NSMutableDictionary dictionaryWithCapacity:chipCount];
+#if SHOW_ALL
+	if (chipCount > 0) {
+		// all
+		UINavigationController *exist = [self.childs valueForKey:@"ALL"];
+		UINavigationController *navigationController;
+		FeedsViewController *feedsViewController;
+		if (exist) {
+			navigationController = exist;
+			feedsViewController = (FeedsViewController *)[navigationController topViewController];
+			feedsViewController.currentSegment = self.currentSegment;
 		}
 		else {
-			if (self.currentSegment == 1) {
-				self.messageLabel.text = NSLocalizedString(@"No starred items", nil);
+			feedsViewController = [IPHONE_STORYBOARD instantiateViewControllerWithIdentifier:@"FeedsViewController"];
+			feedsViewController.currentSegment = self.currentSegment;
+			
+			navigationController = [[UINavigationController alloc] initWithRootViewController:feedsViewController];
+			navigationController.view.autoresizingMask = UIViewAutoresizingNone;
+			
+			[self customizeInnerNavigationBar:navigationController.navigationBar];
+			
+			[self addChildViewController:navigationController];
+			[self.scrollView addSubview:navigationController.view];
+		}
+		
+		[self.childs removeObjectForKey:@"ALL"];
+		[newChilds setValue:navigationController forKey:@"ALL"];
+		
+		navigationController.view.frame = CGRectMake(nextOrigin.x, nextOrigin.y, viewControllerSize.width, viewControllerSize.height);
+		
+		if ([navigationController.view superview] == nil) {
+			[self.scrollView addSubview:navigationController.view];
+		}
+		
+		[self addShadow:navigationController.view.layer];
+		
+		nextOrigin = [self nextOrigin:nextOrigin padding:(CGFloat)paddingInt scrollViewWidth:scrollViewWidth];
+	}
+#endif
+	int tag = 3;
+	for (Subscription *subscription in subscriptions) {
+		UINavigationController *exist = [self.childs valueForKey:subscription.keyId];
+		UINavigationController *navigationController;
+		FeedsViewController *feedsViewController;
+		if (exist) {
+			navigationController = exist;
+			if (changeMode) {
+				[navigationController popToRootViewControllerAnimated:YES];
 			}
-			else {
-				self.messageLabel.text = NSLocalizedString(@"No unread items", nil);
+			feedsViewController = (FeedsViewController *)[navigationController topViewController];
+			feedsViewController.currentSegment = self.currentSegment;
+		} else {
+			feedsViewController = [IPHONE_STORYBOARD instantiateViewControllerWithIdentifier:@"FeedsViewController"];
+			feedsViewController.subscription = subscription;
+			feedsViewController.currentSegment = self.currentSegment;
+			
+			navigationController = [[UINavigationController alloc] initWithRootViewController:feedsViewController];
+			navigationController.view.autoresizingMask = UIViewAutoresizingNone;
+			navigationController.view.tag = ++tag;
+			
+			[self customizeInnerNavigationBar:navigationController.navigationBar];
+			
+			//[self.childs setValue:navigationController forKey:subscription.keyId];
+			
+			[self addChildViewController:navigationController];
+			[self.scrollView addSubview:navigationController.view];
+		}			
+		
+		
+		
+		[self.childs removeObjectForKey:subscription.keyId];
+		[newChilds setValue:navigationController forKey:subscription.keyId];
+		
+		navigationController.view.frame = CGRectMake(nextOrigin.x, nextOrigin.y, viewControllerSize.width, viewControllerSize.height);
+		
+		if ([navigationController.view superview] == nil) {
+			[self.scrollView addSubview:navigationController.view];
+		}
+		
+		[self addShadow:navigationController.view.layer];
+		
+		nextOrigin = [self nextOrigin:nextOrigin padding:(CGFloat)paddingInt scrollViewWidth:scrollViewWidth];
+	}
+	
+	for (Category *category in cateogries) {
+		UINavigationController *exist = [self.childs valueForKey:category.keyId];
+		UINavigationController *navigationController;
+		TopViewController *topViewController;
+		if (exist) {
+			navigationController = exist;
+			if (changeMode) {
+				[navigationController popToRootViewControllerAnimated:YES];
+			}
+			topViewController = (TopViewController *)[navigationController topViewController];
+			topViewController.currentSegment = self.currentSegment;
+		} else {
+			TopViewController *topViewController = [IPHONE_STORYBOARD instantiateViewControllerWithIdentifier:@"TopViewController"];
+			topViewController.category = category;
+			topViewController.currentSegment = self.currentSegment;
+			
+			navigationController = [[UINavigationController alloc] initWithRootViewController:topViewController];
+			navigationController.view.autoresizingMask = UIViewAutoresizingNone;
+			
+			[self customizeInnerNavigationBar:navigationController.navigationBar];
+			
+			[self addChildViewController:navigationController];
+			[self.scrollView addSubview:navigationController.view];
+		}
+		
+		
+		
+		[self.childs removeObjectForKey:category.keyId];
+		[newChilds setValue:navigationController forKey:category.keyId];
+		
+		navigationController.view.frame = CGRectMake(nextOrigin.x, nextOrigin.y, viewControllerSize.width, viewControllerSize.height);
+		
+		if ([navigationController.view superview] == nil) {
+			[self.scrollView addSubview:navigationController.view];
+		}
+		
+		[self addShadow:navigationController.view.layer];
+		
+		nextOrigin = [self nextOrigin:nextOrigin padding:(CGFloat)paddingInt scrollViewWidth:scrollViewWidth];
+	}
+	
+#ifdef FREE_FOR_PROMOTION
+	if (chipCount >= 5 && self.gadBannerLoaded) {
+		// 마지막 위치에 광고 삽입
+		CGRect nextFrame = CGRectMake(nextOrigin.x, nextOrigin.y, viewControllerSize.width, viewControllerSize.height);
+		self.gadView.center = CGPointMake(CGRectGetMidX(nextFrame), CGRectGetMidY(nextFrame));
+		if ([self.gadView superview] == nil) {
+			[self.scrollView addSubview:self.gadView];
+		}
+		
+		[self addShadow:self.gadView.layer];
+		
+		nextOrigin = [self nextOrigin:nextOrigin padding:(CGFloat)paddingInt scrollViewWidth:scrollViewWidth];
+	}
+#endif
+	
+	if (nextOrigin.x == paddingInt) {
+		self.scrollView.contentSize = CGSizeMake(scrollViewWidth, nextOrigin.y);
+	} else {
+		self.scrollView.contentSize = CGSizeMake(scrollViewWidth, nextOrigin.y + viewControllerSize.height + paddingInt);
+	}
+	
+	if ([self.childs count] > 0) {
+		for (NSString *key in self.childs) {
+			UINavigationController *exist = [self.childs valueForKey:key];
+			if (exist) {
+				[exist removeFromParentViewController];
+				[exist.view removeFromSuperview];
 			}
 		}
-	}	
+	}
+	
+	self.childs = newChilds;
+	
+	if (chipCount > 0) {
+		self.messageLabel.text = @"";
+	}
+	else {
+		if (self.currentSegment == 1) {
+			self.messageLabel.text = NSLocalizedString(@"No starred items", nil);
+		}
+		else {
+			self.messageLabel.text = NSLocalizedString(@"No unread items", nil);
+		}
+	}
+	
+	[self refreshUnreadCount];
 }
 
 - (void)invalidateItemsForOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -659,6 +657,8 @@
 
 	[self.segmentView addSubview:self.segmentControl];
 	
+	CGSize shadowOffset = CGSizeMake(0, 1.0f/[[UIScreen mainScreen] scale]);
+	
 	UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	nextButton.frame = CGRectMake(0, 0, 60, 30);
 	[nextButton setImage:[UIImage imageNamed:@"feedsNext_Portrait"] forState:UIControlStateNormal];
@@ -666,7 +666,19 @@
 	[nextButton addTarget:self action:@selector(next:) forControlEvents:UIControlEventTouchUpInside];
 	UIBarButtonItem *nextItem = [[UIBarButtonItem alloc] initWithCustomView:nextButton];
 	
-	self.navigationItem.leftBarButtonItem = nextItem;
+	self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 250, 40)];
+	self.statusLabel.textColor = [UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1];
+	self.statusLabel.shadowColor = [UIColor whiteColor];
+	self.statusLabel.shadowOffset = shadowOffset;
+	self.statusLabel.font = [UIFont boldSystemFontOfSize:16.0];
+	self.statusLabel.backgroundColor = [UIColor clearColor];
+	UIBarButtonItem *newDescItem = [[UIBarButtonItem alloc] initWithCustomView:self.statusLabel];
+	
+	//self.navigationItem.leftBarButtonItem = nextItem;
+	self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:nextItem, newDescItem, nil];
+	
+	self.updateLabel.shadowOffset = shadowOffset;
+	self.messageLabel.shadowOffset = shadowOffset;
 	
 	[self showUpdateStatus];
 	[self refreshUnreadCount];
@@ -1191,18 +1203,18 @@
 }
 
 - (void)refreshUnreadCount {
-//	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//	NSUInteger count = [appDelegate unreadCount];
-//	
-//	if (count == 0) {
-//		self.statusLabel.text = NSLocalizedString(@"You have no unread items.", nil);
-//	}
-//	else if (count == 1) {
-//		self.statusLabel.text = NSLocalizedString(@"1 new item", nil);
-//	} 
-//	else {
-//		self.statusLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%d new items", nil), count];
-//	}
+	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+	NSUInteger count = [appDelegate unreadCount];
+	
+	if (count == 0) {
+		self.statusLabel.text = NSLocalizedString(@"You have no unread items.", nil);
+	}
+	else if (count == 1) {
+		self.statusLabel.text = NSLocalizedString(@"1 new item", nil);
+	} 
+	else {
+		self.statusLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%d new items", nil), count];
+	}
 }
 
 - (void)showUpdateStatus {

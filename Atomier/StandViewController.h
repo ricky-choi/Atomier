@@ -42,6 +42,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *updateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *messageLabel;
 
+@property (strong, nonatomic) UILabel *statusLabel;
+
 - (IBAction)refresh:(id)sender;
 - (IBAction)changeMode:(id)sender;
 - (IBAction)subscribe:(id)sender;

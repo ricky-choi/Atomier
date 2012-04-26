@@ -137,7 +137,7 @@
 "Send to Facebook" = "Publicar en Facebook";
 
 /* accounts server error GMClientAuthErrorBadAuthentication */
-"BadAuthentication" = "Incorrect account name or password.";
+"BadAuthentication" = "Info de Acceso Inv·lida";
 
 /* accounts server error GMClientAuthErrorNotVerified */
 "NotVerified" = "User verification is required. Sign in to Google Calendar in a web browser to verify.";
