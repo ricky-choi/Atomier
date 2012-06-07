@@ -52,7 +52,7 @@
 
 - (void)imageDownloaded:(NSNotification *)notification {
 	NSDictionary *userInfo = [notification userInfo];
-	NSString *downloadedImageContentID = [userInfo valueForKey:@"contentID"];
+	NSString *downloadedImageContentID = [userInfo objectForKey:@"contentID"];
 	NSString *thisContentID = [_feed.keyId lastPathComponent];
 	NSLog(@"image downloaded: %@ < %@", thisContentID, downloadedImageContentID);
 	

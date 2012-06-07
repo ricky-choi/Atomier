@@ -203,9 +203,9 @@
 	[self.spinner stopAnimating];
 	
 	NSString *message = NSLocalizedString(@"SignInFailedGeneral", nil);
-	NSString *errorCode = [notification.userInfo valueForKey:@"Error"];
+	NSString *errorCode = [notification.userInfo objectForKey:@"Error"];
 	if ([errorCode isEqualToString:@"BadAuthentication"]) {
-		NSString *errorInfo = [notification.userInfo valueForKey:@"Info"];
+		NSString *errorInfo = [notification.userInfo objectForKey:@"Info"];
 		if ([errorInfo isEqualToString:@"InvalidSecondFactor"]) {
 			// 2-step error
 			message = NSLocalizedString(@"SignInFailed2Step", nil);
@@ -310,8 +310,8 @@
 	//NSLog(@"keyboardWillShow: %@", [notification userInfo]);
 	
 	NSDictionary* info = [notification userInfo];
-	CGRect endFrame = [[info valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-	CGFloat duration = [[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+	CGRect endFrame = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+	CGFloat duration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 	    endFrame = [self.view.window convertRect:endFrame toView:self.view];
@@ -337,7 +337,7 @@
 	//NSLog(@"keyboardWillHide: %@", [notification userInfo]);
 	
 	NSDictionary* info = [notification userInfo];
-	CGFloat duration = [[info valueForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+	CGFloat duration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
 	
 	CGRect newViewFrame = [self.view bounds];
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {

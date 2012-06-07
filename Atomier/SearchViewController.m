@@ -221,15 +221,15 @@
 			
 			if (indexPath.row < [self.keywordSearchResults count]) {
 				NSDictionary *aSource = [self.keywordSearchResults objectAtIndex:indexPath.row];
-				cell.textLabel.text = [aSource valueForKey:@"title"];
-				NSString *streamid = [aSource valueForKey:@"streamid"];
+				cell.textLabel.text = [aSource objectForKey:@"title"];
+				NSString *streamid = [aSource objectForKey:@"streamid"];
 				cell.detailTextLabel.text = [streamid substringFromIndex:5];
 				cell.textLabel.textAlignment = UITextAlignmentLeft;
 				cell.imageView.image = [UIImage imageNamed:@"rss_source"];
 				
 				cell.selectionStyle = UITableViewCellSelectionStyleNone;
 				
-				int issubscribed = [[aSource valueForKey:@"issubscribed"] intValue];
+				int issubscribed = [[aSource objectForKey:@"issubscribed"] intValue];
 				if (issubscribed == 0) {
 					UIButton *addButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
 					addButton.tag = indexPath.row;
@@ -265,7 +265,7 @@
 	[self.hud show];
 	
 	NSDictionary *aSource = [self.keywordSearchResults objectAtIndex:button.tag];
-	[[GoogleReader sharedInstance] quickSubscribeToRSSFeedURL:[[aSource valueForKey:@"streamid"] substringFromIndex:5] moreSearch:NO];
+	[[GoogleReader sharedInstance] quickSubscribeToRSSFeedURL:[[aSource objectForKey:@"streamid"] substringFromIndex:5] moreSearch:NO];
 }
 
 
@@ -449,11 +449,11 @@
 	[self.hud update];
 	[self.hud hideAfter:1.0];
 	
-	NSDictionary *pagestatus = [searchData valueForKey:@"pagestatus"];
-	self.hasnextpage = [[pagestatus valueForKey:@"hasnextpage"] intValue];
-	self.nextpagestart = [[pagestatus valueForKey:@"nextpagestart"] intValue];
+	NSDictionary *pagestatus = [searchData objectForKey:@"pagestatus"];
+	self.hasnextpage = [[pagestatus objectForKey:@"hasnextpage"] intValue];
+	self.nextpagestart = [[pagestatus objectForKey:@"nextpagestart"] intValue];
 	
-	[self.keywordSearchResults addObjectsFromArray:[searchData valueForKey:@"results"]];
+	[self.keywordSearchResults addObjectsFromArray:[searchData objectForKey:@"results"]];
 	
 	[self.searchDisplayController.searchResultsTableView reloadData];
 }

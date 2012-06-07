@@ -689,17 +689,17 @@ static NSString* kAppId = @"164714413630639";
 	NSMutableDictionary *existSubscriptions = [self.savedSubscriptionIDs mutableCopy];
 	
 	for (NSDictionary *aSubscription in allSubscriptions) {
-		NSString *subscriptionID = [aSubscription valueForKey:@"id"];
-		Subscription *subscription = [self.savedSubscriptionIDs valueForKey:subscriptionID];
+		NSString *subscriptionID = [aSubscription objectForKey:@"id"];
+		Subscription *subscription = [self.savedSubscriptionIDs objectForKey:subscriptionID];
 		if (subscription) {
 			[existSubscriptions removeObjectForKey:subscription.keyId];
 			// 이미 있는 서브스크립션
 			NSMutableSet *existCategoriesForThisSubscription = [subscription.categories mutableCopy];
-			NSArray *categories = [aSubscription valueForKey:@"categories"];
+			NSArray *categories = [aSubscription objectForKey:@"categories"];
 			for (NSDictionary *aCategory in categories) {
-				NSString *categoryID = [aCategory valueForKey:@"id"];
+				NSString *categoryID = [aCategory objectForKey:@"id"];
 				
-				Category *c = [self.savedCategoryIDs valueForKey:categoryID];
+				Category *c = [self.savedCategoryIDs objectForKey:categoryID];
 				if (c) {
 					[existCategories removeObjectForKey:c.keyId];
 					
@@ -717,7 +717,7 @@ static NSString* kAppId = @"164714413630639";
 					Category *newCategory = [NSEntityDescription insertNewObjectForEntityForName:@"Category" inManagedObjectContext:self.managedObjectContext];
 					if (newCategory) {
 						newCategory.keyId = categoryID;
-						newCategory.label = [aCategory valueForKey:@"label"];
+						newCategory.label = [aCategory objectForKey:@"label"];
 						
 						[subscription addCategoriesObject:newCategory];
 						
@@ -737,11 +737,11 @@ static NSString* kAppId = @"164714413630639";
 			// 새로운 서브스크립션
 			subscription = [NSEntityDescription insertNewObjectForEntityForName:@"Subscription" inManagedObjectContext:self.managedObjectContext];
 			
-			NSArray *categories = [aSubscription valueForKey:@"categories"];
+			NSArray *categories = [aSubscription objectForKey:@"categories"];
 			for (NSDictionary *aCategory in categories) {
-				NSString *categoryID = [aCategory valueForKey:@"id"];
+				NSString *categoryID = [aCategory objectForKey:@"id"];
 				
-				Category *c = [self.savedCategoryIDs valueForKey:categoryID];
+				Category *c = [self.savedCategoryIDs objectForKey:categoryID];
 				if (c) {
 					[existCategories removeObjectForKey:c.keyId];
 					[subscription addCategoriesObject:c];
@@ -750,7 +750,7 @@ static NSString* kAppId = @"164714413630639";
 					Category *newCategory = [NSEntityDescription insertNewObjectForEntityForName:@"Category" inManagedObjectContext:self.managedObjectContext];
 					if (newCategory) {
 						newCategory.keyId = categoryID;
-						newCategory.label = [aCategory valueForKey:@"label"];
+						newCategory.label = [aCategory objectForKey:@"label"];
 						
 						[subscription addCategoriesObject:newCategory];
 						
@@ -762,8 +762,8 @@ static NSString* kAppId = @"164714413630639";
 			}
 			
 			subscription.keyId = subscriptionID;
-			subscription.sortid = [aSubscription valueForKey:@"sortid"];
-			subscription.title = [aSubscription valueForKey:@"title"];
+			subscription.sortid = [aSubscription objectForKey:@"sortid"];
+			subscription.title = [aSubscription objectForKey:@"title"];
 			
 			NSLog(@"ADDED Subscription: %@", [subscription description]);
 			
@@ -772,11 +772,11 @@ static NSString* kAppId = @"164714413630639";
 	}
 	
 	for (NSString *key in existCategories) {
-		Category *willDeleteCategory = [existCategories valueForKey:key];
+		Category *willDeleteCategory = [existCategories objectForKey:key];
 		[self.managedObjectContext deleteObject:willDeleteCategory];
 	}
 	for (NSString *key in existSubscriptions) {
-		Subscription *willDeleteSubscription = [existSubscriptions valueForKey:key];
+		Subscription *willDeleteSubscription = [existSubscriptions objectForKey:key];
 		[self.managedObjectContext deleteObject:willDeleteSubscription];
 	}
 	NSLog(@"end feed download: %@", @"allSubscriptions");
@@ -789,166 +789,172 @@ static NSString* kAppId = @"164714413630639";
 
 - (void)newFeedsArrival:(NSArray *)arrivals unreadsOrStarred:(BOOL)unreadState {
 	
+	NSArray *newArrivals = arrivals;
+	
 	NSLog(@"start feed download: %@", unreadState ? @"unread" : @"starred");
 	NSMutableArray *existFeedObjects = [NSMutableArray arrayWithArray:[self.savedFeedIDs allValues]];
 	
-	for (NSDictionary *aFeed in arrivals) {
-		NSString *feedID = [aFeed valueForKey:@"id"];
-		Feed *feed = [self.savedFeedIDs valueForKey:feedID];
-		if (feed) {
-			//NSLog(@"already exist(%@): %@", feed, unreadState ? @"unread" : @"starred");
-			// 이미 있는 피드
-			[existFeedObjects removeObject:feed];
-			
-			if (unreadState) {
-				// unread 목록
-				BOOL unreadValue = [feed.unread boolValue];
-				if (unreadValue == NO) {
-					feed.unread = [NSNumber numberWithBool:YES];
+	for (NSDictionary *aFeed in newArrivals) {
+		NSString *feedID = [aFeed objectForKey:@"id"];
+		if (feedID) {
+			Feed *feed = [self.savedFeedIDs objectForKey:feedID];
+			if (feed) {
+				//NSLog(@"already exist(%@): %@", feed, unreadState ? @"unread" : @"starred");
+				// 이미 있는 피드
+				[existFeedObjects removeObject:feed];
+				
+				if (unreadState) {
+					// unread 목록
+					BOOL unreadValue = [feed.unread boolValue];
+					if (unreadValue == NO) {
+						feed.unread = [NSNumber numberWithBool:YES];
 #if REFRESH_COUNT_IMMEDIATE						
-					[feed.subscription refreshUnreadCountWithCategory];
+						[feed.subscription refreshUnreadCountWithCategory];
 #endif
-				}
-			} else {
-				// starred 목록
-				BOOL starredValue = [feed.starred boolValue];
-				if (starredValue == NO) {
-					feed.starred = [NSNumber numberWithBool:YES];
-#if REFRESH_COUNT_IMMEDIATE						
-					[feed.subscription refreshStarredCountWithCategory];
-#endif
-				}
-			}				
-			
-		} else {
-			// 새로운 피드
-			Feed *newFeed = [NSEntityDescription insertNewObjectForEntityForName:@"Feed" inManagedObjectContext:self.managedObjectContext];
-			
-			if (newFeed) {
-				newFeed.unread = [NSNumber numberWithBool:unreadState];
-				newFeed.starred = [NSNumber numberWithBool:!unreadState];
-				
-				NSArray *alternates = [aFeed valueForKey:@"alternate"];
-				for (NSDictionary *aAlter in alternates) {
-					NSString *href = [aAlter valueForKey:@"href"];
-					NSString *type = [aAlter valueForKey:@"type"];
-					if (href && type && [href length] > 0 && [type length] > 0) {
-						Alternate *newAlternate = [NSEntityDescription insertNewObjectForEntityForName:@"Alternate" inManagedObjectContext:self.managedObjectContext];
-						if (newAlternate) {
-							newAlternate.href = href;
-							newAlternate.type = type;
-							
-							[newFeed addAlternatesObject:newAlternate];
-						}
-					}						
-				}
-				
-				NSString *author = [aFeed valueForKey:@"author"];
-				if (author && [author length] > 0) {
-					newFeed.author = author;
-				}
-				
-				
-				NSArray *tags = [aFeed valueForKey:@"categories"];
-				for (NSString *aTag in tags) {
-					if (aTag && [aTag length] > 0 && ![aTag hasPrefix:@"user/"]) {
-						Tag *existTag = [self.savedTags valueForKey:aTag];
-						if (existTag) {
-							// 이미 있는 태그. 추가해준다.
-							[newFeed addTagsObject:existTag];
-						} else {
-							// 없는 태그. 새로 만들고 추가해준다.
-							Tag *newTag = [NSEntityDescription insertNewObjectForEntityForName:@"Tag" inManagedObjectContext:self.managedObjectContext];
-							if (newTag) {
-								newTag.tag = aTag;
-								
-								[newFeed addTagsObject:newTag];
-								
-								[self.savedTags setValue:newTag forKey:aTag];
-							}								
-						}
 					}
-				}
-				
-				newFeed.keyId = feedID;
-				
-				NSDictionary *origin = [aFeed valueForKey:@"origin"];
-				if (origin) {
-					NSString *htmlUrl = [origin valueForKey:@"htmlUrl"];
-					NSString *streamId = [origin valueForKey:@"streamId"];
-					if (streamId) {
-						// 이미 있는 서브스크립션에서 찾는다.
-						Subscription *subscriptionForFeed = [self.savedSubscriptionIDs valueForKey:streamId];
-						if (subscriptionForFeed) {
-							// 찾았다.
-							// 원본 주소가 없으면 추가해준다.
-							if (subscriptionForFeed.htmlUrl == nil && htmlUrl != nil) {
-								subscriptionForFeed.htmlUrl = htmlUrl;
-#if 0								
-								NSURL *url = [NSURL URLWithString:htmlUrl];
-
-								ContentOrganizer *contentOrganizer = [ContentOrganizer sharedInstance];
-								[contentOrganizer makeIcon:[url host] scheme:[url scheme]];
-#else
-								[self.readyGetIcons addObject:[NSURL URLWithString:htmlUrl]];
+				} else {
+					// starred 목록
+					BOOL starredValue = [feed.starred boolValue];
+					if (starredValue == NO) {
+						feed.starred = [NSNumber numberWithBool:YES];
+#if REFRESH_COUNT_IMMEDIATE						
+						[feed.subscription refreshStarredCountWithCategory];
 #endif
+					}
+				}				
+				
+			} 
+			else {
+				// 새로운 피드
+				Feed *newFeed = [NSEntityDescription insertNewObjectForEntityForName:@"Feed" inManagedObjectContext:self.managedObjectContext];
+				NSLog(@"analyze new Feed start: %@", [aFeed description]);
+				
+				if (newFeed) {
+					newFeed.unread = [NSNumber numberWithBool:unreadState];
+					newFeed.starred = [NSNumber numberWithBool:!unreadState];
+					
+					NSArray *alternates = [aFeed objectForKey:@"alternate"];
+					for (NSDictionary *aAlter in alternates) {
+						NSString *href = [aAlter objectForKey:@"href"];
+						NSString *type = [aAlter objectForKey:@"type"];
+						if (href && type && [href length] > 0 && [type length] > 0) {
+							Alternate *newAlternate = [NSEntityDescription insertNewObjectForEntityForName:@"Alternate" inManagedObjectContext:self.managedObjectContext];
+							if (newAlternate) {
+								newAlternate.href = href;
+								newAlternate.type = type;
+								
+								[newFeed addAlternatesObject:newAlternate];
 							}
-							newFeed.subscription = subscriptionForFeed;
-#if REFRESH_COUNT_IMMEDIATE								
-							if (unreadState) {
-								[newFeed.subscription refreshUnreadCountWithCategory];
+						}						
+					}
+					
+					NSString *author = [aFeed objectForKey:@"author"];
+					if (author && [author length] > 0) {
+						newFeed.author = author;
+					}
+					
+					
+					NSArray *tags = [aFeed objectForKey:@"categories"];
+					for (NSString *aTag in tags) {
+						if (aTag && [aTag length] > 0 && ![aTag hasPrefix:@"user/"]) {
+							Tag *existTag = [self.savedTags objectForKey:aTag];
+							if (existTag) {
+								// 이미 있는 태그. 추가해준다.
+								[newFeed addTagsObject:existTag];
 							} else {
-								[newFeed.subscription refreshStarredCountWithCategory];
+								// 없는 태그. 새로 만들고 추가해준다.
+								Tag *newTag = [NSEntityDescription insertNewObjectForEntityForName:@"Tag" inManagedObjectContext:self.managedObjectContext];
+								if (newTag) {
+									newTag.tag = aTag;
+									
+									[newFeed addTagsObject:newTag];
+									
+									[self.savedTags setValue:newTag forKey:aTag];
+								}								
 							}
-#endif	
-						} else {
-							// 없네... 추가해야 되나?
 						}
 					}
-				}
-				
-				NSNumber *published = [aFeed valueForKey:@"published"];
-				if (published) {
-					NSTimeInterval publishedTime = [published doubleValue];
-					NSDate *publishedDate = [NSDate dateWithTimeIntervalSince1970:publishedTime];
-					newFeed.publishedDate = publishedDate;
-				}
-				
-				newFeed.title = [aFeed valueForKey:@"title"];
-				
-				NSNumber *updated = [aFeed valueForKey:@"updated"];
-				if (updated) {
-					NSTimeInterval updatedTime = [updated doubleValue];
-					NSDate *updatedDate = [NSDate dateWithTimeIntervalSince1970:updatedTime];
-					newFeed.updatedDate = updatedDate;
-				}
-				
-				NSDictionary *content = [aFeed valueForKey:@"content"];
-				if (!content) {
-					content = [aFeed valueForKey:@"summary"];
-				}
-				
-				if (content) {
-					NSString *contentOfContent = [content valueForKey:@"content"];
-					//NSLog(@"content: %@", contentOfContent);
-					if (contentOfContent && [contentOfContent length] > 0) {
-						// 새로운 컨텐트 추가
-#if 1
-						NSString *filename = [feedID lastPathComponent];
-						[[ContentOrganizer sharedInstance] save:contentOfContent forID:filename];
+					
+					newFeed.keyId = feedID;
+					
+					NSDictionary *origin = [aFeed objectForKey:@"origin"];
+					if (origin) {
+						NSString *htmlUrl = [origin objectForKey:@"htmlUrl"];
+						NSString *streamId = [origin objectForKey:@"streamId"];
+						if (streamId) {
+							// 이미 있는 서브스크립션에서 찾는다.
+							Subscription *subscriptionForFeed = [self.savedSubscriptionIDs objectForKey:streamId];
+							if (subscriptionForFeed) {
+								// 찾았다.
+								// 원본 주소가 없으면 추가해준다.
+								if (subscriptionForFeed.htmlUrl == nil && htmlUrl != nil) {
+									subscriptionForFeed.htmlUrl = htmlUrl;
+#if 0								
+									NSURL *url = [NSURL URLWithString:htmlUrl];
+									
+									ContentOrganizer *contentOrganizer = [ContentOrganizer sharedInstance];
+									[contentOrganizer makeIcon:[url host] scheme:[url scheme]];
 #else
-						Content *newContent = [NSEntityDescription insertNewObjectForEntityForName:@"Content" inManagedObjectContext:self.managedObjectContext];
-						if (newContent) {
-							newContent.content = contentOfContent;								
-							newFeed.content = newContent;
-						}
+									[self.readyGetIcons addObject:[NSURL URLWithString:htmlUrl]];
 #endif
+								}
+								newFeed.subscription = subscriptionForFeed;
+#if REFRESH_COUNT_IMMEDIATE								
+								if (unreadState) {
+									[newFeed.subscription refreshUnreadCountWithCategory];
+								} else {
+									[newFeed.subscription refreshStarredCountWithCategory];
+								}
+#endif	
+							} else {
+								// 없네... 추가해야 되나?
+							}
+						}
 					}
+					
+					NSNumber *published = [aFeed objectForKey:@"published"];
+					if (published) {
+						NSTimeInterval publishedTime = [published doubleValue];
+						NSDate *publishedDate = [NSDate dateWithTimeIntervalSince1970:publishedTime];
+						newFeed.publishedDate = publishedDate;
+					}
+					
+					newFeed.title = [aFeed objectForKey:@"title"];
+					
+					NSNumber *updated = [aFeed objectForKey:@"updated"];
+					if (updated) {
+						NSTimeInterval updatedTime = [updated doubleValue];
+						NSDate *updatedDate = [NSDate dateWithTimeIntervalSince1970:updatedTime];
+						newFeed.updatedDate = updatedDate;
+					}
+					
+					NSDictionary *content = [aFeed objectForKey:@"content"];
+					if (!content) {
+						content = [aFeed objectForKey:@"summary"];
+					}
+					
+					if (content) {
+						NSString *contentOfContent = [content objectForKey:@"content"];
+						//NSLog(@"content: %@", contentOfContent);
+						if (contentOfContent && [contentOfContent length] > 0) {
+							// 새로운 컨텐트 추가
+#if 1
+							NSString *filename = [feedID lastPathComponent];
+							[[ContentOrganizer sharedInstance] save:contentOfContent forID:filename];
+#else
+							Content *newContent = [NSEntityDescription insertNewObjectForEntityForName:@"Content" inManagedObjectContext:self.managedObjectContext];
+							if (newContent) {
+								newContent.content = contentOfContent;								
+								newFeed.content = newContent;
+							}
+#endif
+						}
+					}
+					
+					NSLog(@"ADDED Feed: %@", [newFeed description]);
+					
+					[self.savedFeedIDs setValue:newFeed forKey:feedID];
 				}
-				
-				NSLog(@"ADDED Feed: %@", [newFeed description]);
-				
-				[self.savedFeedIDs setValue:newFeed forKey:feedID];
 			}
 		}
 	}

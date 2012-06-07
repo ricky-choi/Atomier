@@ -434,7 +434,7 @@
 #if SHOW_ALL
 	if (chipCount > 0) {
 		// all
-		UINavigationController *exist = [self.childs valueForKey:@"ALL"];
+		UINavigationController *exist = [self.childs objectForKey:@"ALL"];
 		UINavigationController *navigationController;
 		FeedsViewController *feedsViewController;
 		if (exist) {
@@ -471,7 +471,7 @@
 #endif
 	int tag = 3;
 	for (Subscription *subscription in subscriptions) {
-		UINavigationController *exist = [self.childs valueForKey:subscription.keyId];
+		UINavigationController *exist = [self.childs objectForKey:subscription.keyId];
 		UINavigationController *navigationController;
 		FeedsViewController *feedsViewController;
 		if (exist) {
@@ -515,7 +515,7 @@
 	}
 	
 	for (Category *category in cateogries) {
-		UINavigationController *exist = [self.childs valueForKey:category.keyId];
+		UINavigationController *exist = [self.childs objectForKey:category.keyId];
 		UINavigationController *navigationController;
 		TopViewController *topViewController;
 		if (exist) {
@@ -578,7 +578,7 @@
 	
 	if ([self.childs count] > 0) {
 		for (NSString *key in self.childs) {
-			UINavigationController *exist = [self.childs valueForKey:key];
+			UINavigationController *exist = [self.childs objectForKey:key];
 			if (exist) {
 				[exist removeFromParentViewController];
 				[exist.view removeFromSuperview];
@@ -626,7 +626,7 @@
 			key = [(Subscription *)managedObject keyId];
 		}
 		
-		UINavigationController *exist = [self.childs valueForKey:key];
+		UINavigationController *exist = [self.childs objectForKey:key];
 		if (exist) {
 			[exist removeFromParentViewController];
 			[exist.view removeFromSuperview];
