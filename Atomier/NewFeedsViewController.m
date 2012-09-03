@@ -7,7 +7,6 @@
 //
 
 #import "NewFeedsViewController.h"
-#import "NewFeedViewController.h"
 
 @interface NewFeedsViewController ()
 
@@ -28,6 +27,13 @@
 	
     NSInteger pageCount;
     BOOL pendingOrientationChange;
+	
+	BOOL fullscreen;
+	
+	CGFloat bottomPaddingPortrait;
+	CGFloat bottomPaddingLandscape;
+	CGFloat bottomPaddingPortraitMin;
+	CGFloat bottomPaddingLandscapeMin;
 }
 
 @synthesize feeds = _feeds;
@@ -55,26 +61,108 @@
 		}
 	}
 	else {
+		CGRect viewRect = self.view.bounds;
+		CGFloat padding;
+		CGFloat bottomViewHeight;
 		if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {
-			self.bottomView.frame = CGRectMake(0, 480.0f - 44.0f, 320.0f, 44.0f);
+			padding = fullscreen ? bottomPaddingPortraitMin : bottomPaddingPortrait;
+			bottomViewHeight = bottomPaddingPortrait;
+			if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) {
+				viewRect = CGRectMake(0, 0, viewRect.size.height, viewRect.size.width);
+			}
 			
 			self.topImageView.image = [UIImage imageNamed:@"feedsTop_portrait"];
 			self.bottomImageView.image = [UIImage imageNamed:@"syndi_toolbar_portrait"];
 		}
 		else {
-			self.bottomView.frame = CGRectMake(0, 320.0f - 32.0f, 480.0f, 32.0f);
+			padding = fullscreen ? bottomPaddingLandscapeMin : bottomPaddingLandscape;
+			bottomViewHeight = bottomPaddingLandscape;
+			if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+				viewRect = CGRectMake(0, 0, viewRect.size.height, viewRect.size.width);
+			}
 			
 			self.topImageView.image = [UIImage imageNamed:@"feedsTop_landscape"];
 			self.bottomImageView.image = [UIImage imageNamed:@"syndi_toolbar_landscape"];
 		}
+		
+		self.scrollView.frame = CGRectMake(0, 0, viewRect.size.width, viewRect.size.height - padding);
+		self.bottomView.frame = CGRectMake(0, self.scrollView.frame.size.height, self.scrollView.frame.size.width, bottomViewHeight);
 	}
+}
+
+- (IBAction)toggleFullScreen:(id)sender {
+	
+	CGFloat padding;
+	CGFloat paddingMin;
+	
+	if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+		padding = bottomPaddingPortrait;
+		paddingMin = bottomPaddingPortraitMin;
+	}
+	else {
+		padding = bottomPaddingLandscape;
+		paddingMin = bottomPaddingLandscapeMin;
+	}
+	
+	[UIView beginAnimations:nil context:NULL];
+	
+	if (fullscreen) {
+		// 원래 크기로
+		self.scrollView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - padding);
+	} else {
+		// 풀스크린으로 변경
+		self.scrollView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - paddingMin);
+	}
+	
+	CGRect bottomBarRect = self.bottomView.frame;
+	bottomBarRect.origin.y = self.scrollView.frame.size.height;
+	self.bottomView.frame = bottomBarRect;
+	
+	[UIView commitAnimations];
+	
+	fullscreen = !fullscreen;
+}
+
+- (IBAction)fullscreenOn:(id)sender {
+	if (fullscreen == NO) {
+		[self toggleFullScreen:sender];
+	}
+}
+
+- (IBAction)fullscreenOff:(id)sender {
+	if (fullscreen == YES) {
+		[self toggleFullScreen:sender];
+	}
+}
+
+- (void)setup {
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+		bottomPaddingLandscape = 70.0f;
+		bottomPaddingLandscapeMin = 8.0f;
+		bottomPaddingPortrait = bottomPaddingLandscape;
+		bottomPaddingPortraitMin = bottomPaddingLandscapeMin;
+	} else {
+		bottomPaddingLandscape = 32.0f;
+		bottomPaddingLandscapeMin = 4.0f;
+		bottomPaddingPortrait = 44.0f;
+		bottomPaddingPortraitMin = bottomPaddingLandscapeMin;
+	}
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+	self = [super initWithCoder:aDecoder];
+	if (self) {
+		[self setup];
+	}
+	
+	return self;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        [self setup];
     }
     return self;
 }
@@ -117,6 +205,7 @@
 	NewFeedViewController *page = [self.pages objectAtIndex:i];
 	if ([self isNSNull:page]) {
 		page = [self.storyboard instantiateViewControllerWithIdentifier:@"NewFeedViewController"];
+		page.delegate = self;
 		page.feed = [self.feeds objectAtIndex:i];
 		[self.pages replaceObjectAtIndex:i withObject:page];
 		[self addChildViewController:page];
@@ -125,6 +214,7 @@
         frame.origin.x = frame.size.width * i;
         frame.origin.y = 0;
         page.view.frame = frame;
+		page.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self.scrollView addSubview:page.view];
 	}
 	
@@ -189,6 +279,7 @@
     [self setPageLabel:nil];
 	
 	[self setBottomView:nil];
+	
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -228,6 +319,8 @@
 - (void)refreshPageLabel {
 	self.pageLabel.text = [NSString stringWithFormat:NSLocalizedString(@"%d of %d", nil), pageIndex+1, pageCount];
 }
+
+#pragma mark - IBAction
 
 - (IBAction)goHome:(id)sender {
 	if (_delegate && [_delegate respondsToSelector:@selector(feedsViewControllerWillDismiss:)]) {
@@ -321,6 +414,20 @@
     }
 	
 	[self markRead:pageIndex];
+}
+
+#pragma mark - NewFeedViewControllerDelegate
+
+- (void)touchedEmptyContent {
+	[self toggleFullScreen:nil];
+}
+
+- (void)forceFullscreen:(BOOL)on {
+	if (on) {
+		[self fullscreenOn:nil];
+	} else {
+		[self fullscreenOff:nil];
+	}
 }
 
 @end

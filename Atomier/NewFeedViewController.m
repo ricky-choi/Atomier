@@ -21,6 +21,7 @@
 
 @implementation NewFeedViewController
 
+@synthesize delegate = _delegate;
 @synthesize webView = _webView;
 
 @synthesize feed = _feed;
@@ -31,6 +32,12 @@
 @synthesize starButton = _starButton;
 
 @synthesize actionSheet = _actionSheet;
+
+@synthesize tapWebViewGesture = _tapWebViewGesture;
+
+- (void)dealloc {
+	self.delegate = nil;
+}
 
 - (UIActionSheet *)actionSheet {
 	if (_actionSheet == nil) {
@@ -172,8 +179,8 @@
 		}
 		else if (buttonIndex == actionSheet.firstOtherButtonIndex + 3) {
 			// Mail Article
-			NSString *body = [self contentForFeed:self.feed];
-			[self mail:[self feedTitle] body:[body stringByAppendingFormat:@"<p>Sent with <a href=\"%@\">%@</a></p>", @"http://itunes.apple.com/us/app/syndi-rss-reader/id498935649?ls=1&mt=8", @"Syndi RSS"]];
+			NSString *body = [NSString stringWithFormat:@"<p><a href=\"%@\">%@</a></p>%@<p>Sent with <a href=\"%@\">%@</a></p>", alternate.href, alternate.href, [self contentForFeed:self.feed], @"http://itunes.apple.com/us/app/syndi-rss-reader/id498935649?ls=1&mt=8", @"Syndi RSS"];
+			[self mail:[self feedTitle] body:body];
 		}
 		else if (buttonIndex == actionSheet.firstOtherButtonIndex + 4) {
 			AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -325,10 +332,29 @@
 		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapLabel:)];
 		[self.titleLabel addGestureRecognizer:tapGesture];
 	}
+	
+	UIPinchGestureRecognizer *pinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinch:)];
+	[self.webView addGestureRecognizer:pinchGestureRecognizer];
 }
 
 - (void)tapLabel:(UITapGestureRecognizer *)gesture {
 	[self.webView.scrollView scrollRectToVisible:self.view.bounds animated:YES];
+}
+
+- (void)pinch:(UIPinchGestureRecognizer *)gesture {
+	if (gesture.view == self.webView && gesture.state == UIGestureRecognizerStateChanged) {
+		if ([_delegate respondsToSelector:@selector(forceFullscreen:)]) {
+			[_delegate forceFullscreen:([gesture velocity] > 0)];
+		}
+	}
+}
+
+- (void)showFullScreen:(BOOL)fullscreen {
+	if (fullscreen) {
+		
+	} else {
+		
+	}
 }
 
 - (void)viewDidUnload

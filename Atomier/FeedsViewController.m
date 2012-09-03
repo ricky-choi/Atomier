@@ -354,7 +354,14 @@
 //		self.navigationItem.rightBarButtonItem = siteItem;
 //	}
 
-	self.toolbarItems = self.toolbarItemsPortrait;
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+	    UIBarButtonItem *actionItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(markAllAsRead:)];
+		[actionItem setTintColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1]];
+		self.navigationItem.rightBarButtonItem = actionItem;
+	} else {
+		self.toolbarItems = self.toolbarItemsPortrait;
+	}
+	
 	
 #ifdef FREE_FOR_PROMOTION
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adFreeNotified:) name:DEFAULT_KEY_AD object:nil];

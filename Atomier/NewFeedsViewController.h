@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NewFeedViewController.h"
 
 @class NewFeedsViewController;
 
@@ -16,7 +17,7 @@
 
 @end
 
-@interface NewFeedsViewController : UIViewController < UIScrollViewDelegate >
+@interface NewFeedsViewController : UIViewController < UIScrollViewDelegate, NewFeedViewControllerDelegate >
 
 @property (weak, nonatomic) id <NewFeedsViewControllerDelegate> delegate;
 
@@ -35,6 +36,10 @@
 - (IBAction)goHome:(id)sender;
 - (IBAction)goNext:(id)sender;
 - (IBAction)goPrevious:(id)sender;
+
+- (IBAction)toggleFullScreen:(id)sender;
+- (IBAction)fullscreenOn:(id)sender;
+- (IBAction)fullscreenOff:(id)sender;
 
 - (void)refreshPageLabel;
 

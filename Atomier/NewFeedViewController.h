@@ -12,10 +12,18 @@
 
 #define USE_CONTENT_ORGANIZER 1
 
+@protocol NewFeedViewControllerDelegate <NSObject>
+@optional
+- (void)touchedEmptyContent;
+- (void)forceFullscreen:(BOOL)on;
+
+@end
+
 @class Feed;
 
 @interface NewFeedViewController : UIViewController <UIWebViewDelegate, NewWebViewControllerDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
 
+@property (weak, nonatomic) id <NewFeedViewControllerDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 
 @property (strong, nonatomic) Feed *feed;
@@ -26,8 +34,12 @@
 
 @property (strong, nonatomic) UIActionSheet *actionSheet;
 
+@property (strong, nonatomic) UITapGestureRecognizer *tapWebViewGesture;
+
 - (IBAction)action:(id)sender;
 - (IBAction)toggleStar:(id)sender;
+
+- (void)showFullScreen:(BOOL)fullscreen;
 
 - (void)prepare;
 - (void)unprepare;
