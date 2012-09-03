@@ -675,10 +675,25 @@ static NSString* kAppId = @"164714413630639";
 	[self requestSession];
 }
 
-- (void)googleReaderDownloadFailed {
+- (void)googleReaderDownloadFailed:(NSError *)error {
 	loadingForSubscriptions = NO;
 	loadingForUnreads = NO;
 	loadingForStarreds = NO;
+	
+	[self checkLoadDone];
+	
+	if (error) {
+		//Error Domain=ASIHTTPRequestErrorDomain Code=2 "The request timed out" UserInfo=0x3c2bd0 {NSLocalizedDescription=The request timed out}
+		if ([error.domain isEqualToString:@"ASIHTTPRequestErrorDomain"] && error.code == 2) {
+			// The request timed out
+			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Synchronization Error Occurred", nil)
+																message:error.localizedDescription
+															   delegate:nil
+													  cancelButtonTitle:NSLocalizedString(@"OK", nil)
+													  otherButtonTitles:nil];
+			[alertView show];
+		}
+	}
 }
 
 - (void)googleReaderAllSubscriptionsDidDownload:(NSArray *)allSubscriptions {
@@ -827,7 +842,7 @@ static NSString* kAppId = @"164714413630639";
 			else {
 				// 새로운 피드
 				Feed *newFeed = [NSEntityDescription insertNewObjectForEntityForName:@"Feed" inManagedObjectContext:self.managedObjectContext];
-				NSLog(@"analyze new Feed start: %@", [aFeed description]);
+				//NSLog(@"analyze new Feed start: %@", [aFeed description]);
 				
 				if (newFeed) {
 					newFeed.unread = [NSNumber numberWithBool:unreadState];
@@ -951,7 +966,7 @@ static NSString* kAppId = @"164714413630639";
 						}
 					}
 					
-					NSLog(@"ADDED Feed: %@", [newFeed description]);
+					//NSLog(@"ADDED Feed: %@", [newFeed description]);
 					
 					[self.savedFeedIDs setValue:newFeed forKey:feedID];
 				}
