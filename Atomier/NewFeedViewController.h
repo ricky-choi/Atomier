@@ -28,6 +28,7 @@
 
 @property (strong, nonatomic) Feed *feed;
 
+@property (weak, nonatomic) IBOutlet UIView *topBar;
 @property (weak, nonatomic) IBOutlet UIImageView *topBarImageView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIButton *starButton;
@@ -35,6 +36,8 @@
 @property (strong, nonatomic) UIActionSheet *actionSheet;
 
 @property (strong, nonatomic) UITapGestureRecognizer *tapWebViewGesture;
+
+@property (assign, nonatomic) BOOL fullscreen;
 
 - (IBAction)action:(id)sender;
 - (IBAction)toggleStar:(id)sender;

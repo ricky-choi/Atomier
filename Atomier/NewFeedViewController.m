@@ -17,6 +17,8 @@
 
 @interface NewFeedViewController ()
 
+- (void)invalidateSize:(BOOL)fullscreen;
+
 @end
 
 @implementation NewFeedViewController
@@ -25,6 +27,7 @@
 @synthesize webView = _webView;
 
 @synthesize feed = _feed;
+@synthesize topBar = _topBar;
 
 @synthesize topBarImageView = _topBarImageView;
 
@@ -34,6 +37,8 @@
 @synthesize actionSheet = _actionSheet;
 
 @synthesize tapWebViewGesture = _tapWebViewGesture;
+
+@synthesize fullscreen = _fullscreen;
 
 - (void)dealloc {
 	self.delegate = nil;
@@ -327,6 +332,8 @@
 	self.webView.delegate = self;
 	self.webView.scrollView.bounces = NO;
 	
+	[self invalidateSize:self.fullscreen];
+	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 	    self.titleLabel.userInteractionEnabled = YES;
 		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapLabel:)];
@@ -343,18 +350,33 @@
 
 - (void)pinch:(UIPinchGestureRecognizer *)gesture {
 	if (gesture.view == self.webView && gesture.state == UIGestureRecognizerStateChanged) {
+
 		if ([_delegate respondsToSelector:@selector(forceFullscreen:)]) {
 			[_delegate forceFullscreen:([gesture velocity] > 0)];
 		}
 	}
 }
 
-- (void)showFullScreen:(BOOL)fullscreen {
+- (void)invalidateSize:(BOOL)fullscreen {
+	CGFloat topBarHeight = self.topBar.frame.size.height;
+	
 	if (fullscreen) {
-		
+		self.topBar.frame = CGRectMake(0.0f, -topBarHeight, self.view.bounds.size.width, topBarHeight);
+		self.webView.frame = CGRectMake(0.0f, 0.0f, self.view.bounds.size.width, self.view.bounds.size.height);
 	} else {
-		
+		self.topBar.frame = CGRectMake(0.0f, 0.0f, self.view.bounds.size.width, topBarHeight);
+		self.webView.frame = CGRectMake(0.0f, topBarHeight, self.view.bounds.size.width, self.view.bounds.size.height - topBarHeight);
 	}
+}
+
+- (void)showFullScreen:(BOOL)fullscreen {
+	[UIView beginAnimations:nil context:NULL];
+	
+	[self invalidateSize:fullscreen];
+	
+	[UIView commitAnimations];
+	
+	self.fullscreen = fullscreen;
 }
 
 - (void)viewDidUnload
@@ -364,6 +386,7 @@
 	[self setTitleLabel:nil];
 	[self setStarButton:nil];
 	[self setWebView:nil];
+	[self setTopBar:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }

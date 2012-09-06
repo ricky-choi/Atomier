@@ -109,9 +109,11 @@
 	if (fullscreen) {
 		// 원래 크기로
 		self.scrollView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - padding);
+		self.topImageView.alpha = 1.0f;
 	} else {
 		// 풀스크린으로 변경
 		self.scrollView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - paddingMin);
+		self.topImageView.alpha = 0.0f;
 	}
 	
 	CGRect bottomBarRect = self.bottomView.frame;
@@ -121,6 +123,14 @@
 	[UIView commitAnimations];
 	
 	fullscreen = !fullscreen;
+	self.scrollView.showsHorizontalScrollIndicator = fullscreen;
+	
+	// set content
+	for (NewFeedViewController *page in self.pages) {
+		if (![self isNSNull:page]) {
+			[page showFullScreen:fullscreen];
+		}
+	}
 }
 
 - (IBAction)fullscreenOn:(id)sender {
@@ -207,6 +217,7 @@
 		page = [self.storyboard instantiateViewControllerWithIdentifier:@"NewFeedViewController"];
 		page.delegate = self;
 		page.feed = [self.feeds objectAtIndex:i];
+		page.fullscreen = fullscreen;
 		[self.pages replaceObjectAtIndex:i withObject:page];
 		[self addChildViewController:page];
 		
@@ -240,6 +251,7 @@
 	// Do any additional setup after loading the view.
 	
 	self.scrollView.delegate = self;
+	self.scrollView.showsHorizontalScrollIndicator = fullscreen;
 	
 	if ([self.feeds count] > 0) {
 		self.pages = [NSMutableArray arrayWithCapacity:[self.feeds count]];
