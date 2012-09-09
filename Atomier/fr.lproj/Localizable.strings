@@ -1,0 +1,148 @@
+/* Localizable.strings
+  Atomier
+
+  Created by Choi Jaeyoung on 12/28/11.
+  Copyright (c) 2011 Appcid. All rights reserved. */
+
+
+"Unread" = "Non lus";
+
+"Starred" = "Suivis";
+
+"Subscribe" = "Souscrire";
+
+"Unsubscribe" = "Désabonner";
+
+"Mark all as read" = "Tout marquer comme lu";
+
+"Mark all items from this list as read?" = "Marquer tous les éléments de cette liste comme lus?";
+
+"Share" = "Partager";
+
+"Shared" = "Partagé";
+
+"Open in Safari" = "Ouvrir dans Safari";
+
+"Copy Link" = "Copier le lien";
+
+"Mail Link" = "Envoyer le lien par courrier";
+
+"Mail Article" = "Envoyer l'article par courrier";
+
+"Send to Twitter" = "Envoyer vers Twitter";
+
+"Sort" = "Tri";
+
+"Sort by oldest" = "Afficher les éléments les plus anciens en premier";
+
+"Sort by newest" = "Afficher les éléments les plus récents en premier";
+
+"Refresh All" = "Tout mettre à jour";
+
+"Settings" = "Réglages";
+
+"You are not connected to the Internet" = "Vous n'êtes pas connecté à internet";
+
+"You aren’t connected to the internet. Please connect and try again." = "Vous n'êtes pas connecté à internet. Connectez-vous et réessayez.";
+
+"The username or password you entered is incorrect." = "Le nom d'utilisateur ou le mot-de-passe que vous avez introduit est incorrect.";
+
+"All" = "Tout";
+
+"Subscription" = "Abonnement";
+
+"Category" = "Catégorie";
+
+"Cancel" = "Annuler";
+
+"Homepage" = "Page d'accueil";
+
+"OK" = "OK";
+
+"All Items" = "Tous";
+
+"Folders" = "Dossiers";
+
+"Subscriptions" = "Abonnements";
+
+"Account: %@" = "Compte: %@";
+
+"Sync" = "Sync";
+
+"Home Screen" = "Ecran d'accueil";
+
+"Upgrade" = "Mise-à-jour";
+
+"Sign out" = "Déconnecter";
+
+"Automatic" = "Automatique";
+
+"Automatic if Wi-Fi" = "Automatique si Wi-Fi";
+
+"Manual" = "Manuelle";
+
+"Show Unread Badge" = "Afficher le badge non lu";
+
+"Buy Full Version" = "Acheter la version complète";
+
+"Remove Ad" = "Retirer les annonces";
+
+"%d of %d" = "%d de %d";
+
+"1 new item" = "1 nouvel élément";
+
+"Error" = "Erreur";
+
+"Feed" = "Flux";
+
+"More..." = "Plus...";
+
+"No More Feeds" = "Plus de flux";
+
+"Search term or Enter feed URL" = "Rechercher le terme ou Entrez l'URL du flux";
+
+"Search" = "Rechercher";
+
+"Searching Done." = "Recherche faite.";
+
+"Searching Failed." = "La recherche a échoué";
+
+"Searching keyword..." = "Recherche du mot...";
+
+"Subscribe Failed." = "La souscription a échoué.";
+
+"Subscribed." = "Abonné.";
+
+"Subscribing..." = "Souscription...";
+
+"Update: %@" = "Mis-à-jour: %@";//      Or can be "Màj:" if too long
+
+"Updating..." = "Mise-à-jour...";
+
+"You have no unread items." = "Vous n'avez pas d'éléments non lus.";
+
+"Mark as read" = "Marquer comme lu";
+
+"Mark as unread" = "Marquer comme non lu";
+
+"If you enjoy using %@, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!" = "Si vous aimez %@, pensez à l'évaluer. Celà ne vous prendra pas plus d'une minute. Merci pour votre support!";
+
+"Rate %@" = "Evaluer %@";
+
+"No, Thanks" = "Non merci";
+
+"Remind me later" = "Rappelez-moi plus tard";
+
+"2-step application-specific password required" = "La validation en deux étapes est nécessaire";
+
+"Send to Facebook" = "Envoyer vers Facebook";
+
+"Incorrect account name or password." = "Nom d'utilisateur ou mot-de-passe incorrect.";
+
+"%d new items" = "%d nouveaux éléments";
+
+"No unread items" = "Pas d'éléments non-lus";
+
+"No starred items" = "Pas d'éléments suivis";
+
+"Synchronization Error Occurred" = "Erreur de synchronisation";

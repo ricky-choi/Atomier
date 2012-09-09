@@ -156,27 +156,6 @@ static NSString* kAppId = @"164714413630639";
 															 [NSNumber numberWithInt:1], DEFAULT_KEY_SYNC_RULE,
 															 [NSNumber numberWithBool:YES], DEFAULT_KEY_BADGE, nil]];
 	
-#ifdef FREE_FOR_PROMOTION
-    // check iCloud
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	NSURL *cloudDirectory = [fileManager URLForUbiquityContainerIdentifier:nil];
-	NSLog(@"cloud url: %@", [cloudDirectory description]);
-	
-	if (cloudDirectory) {
-		NSUbiquitousKeyValueStore* store = [NSUbiquitousKeyValueStore defaultStore];
-		[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(updateKVStoreItems:)
-													 name:NSUbiquitousKeyValueStoreDidChangeExternallyNotification
-												   object:store];
-		if ([store synchronize] == NO) {
-			NSLog(@"iCloud Sync Error");
-		}
-		else {
-			NSLog(@"iCloud Representation: %@", [[store dictionaryRepresentation] description]);
-		}
-	}
-#endif
-	
 	self.savedCategoryIDs = [NSMutableDictionary dictionaryWithCapacity:10];
 	self.savedSubscriptionIDs = [NSMutableDictionary dictionaryWithCapacity:50];
 	self.savedFeedIDs = [NSMutableDictionary dictionaryWithCapacity:100];
@@ -658,10 +637,18 @@ static NSString* kAppId = @"164714413630639";
 }
 - (void)googleReaderAuthenticateFailed:(id)info {
 	NSLog(@"googleReaderAuthenticateFailed: %@", info);
+    
+    if ([info isKindOfClass:[NSDictionary class]]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_LOGIN_FAILED
+                                                            object:nil
+                                                          userInfo:info];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_LOGIN_FAILED
+                                                            object:nil
+                                                          userInfo:@{ @"StaticMessage" : info }];
+    }
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:kNOTIFICATION_LOGIN_FAILED
-														object:nil
-													  userInfo:info];//[NSDictionary dictionaryWithObjectsAndKeys:@"Authenticate", @"Kind", nil]];
+	
 	[self showSignInView];
 }
 

@@ -10,14 +10,11 @@
 #import <CoreData/CoreData.h>
 #import "SettingsViewController.h"
 
-#import <iAd/ADBannerView.h>
-#import "GADBannerView.h"
-
 @class Category;
 @class FeedsViewController;
 @class NASegmentedControl;
 
-@interface StandViewController : UIViewController <NSFetchedResultsControllerDelegate, UIActionSheetDelegate, ADBannerViewDelegate, GADBannerViewDelegate, SettingsViewControllerDelegate>
+@interface StandViewController : UIViewController <NSFetchedResultsControllerDelegate, UIActionSheetDelegate>
 
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsControllerForCategory;
@@ -54,11 +51,5 @@
 - (void)notifyUpdating;
 - (void)notifyUpdateDone;
 - (void)refreshUnreadCount;
-
-// for ad
-@property (strong, nonatomic) ADBannerView *adView;
-@property (strong, nonatomic) GADBannerView *gadView;
-@property (assign, nonatomic) BOOL gadBannerLoaded;
-@property (assign, nonatomic) BOOL firstAttempIsiAd;
 
 @end

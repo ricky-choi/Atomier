@@ -20,11 +20,7 @@
 #define kNOTIFICATION_LOGIN_SUCCESS @"kNOTIFICATION_LOGIN_SUCCESS"
 #define kNOTIFICATION_LOGIN_FAILED @"kNOTIFICATION_LOGIN_FAILED"
 
-#ifdef FREE_FOR_PROMOTION
-#define kKEYCHAIN_SERVICE @"com.felaur.syndifree"
-#else
 #define kKEYCHAIN_SERVICE @"com.felaur.syndi"
-#endif
 
 #define kKEYCHAIN_ACCOUNT_ID @"SyndiAccountID"
 #define kKEYCHAIN_ACCOUNT_PASSWORD @"SyndiAccountPW"

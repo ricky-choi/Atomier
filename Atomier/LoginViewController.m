@@ -44,19 +44,11 @@
 		self.emailField.text = savedID;
 	}
 	
-#ifdef FREE_FOR_PROMOTION
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-		self.backgroundImageView.image = [UIImage imageNamed:@"free_syndi-login~ipad"];
-	} else {
-		self.backgroundImageView.image = [UIImage imageNamed:@"free_syndi_login"];
-	}
-#else
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 		self.backgroundImageView.image = [UIImage imageNamed:@"syndi-login~ipad"];
 	} else {
 		self.backgroundImageView.image = [UIImage imageNamed:@"syndi_login"];
 	}
-#endif
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 	    self.emailField.frame =			CGRectMake(110, 357, 320, 31);
@@ -203,42 +195,53 @@
 	[self.spinner stopAnimating];
 	
 	NSString *message = NSLocalizedString(@"SignInFailedGeneral", nil);
-	NSString *errorCode = [notification.userInfo objectForKey:@"Error"];
-	if ([errorCode isEqualToString:@"BadAuthentication"]) {
-		NSString *errorInfo = [notification.userInfo objectForKey:@"Info"];
-		if ([errorInfo isEqualToString:@"InvalidSecondFactor"]) {
-			// 2-step error
-			message = NSLocalizedString(@"SignInFailed2Step", nil);
-		}
-		else {
-			// typical error
-			message = NSLocalizedString(@"BadAuthentication", nil);
-		}
-	}
-	else if ([errorCode isEqualToString:@"NotVerified"]) {
-		message = NSLocalizedString(@"NotVerified", nil);
-	}
-	else if ([errorCode isEqualToString:@"TermsNotAgreed"]) {
-		message = NSLocalizedString(@"TermsNotAgreed", nil);
-	}
-	else if ([errorCode isEqualToString:@"CaptchaRequired"]) {
-		message = NSLocalizedString(@"CaptchaRequired", nil);
-	}
-	else if ([errorCode isEqualToString:@"Unknown"]) {
-		message = NSLocalizedString(@"Unknown", nil);
-	}
-	else if ([errorCode isEqualToString:@"AccountDeleted"]) {
-		message = NSLocalizedString(@"AccountDeleted", nil);
-	}
-	else if ([errorCode isEqualToString:@"AccountDisabled"]) {
-		message = NSLocalizedString(@"AccountDisabled", nil);
-	}
-	else if ([errorCode isEqualToString:@"ServiceDisabled"]) {
-		message = NSLocalizedString(@"ServiceDisabled", nil);
-	}
-	else if ([errorCode isEqualToString:@"ServiceUnavailable"]) {
-		 message = NSLocalizedString(@"ServiceUnavailable", nil);
-	}
+    
+    if ([notification.userInfo isKindOfClass:[NSDictionary class]]) {
+        
+        NSString *staticMessage = [notification.userInfo objectForKey:@"StaticMessage"];
+        if (staticMessage) {
+            if (![staticMessage isEqualToString:@"Unknown"]) {
+                message = staticMessage;
+            }            
+        } else {
+            NSString *errorCode = [notification.userInfo objectForKey:@"Error"];
+            if ([errorCode isEqualToString:@"BadAuthentication"]) {
+                NSString *errorInfo = [notification.userInfo objectForKey:@"Info"];
+                if ([errorInfo isEqualToString:@"InvalidSecondFactor"]) {
+                    // 2-step error
+                    message = NSLocalizedString(@"SignInFailed2Step", nil);
+                }
+                else {
+                    // typical error
+                    message = NSLocalizedString(@"BadAuthentication", nil);
+                }
+            }
+            else if ([errorCode isEqualToString:@"NotVerified"]) {
+                message = NSLocalizedString(@"NotVerified", nil);
+            }
+            else if ([errorCode isEqualToString:@"TermsNotAgreed"]) {
+                message = NSLocalizedString(@"TermsNotAgreed", nil);
+            }
+            else if ([errorCode isEqualToString:@"CaptchaRequired"]) {
+                message = NSLocalizedString(@"CaptchaRequired", nil);
+            }
+            else if ([errorCode isEqualToString:@"Unknown"]) {
+                message = NSLocalizedString(@"Unknown", nil);
+            }
+            else if ([errorCode isEqualToString:@"AccountDeleted"]) {
+                message = NSLocalizedString(@"AccountDeleted", nil);
+            }
+            else if ([errorCode isEqualToString:@"AccountDisabled"]) {
+                message = NSLocalizedString(@"AccountDisabled", nil);
+            }
+            else if ([errorCode isEqualToString:@"ServiceDisabled"]) {
+                message = NSLocalizedString(@"ServiceDisabled", nil);
+            }
+            else if ([errorCode isEqualToString:@"ServiceUnavailable"]) {
+                message = NSLocalizedString(@"ServiceUnavailable", nil);
+            }
+        }
+    }
 	
 	self.alertField.text = message;
 	[self.alertField setHidden:NO];

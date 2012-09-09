@@ -121,11 +121,6 @@
 	self.sortDateAscending = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULT_KEY_SORT_DATE];
 	
 	_readyPurchase = NO;
-#ifdef FREE_FOR_PROMOTION
-    if ([self showAD] && [SKPaymentQueue canMakePayments] && self.productsToSell == nil) {
-		[self requestProductData];
-	}
-#endif
 	
 }
 
@@ -146,16 +141,6 @@
 	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 	
 	return [appDelegate syncRule];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-
-//	int rule = [self currentRule];
-//	NSIndexPath *ruleIndexPath = [NSIndexPath indexPathForRow:rule inSection:1];
-//	UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:ruleIndexPath];
-//	cell.accessoryType = UITableViewCellAccessoryCheckmark;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -183,9 +168,6 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#ifdef FREE_FOR_PROMOTION
-    return 5;
-#endif
 	return 4;
 }
 

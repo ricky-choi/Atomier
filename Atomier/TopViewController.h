@@ -11,13 +11,10 @@
 #import "PreviewFeed.h"
 #import "SettingsViewController.h"
 
-#import <iAd/ADBannerView.h>
-#import "GADBannerView.h"
-
 @class Category;
 @class NASegmentedControl;
 
-@interface TopViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, PreviewFeedDelegate, UIActionSheetDelegate, ADBannerViewDelegate, GADBannerViewDelegate, SettingsViewControllerDelegate>
+@interface TopViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, PreviewFeedDelegate, UIActionSheetDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
@@ -38,10 +35,5 @@
 - (IBAction)changeMode:(id)sender;
 
 + (NSString *)modeNameForSegment:(NSUInteger)segment;
-
-// for ad
-@property (strong, nonatomic) ADBannerView *adView;
-@property (strong, nonatomic) GADBannerView *gadView;
-@property (assign, nonatomic) BOOL gadBannerLoaded;
 
 @end

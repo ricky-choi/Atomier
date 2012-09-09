@@ -11,13 +11,10 @@
 #import "FeedViewController.h"
 #import "NewFeedsViewController.h"
 
-#import <iAd/ADBannerView.h>
-#import "GADBannerView.h"
-
 @class Category;
 @class Subscription;
 
-@interface FeedsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, UIActionSheetDelegate, FeedViewControllerDelegate, ADBannerViewDelegate, GADBannerViewDelegate, NewFeedsViewControllerDelegate>
+@interface FeedsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, UIActionSheetDelegate, FeedViewControllerDelegate, NewFeedsViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
@@ -35,10 +32,5 @@
 @property (strong, nonatomic) NSArray *toolbarItemsLandscape;
 
 - (void)unsubscribe;
-
-// for ad
-@property (strong, nonatomic) ADBannerView *adView;
-@property (strong, nonatomic) GADBannerView *gadView;
-@property (assign, nonatomic) BOOL gadBannerLoaded;
 
 @end

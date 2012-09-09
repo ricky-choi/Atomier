@@ -38,12 +38,6 @@
 
 - (void)showUpdateStatus;
 
-// for Ad
-- (void)layoutForCurrentOrientation:(NSTimeInterval)duration;
-- (void)createADBannerView;
-- (void)createGADBannerView;
-- (void)removeAd;
-
 @end
 
 @implementation StandViewController
@@ -64,11 +58,6 @@
 @synthesize updateLabel = _updateLabel;
 @synthesize messageLabel = _messageLabel;
 @synthesize statusLabel = _statusLabel;
-
-@synthesize adView = _adView;
-@synthesize gadView = _gadView;
-@synthesize gadBannerLoaded = _gadBannerLoaded;
-@synthesize firstAttempIsiAd;
 
 - (NASegmentedControl *)segmentControl {
 	if (_segmentControl == nil) {
@@ -122,161 +111,6 @@
 	return _segmentControl;
 }
 
-- (void)removeAd {
-	if (self.adView) {
-		[self.adView removeFromSuperview];
-		self.adView = nil;
-	}
-	
-	if (self.gadView) {
-		[self.gadView removeFromSuperview];
-		self.gadView = nil;
-		self.gadBannerLoaded = NO;
-	}
-}
-
-- (void)layoutForCurrentOrientation:(NSTimeInterval)duration {
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-		
-		CGRect contentFrame = self.view.bounds;
-		CGPoint bannerOrigin = CGPointMake(CGRectGetMinX(contentFrame), CGRectGetMaxY(contentFrame));
-		CGFloat bannerHeight = 0.0f;
-		
-		UIView *currentAdView = nil;
-		
-		if (self.adView && self.adView.bannerLoaded) {
-			ADBannerView *adBanner = self.adView;
-			
-			if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
-				adBanner.currentContentSizeIdentifier = ADBannerContentSizeIdentifierLandscape;
-			else
-				adBanner.currentContentSizeIdentifier = ADBannerContentSizeIdentifierPortrait;
-			
-			bannerHeight = adBanner.bounds.size.height;
-			
-			contentFrame.size.height -= bannerHeight;
-			bannerOrigin.y -= bannerHeight;
-			
-			currentAdView = adBanner;
-		}
-		else {
-			
-		}
-		
-		if (currentAdView && [currentAdView superview] == nil) {
-			[self.view addSubview:currentAdView];
-		}
-		
-		// And finally animate the changes, running layout for the content view if required.
-		[UIView animateWithDuration:duration
-						 animations:^{
-							 self.scrollView.frame = contentFrame;
-							 //[self.tableView layoutIfNeeded];
-							 if (currentAdView) {
-								 currentAdView.frame = CGRectMake(bannerOrigin.x, bannerOrigin.y, currentAdView.frame.size.width, currentAdView.frame.size.height);
-							 }
-							 
-						 }];
-	}
-}
-
-- (void)createADBannerView {
-	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	if ([appDelegate showAD] == NO) {
-		return;
-	}
-	
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-		if (self.adView.bannerLoaded || self.gadBannerLoaded) {
-			return;
-		}
-		
-	    self.adView = [[ADBannerView alloc] initWithFrame:CGRectZero];
-		self.adView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleTopMargin;
-		self.adView.requiredContentSizeIdentifiers = [NSSet setWithObjects:ADBannerContentSizeIdentifierPortrait, ADBannerContentSizeIdentifierLandscape, nil];
-		
-		NSString *contentSize = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? ADBannerContentSizeIdentifierPortrait : ADBannerContentSizeIdentifierLandscape;
-		self.adView.currentContentSizeIdentifier = contentSize;
-		
-		CGRect frame;
-		frame.size = [ADBannerView sizeFromBannerContentSizeIdentifier:contentSize];
-		frame.origin = CGPointMake(0.0f, CGRectGetMaxY(self.view.bounds));
-		
-		self.adView.frame = frame;
-		self.adView.delegate = self;
-		
-		[self.view addSubview:self.adView];
-	}
-}
-
-- (void)createGADBannerView {
-	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	if ([appDelegate showAD] == NO) {
-		return;
-	}
-	
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-		if (self.adView.bannerLoaded || self.gadBannerLoaded) {
-			return;
-		}
-		
-		CGRect frame = CGRectZero;
-		frame.size = GAD_SIZE_300x250;
-		
-		self.gadView = [[GADBannerView alloc] initWithFrame:frame];
-		self.gadView.adUnitID = MY_BANNER_UNIT_ID;
-		self.gadView.delegate = self;
-		
-		self.gadView.rootViewController = self;
-		//[self.view addSubview:self.gadView];
-		
-		[self.gadView loadRequest:[GADRequest request]];
-	}
-}
-
-#pragma mark -
-#pragma mark ADBannerViewDelegate methods
-
-- (void)bannerViewDidLoadAd:(ADBannerView *)banner
-{
-    [self layoutForCurrentOrientation:0.25];
-}
-
-- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
-{
-    [self layoutForCurrentOrientation:0.25];
-	if (firstAttempIsiAd) {
-		[self createGADBannerView];
-	}
-}
-
-- (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave
-{
-    return YES;
-}
-
-- (void)bannerViewActionDidFinish:(ADBannerView *)banner
-{
-	[self layoutForCurrentOrientation:0];
-}
-
-- (void)adViewDidReceiveAd:(GADBannerView *)view {
-	self.gadBannerLoaded = YES;
-	[self invalidateItemsForOrientation:self.interfaceOrientation];
-}
-
-- (void)adView:(GADBannerView *)view didFailToReceiveAdWithError:(GADRequestError *)error {
-	NSLog(@"adView:didFailToReceiveAdWithError:%@", [error localizedDescription]);
-	self.gadBannerLoaded = NO;
-	if (!firstAttempIsiAd) {
-		[self createADBannerView];
-	}
-}
-
-- (void)adViewWillDismissScreen:(GADBannerView *)adView {
-
-}
-
 #pragma mark -
 
 - (NSMutableDictionary *)childs {
@@ -315,21 +149,12 @@
 	return __managedObjectContext;
 }
 
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
-*/
-
 - (NSString *)currentModeName {
 	return [TopViewController modeNameForSegment:self.currentSegment];
 }
 
 - (void)invalidateEditButton {
-#ifndef FREE_FOR_PROMOTION	
 	[self.navigationItem.rightBarButtonItem setEnabled:([self.fetchedResultsControllerForSubscription.fetchedObjects count] + [self.fetchedResultsControllerForCategory.fetchedObjects count] > 0)];
-#endif
 }
 
 - (CGSize)chipSize {
@@ -385,11 +210,6 @@
 #if SHOW_ALL
 	if (chipCount > 0) {
 		chipCount++;
-#ifdef FREE_FOR_PROMOTION
-		if (self.gadBannerLoaded && chipCount >= 5) {
-			chipCount++;
-		}
-#endif
 	}
 #endif
 	
@@ -555,21 +375,6 @@
 		nextOrigin = [self nextOrigin:nextOrigin padding:(CGFloat)paddingInt scrollViewWidth:scrollViewWidth];
 	}
 	
-#ifdef FREE_FOR_PROMOTION
-	if (chipCount >= 5 && self.gadBannerLoaded) {
-		// 마지막 위치에 광고 삽입
-		CGRect nextFrame = CGRectMake(nextOrigin.x, nextOrigin.y, viewControllerSize.width, viewControllerSize.height);
-		self.gadView.center = CGPointMake(CGRectGetMidX(nextFrame), CGRectGetMidY(nextFrame));
-		if ([self.gadView superview] == nil) {
-			[self.scrollView addSubview:self.gadView];
-		}
-		
-		[self addShadow:self.gadView.layer];
-		
-		nextOrigin = [self nextOrigin:nextOrigin padding:(CGFloat)paddingInt scrollViewWidth:scrollViewWidth];
-	}
-#endif
-	
 	if (nextOrigin.x == paddingInt) {
 		self.scrollView.contentSize = CGSizeMake(scrollViewWidth, nextOrigin.y);
 	} else {
@@ -637,12 +442,6 @@
 	});
 }
 
-- (void)dealloc {
-#ifdef FREE_FOR_PROMOTION
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-#endif
-}
-
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
@@ -683,42 +482,15 @@
 	[self showUpdateStatus];
 	[self refreshUnreadCount];
 
-#ifdef FREE_FOR_PROMOTION	
-	self.navigationController.toolbarHidden = YES;
-	
-	UIBarButtonItem *modeItem = [[UIBarButtonItem alloc] initWithTitle:[self currentModeName] 
-																 style:UIBarButtonItemStyleBordered
-																target:self
-																action:@selector(changeModeByAlternativeWay:)];
-	self.navigationItem.rightBarButtonItem = modeItem;
-#else
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	[self.navigationItem.rightBarButtonItem setTintColor:[UIColor colorWithRed:63.0f/255.0f green:23.0f/255.0f blue:0 alpha:1]];
 	[self invalidateEditButton];
-#endif
 	
 	CGRect contentFrame = self.view.bounds;
 	contentFrame.size.height -= 50.0f;
 	self.scrollView = [[UIScrollView alloc] initWithFrame:contentFrame];
 	self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	[self.view addSubview:self.scrollView];
-	
-#ifdef FREE_FOR_PROMOTION
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adFreeNotified:) name:DEFAULT_KEY_AD object:nil];
-	
-	AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-	if ([appDelegate showAD]) {
-		srandom(time(NULL));
-		int randomNumber = random() % 100;
-		if (randomNumber < 50) {
-			firstAttempIsiAd = YES;
-			[self createADBannerView];
-		} else {
-			firstAttempIsiAd = NO;
-			[self createGADBannerView];
-		}
-	}
-#endif
 }
 
 - (IBAction)next:(id)sender {
@@ -769,12 +541,6 @@
 	[appDelegate refresh];
 }
 
-- (void)adFreeNotified:(NSNotification *)notification {
-	[self removeAd];
-	[self layoutForCurrentOrientation:0];
-	[self invalidateItemsForOrientation:self.interfaceOrientation];
-}
-
 - (void)changeModeByAlternativeWay:(UIBarButtonItem *)barButtonItem {
 	if ([self.actionSheet isVisible]) {
 		[self.actionSheet dismissWithClickedButtonIndex:self.actionSheet.cancelButtonIndex animated:YES];
@@ -789,12 +555,6 @@
 	}
 }
 
-- (void)purchaseAdFreeDone {
-	[self removeAd];
-	[self layoutForCurrentOrientation:0];
-	[self invalidateItemsForOrientation:self.interfaceOrientation];
-}
-
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	
@@ -805,11 +565,6 @@
 	[super viewDidAppear:animated];
 	
 	[self invalidateItemsForOrientation:self.interfaceOrientation];
-	
-#ifdef FREE_FOR_PROMOTION
-
-	[self layoutForCurrentOrientation:0];
-#endif
 	
 }
 
@@ -911,9 +666,6 @@
 
 - (void)viewDidUnload
 {
-	self.adView.delegate = nil;
-	self.gadView.delegate = nil;
-	
 	[self setSegmentView:nil];
 	[self setUpdateLabel:nil];
     [self setMessageLabel:nil];
@@ -949,13 +701,6 @@
 					 }];
 }
 
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-#ifdef FREE_FOR_PROMOTION
-    [self layoutForCurrentOrientation:duration];
-#endif
-}
-
 - (IBAction)changeMode:(id)sender {
 	self.editing = NO;
 	
@@ -984,7 +729,6 @@
 
 - (IBAction)setting:(id)sender {
 	SettingsViewController *viewController = [IPHONE_STORYBOARD instantiateViewControllerWithIdentifier:@"SettingsViewController"];
-	viewController.delegate = self;
 	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
 	navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
 	[self presentViewController:navigationController animated:YES completion:nil];
