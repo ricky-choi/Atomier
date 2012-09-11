@@ -74,7 +74,7 @@
 			self.topImageView.image = [UIImage imageNamed:@"feedsTop_portrait"];
 			self.bottomImageView.image = [UIImage imageNamed:@"syndi_toolbar_portrait"];
 		}
-		else {
+		else {			
 			padding = fullscreen ? bottomPaddingLandscapeMin : bottomPaddingLandscape;
 			bottomViewHeight = bottomPaddingLandscape;
 			if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
@@ -270,8 +270,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	[self layout];
+	
 	[self layoutForOrientation:self.interfaceOrientation];
+	[self layout];
+	
 	[self refreshPageLabel];
 }
 
