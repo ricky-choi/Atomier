@@ -161,7 +161,6 @@
 	if (CGSizeEqualToSize(_chipSize, CGSizeZero)) {
 		return CGSizeMake(320, 320);
 	}
-	
 	return _chipSize;
 }
 
