@@ -188,20 +188,7 @@
 			[self mail:[self feedTitle] body:body];
 		}
 		else if (buttonIndex == actionSheet.firstOtherButtonIndex + 4) {
-			AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-			if ([appDelegate facebookAuthorize]) {
-				// send
-				NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-											   [self feedTitle], @"message"
-											   , [sourceURL absoluteString], @"link"
-											   , nil];
-				if (0) {
-					[appDelegate facebookRequestGraphPath:@"me/feed" andParams:params andHttpMethod:@"POST"];
-				} else {
-					[appDelegate.facebook dialog:@"feed" andParams:params andDelegate:nil];
-				}
-				
-			}
+#warning Facebook integration for iOS6
 		}
 		else if (buttonIndex == actionSheet.firstOtherButtonIndex + 5) {
 			// Send to Twitter

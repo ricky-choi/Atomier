@@ -38,8 +38,6 @@ static NSString* kAppId = @"164714413630639";
 - (void)checkLoadDone;
 - (BOOL)isLoading;
 
-- (void)initFacebook;
-
 @end
 
 @implementation AppDelegate {
@@ -53,35 +51,6 @@ static NSString* kAppId = @"164714413630639";
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
-
-@synthesize savedCategoryIDs = _savedCategoryIDs;
-@synthesize savedSubscriptionIDs = _savedSubscriptionIDs;
-@synthesize savedFeedIDs = _savedFeedIDs;
-@synthesize savedTags = _savedTags;
-
-@synthesize readyGetIcons = _readyGetIcons;
-
-@synthesize loginViewController = _loginViewController;
-
-@synthesize facebook = _facebook;
-
-- (void)initFacebook {
-	if (_facebook == nil) {
-		_facebook = [[Facebook alloc] initWithAppId:kAppId andDelegate:self];
-		
-		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-		if ([defaults objectForKey:@"FBAccessTokenKey"] && [defaults objectForKey:@"FBExpirationDateKey"]) {
-			_facebook.accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
-			_facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
-		}
-	}
-}
-
-- (Facebook *)facebook {
-	[self initFacebook];
-	
-	return _facebook;
-}
 
 - (BOOL)showAD {
 	return [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULT_KEY_AD];
@@ -198,144 +167,7 @@ static NSString* kAppId = @"164714413630639";
 	
 	[Appirater appLaunched:YES];
 	
-	[self initFacebook];
-	
     return YES;
-}
-
-// Pre iOS 4.2 support
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-    return [self.facebook handleOpenURL:url]; 
-}
-
-// For iOS 4.2+ support
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    return [self.facebook handleOpenURL:url]; 
-}
-
-- (BOOL)facebookAuthorize {
-	if (![self.facebook isSessionValid]) {
-//		NSArray *permissions = [[NSArray alloc] initWithObjects:
-//								@"publish_stream",
-//								nil];
-//        [self.facebook authorize:permissions];
-		
-		[self.facebook authorize:nil];
-		
-		return NO;
-	}
-	
-	return YES;
-}
-
-- (void)fbDidLogin {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:[self.facebook accessToken] forKey:@"FBAccessTokenKey"];
-    [defaults setObject:[self.facebook expirationDate] forKey:@"FBExpirationDateKey"];
-    [defaults synchronize];
-	
-}
-
-- (void)fbDidNotLogin:(BOOL)cancelled {
-	
-}
-
-/**
- * Called after the access token was extended. If your application has any
- * references to the previous access token (for example, if your application
- * stores the previous access token in persistent storage), your application
- * should overwrite the old access token with the new one in this method.
- * See extendAccessToken for more details.
- */
-- (void)fbDidExtendToken:(NSString*)accessToken
-			   expiresAt:(NSDate*)expiresAt {
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:accessToken forKey:@"FBAccessTokenKey"];
-    [defaults setObject:expiresAt forKey:@"FBExpirationDateKey"];
-    [defaults synchronize];
-}
-
-/**
- * Called when the user logged out.
- */
-- (void)fbDidLogout {
-	// Remove saved authorization information if it exists
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults objectForKey:@"FBAccessTokenKey"]) {
-        [defaults removeObjectForKey:@"FBAccessTokenKey"];
-        [defaults removeObjectForKey:@"FBExpirationDateKey"];
-        [defaults synchronize];
-    }
-}
-
-/**
- * Called when the current session has expired. This might happen when:
- *  - the access token expired
- *  - the app has been disabled
- *  - the user revoked the app's permissions
- *  - the user changed his or her password
- */
-- (void)fbSessionInvalidated {
-	
-}
-
-- (void)facebookRequestGraphPath:(NSString *)path andParams:(NSMutableDictionary *)params andHttpMethod:(NSString *)httpMethod {
-	if (path) {
-		[self.facebook requestWithGraphPath:path 
-								  andParams:params ? params : [NSMutableDictionary dictionary]
-							  andHttpMethod:httpMethod ? httpMethod : @"GET"
-								andDelegate:self];
-	}
-}
-
-/**
- * Called just before the request is sent to the server.
- */
-- (void)requestLoading:(FBRequest *)request {
-	NSLog(@"facebook requestLoading: %@", request);
-}
-
-/**
- * Called when the Facebook API request has returned a response.
- *
- * This callback gives you access to the raw response. It's called before
- * (void)request:(FBRequest *)request didLoad:(id)result,
- * which is passed the parsed response object.
- */
-- (void)request:(FBRequest *)request didReceiveResponse:(NSURLResponse *)response {
-	//NSLog(@"facebook request: %@ didReceiveResponse: %@", request, response);
-}
-
-/**
- * Called when an error prevents the request from completing successfully.
- */
-- (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
-	NSLog(@"facebook request: %@ didFailWithError: %@", request, error);
-}
-
-/**
- * Called when a request returns and its response has been parsed into
- * an object.
- *
- * The resulting object may be a dictionary, an array or a string, depending
- * on the format of the API response. If you need access to the raw response,
- * use:
- *
- * (void)request:(FBRequest *)request
- *      didReceiveResponse:(NSURLResponse *)response
- */
-- (void)request:(FBRequest *)request didLoad:(id)result {
-	NSLog(@"facebook request: %@ didLoad: %@", request, result);
-}
-
-/**
- * Called when a request returns a response.
- *
- * The result object is the raw response from the server of type NSData
- */
-- (void)request:(FBRequest *)request didLoadRawResponse:(NSData *)data {
-	
 }
 
 - (void)updateKVStoreItems:(NSNotification*)notification {
@@ -431,8 +263,6 @@ static NSString* kAppId = @"164714413630639";
 	else {
 		[self requestSession];		
 	}
-	
-	[self.facebook extendAccessTokenIfNeeded];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
