@@ -152,6 +152,27 @@
 	return YES;
 }
 
+- (BOOL)shouldAutorotate {
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+	    return NO;
+	}
+    return YES;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+	    return UIInterfaceOrientationMaskPortrait;
+	}
+    return UIInterfaceOrientationMaskAll;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+	    return UIInterfaceOrientationPortrait;
+	}
+    return UIInterfaceOrientationPortrait;
+}
+
 #pragma mark - Login
 
 - (NSString *)email {
