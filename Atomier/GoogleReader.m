@@ -13,6 +13,7 @@
 #define DISPATCH_FEED_NAME "com.felaur.readerstandard.feedload"
 #define DISPATCH_FEED_MARK "com.felaur.readerstandard.feedmark"
 
+#define GOOGLE_HOST @"www.google.com"
 #define GOOGLE_COOKIE @".google.com"
 #define USER_TOKEN @"t"
 #define USER_AUTH @"a"
@@ -77,6 +78,34 @@
 	self.auth = [userDefaults stringForKey:USER_AUTH];
 }
 
+- (NSString *)httpScheme {
+    BOOL needSSL = NO;
+    
+    if (_delegate && [_delegate respondsToSelector:@selector(isWWAN)]) {
+        needSSL = ![_delegate isWWAN];
+    }
+    
+    return (needSSL ? @"https" : @"http");
+}
+
+- (NSURL *)httpURLForHost:(NSString *)host andPath:(NSString *)path {
+    return [[NSURL alloc] initWithScheme:[self httpScheme] host:host path:path];
+}
+
+- (NSURL *)googleURLForPath:(NSString *)path {
+    return [[NSURL alloc] initWithScheme:[self httpScheme] host:GOOGLE_HOST path:path];
+}
+
+- (NSURL *)httpURLExceptScheme:(NSString *)string {
+    NSString *urlString = [NSString stringWithFormat:@"%@://%@", [self httpScheme], string];
+    return [NSURL URLWithString:urlString];
+}
+
+- (NSURL *)googleURLExceptScheme:(NSString *)string {
+    NSString *urlString = [NSString stringWithFormat:@"%@://www.google.com/%@", [self httpScheme], string];
+    return [NSURL URLWithString:urlString];
+}
+
 - (void)getAuthSmart {
 	[self readAuthInfo];
 	
@@ -139,11 +168,7 @@
 		
 		NSString * timestamp = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
 		
-		//NSString * url = [NSString stringWithFormat:@"https://www.google.com/accounts/ClientLogin?service=reader&Email=%@&Passwd=%@&ck=%@", [self email], [self password], timestamp];
-		NSString * url = @"https://www.google.com/accounts/ClientLogin";
-		
-		//ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
-		ASIFormDataRequest * request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:url]];
+		ASIFormDataRequest * request = [ASIFormDataRequest requestWithURL:[self googleURLForPath:@"/accounts/ClientLogin"]];
 		[request setRequestMethod:@"POST"];
 		[request setDelegate:self];
 		[request setPostValue:[self email] forKey:@"Email"];
@@ -244,9 +269,7 @@
 	
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
 	dispatch_async(queue, ^{
-		NSString * url = @"http://www.google.com/reader/api/0/token";
-		
-		ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+		ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[self googleURLForPath:@"/reader/api/0/token"]];
 		[request setRequestMethod:@"GET"];
 		[request addRequestHeader:@"Authorization" value:[NSString stringWithFormat:@"GoogleLogin auth=%@", [self auth]]];
 		[request startSynchronous];
@@ -298,9 +321,9 @@
 	dispatch_queue_t queue = dispatch_queue_create(DISPATCH_FEED_NAME, NULL);
 	dispatch_async(queue, ^{
 		NSString * timestamp = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
-		NSString *url = [NSString stringWithFormat:@"http://www.google.com/reader/api/0/subscription/quickadd?ck=%@&client=%@", timestamp, CLIENT];
+		NSString *url = [NSString stringWithFormat:@"reader/api/0/subscription/quickadd?ck=%@&client=%@", timestamp, CLIENT];
 		
-		ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:url]];
+		ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[self googleURLExceptScheme:url]];
 		[request setRequestMethod:@"POST"];
 		[request setPostValue:feedURL forKey:@"quickadd"];
 		[request setPostValue:[self token] forKey:@"T"];
@@ -375,9 +398,9 @@
 	dispatch_queue_t queue = dispatch_queue_create(DISPATCH_FEED_NAME, NULL);
 	dispatch_async(queue, ^{
 		NSString * timestamp = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
-		NSString *url = [NSString stringWithFormat:@"http://www.google.com/reader/directory/search?q=%@&start=%d&ck=%@&client=%@", keyword, startPage, timestamp, CLIENT];
+		NSString *url = [NSString stringWithFormat:@"reader/directory/search?q=%@&start=%d&ck=%@&client=%@", keyword, startPage, timestamp, CLIENT];
 		
-		ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+		ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[self googleURLExceptScheme:url]];
 		[request setRequestMethod:@"GET"];
 		[request addRequestHeader:@"Authorization" value:[NSString stringWithFormat:@"GoogleLogin auth=%@", [self auth]]];
 		[request startSynchronous];
@@ -441,9 +464,9 @@
 	
 	dispatch_queue_t queue = dispatch_queue_create(DISPATCH_FEED_NAME, NULL);
 	dispatch_async(queue, ^{
-		NSString *url = [NSString stringWithFormat:@"http://www.google.com/reader/api/0/subscription/edit?client=%@", CLIENT];
+		NSString *url = [NSString stringWithFormat:@"reader/api/0/subscription/edit?client=%@", CLIENT];
 		
-		ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:url]];
+		ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[self googleURLExceptScheme:url]];
 		[request setRequestMethod:@"POST"];
 		[request setPostValue:[NSString stringWithFormat:@"feed/%@", feedURL] forKey:@"s"];
 		[request setPostValue:@"subscribe" forKey:@"ac"];
@@ -480,9 +503,9 @@
 	
 	dispatch_queue_t queue = dispatch_queue_create(DISPATCH_FEED_NAME, NULL);
 	dispatch_async(queue, ^{
-		NSString *url = [NSString stringWithFormat:@"http://www.google.com/reader/api/0/subscription/edit?client=%@", CLIENT];
+		NSString *url = [NSString stringWithFormat:@"reader/api/0/subscription/edit?client=%@", CLIENT];
 		
-		ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:url]];
+		ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[self googleURLExceptScheme:url]];
 		[request setRequestMethod:@"POST"];
 		[request setPostValue:[NSString stringWithFormat:@"%@", feedURL] forKey:@"s"];
 		[request setPostValue:@"unsubscribe" forKey:@"ac"];		
@@ -515,9 +538,9 @@
 	
 	dispatch_queue_t queue = dispatch_queue_create(DISPATCH_FEED_NAME, NULL);
 	dispatch_async(queue, ^{
-		NSString *url = [NSString stringWithFormat:@"http://www.google.com/reader/api/0/subscription/edit?client=%@", CLIENT];
+		NSString *url = [NSString stringWithFormat:@"reader/api/0/subscription/edit?client=%@", CLIENT];
 		
-		ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:url]];
+		ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[self googleURLExceptScheme:url]];
 		[request setRequestMethod:@"POST"];
 		[request setPostValue:[NSString stringWithFormat:@"feed/%@", feedURL] forKey:@"s"];
 		[request setPostValue:@"edit" forKey:@"ac"];
@@ -555,9 +578,9 @@
 	
 	dispatch_queue_t queue = dispatch_queue_create(DISPATCH_FEED_NAME, NULL);
 	dispatch_async(queue, ^{
-		NSString *url = [NSString stringWithFormat:@"http://www.google.com/reader/api/0/subscription/edit?client=%@", CLIENT];
+		NSString *url = [NSString stringWithFormat:@"reader/api/0/subscription/edit?client=%@", CLIENT];
 		
-		ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:url]];
+		ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[self googleURLExceptScheme:url]];
 		[request setRequestMethod:@"POST"];
 		[request setPostValue:[NSString stringWithFormat:@"feed/%@", feedURL] forKey:@"s"];
 		[request setPostValue:@"edit" forKey:@"ac"];
@@ -594,9 +617,9 @@
 	
 	dispatch_queue_t queue = dispatch_queue_create(DISPATCH_FEED_NAME, NULL);
 	dispatch_async(queue, ^{
-		NSString *url = [NSString stringWithFormat:@"http://www.google.com/reader/api/0/subscription/edit?client=%@", CLIENT];
+		NSString *url = [NSString stringWithFormat:@"reader/api/0/subscription/edit?client=%@", CLIENT];
 		
-		ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:url]];
+		ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[self googleURLExceptScheme:url]];
 		[request setRequestMethod:@"POST"];
 		[request setPostValue:[NSString stringWithFormat:@"feed/%@", feedURL] forKey:@"s"];
 		[request setPostValue:@"edit" forKey:@"ac"];
@@ -631,9 +654,9 @@
 	dispatch_queue_t queue = dispatch_queue_create(DISPATCH_FEED_NAME, NULL);
 	dispatch_async(queue, ^{
 		NSString * timestamp = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
-		NSString * url = [NSString stringWithFormat:@"http://www.google.com/reader/api/0/unread-count?allcomments=false&output=json&ck=%@&client=%@", timestamp, CLIENT];
+		NSString * url = [NSString stringWithFormat:@"reader/api/0/unread-count?allcomments=false&output=json&ck=%@&client=%@", timestamp, CLIENT];
 		
-		ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+		ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[self googleURLExceptScheme:url]];
 		[request setRequestMethod:@"GET"];
 		[request addRequestHeader:@"Authorization" value:[NSString stringWithFormat:@"GoogleLogin auth=%@", [self auth]]];
 		
@@ -698,11 +721,11 @@
 #if MAIN_ASYNC
 	
 	NSString * timestamp = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
-	NSString * url = [NSString stringWithFormat:@"http://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/reading-list?ot=%@&r=n&ck=%@&xt=user/-/state/com.google/read&n=%d&client=%@", [self lastUpdateTime], timestamp, [self maxSyncNum], CLIENT];
+	NSString * url = [NSString stringWithFormat:@"reader/api/0/stream/contents/user/-/state/com.google/reading-list?ot=%@&r=n&ck=%@&xt=user/-/state/com.google/read&n=%d&client=%@", [self lastUpdateTime], timestamp, [self maxSyncNum], CLIENT];
 	
 	self.lastUpdate = [NSDate date];
 	
-	ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+	ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[self googleURLExceptScheme:url]];
 	[request setRequestMethod:@"GET"];
 	[request addRequestHeader:@"Authorization" value:[NSString stringWithFormat:@"GoogleLogin auth=%@", [self auth]]];
 	[request setDelegate:self];
@@ -718,11 +741,11 @@
 	dispatch_queue_t queue = dispatch_queue_create(DISPATCH_FEED_NAME, NULL);
 	dispatch_async(queue, ^{
 		NSString * timestamp = [NSString stringWithFormat:@"%d", (long)[[NSDate date] timeIntervalSince1970]];
-		NSString * url = [NSString stringWithFormat:@"http://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/reading-list?ot=%@&r=n&ck=%@&xt=user/-/state/com.google/read&n=%d&client=%@", [self lastUpdateTime], timestamp, [self maxSyncNum], CLIENT];
+		NSString * url = [NSString stringWithFormat:@"reader/api/0/stream/contents/user/-/state/com.google/reading-list?ot=%@&r=n&ck=%@&xt=user/-/state/com.google/read&n=%d&client=%@", [self lastUpdateTime], timestamp, [self maxSyncNum], CLIENT];
 		
 		self.lastUpdate = [NSDate date];
 		
-		ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+		ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[self googleURLExceptScheme:url]];
 		[request setRequestMethod:@"GET"];
 		[request addRequestHeader:@"Authorization" value:[NSString stringWithFormat:@"GoogleLogin auth=%@", [self auth]]];
 		
@@ -806,9 +829,9 @@
 #if MAIN_ASYNC
 	
 	NSString * timestamp = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
-	NSString * url = [NSString stringWithFormat:@"http://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/starred?ck=%@&n=%d&client=%@", timestamp, [self maxSyncNum], CLIENT];
+	NSString * url = [NSString stringWithFormat:@"reader/api/0/stream/contents/user/-/state/com.google/starred?ck=%@&n=%d&client=%@", timestamp, [self maxSyncNum], CLIENT];
 
-	ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+	ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[self googleURLExceptScheme:url]];
 	[request setRequestMethod:@"GET"];
 	[request addRequestHeader:@"Authorization" value:[NSString stringWithFormat:@"GoogleLogin auth=%@", [self auth]]];
 	[request setDelegate:self];
@@ -824,9 +847,9 @@
 	dispatch_queue_t queue = dispatch_queue_create(DISPATCH_FEED_NAME, NULL);
 	dispatch_async(queue, ^{
 		NSString * timestamp = [NSString stringWithFormat:@"%d", (long)[[NSDate date] timeIntervalSince1970]];
-		NSString * url = [NSString stringWithFormat:@"http://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/starred?ck=%@&n=%d&client=%@", timestamp, [self maxSyncNum], CLIENT];
+		NSString * url = [NSString stringWithFormat:@"reader/api/0/stream/contents/user/-/state/com.google/starred?ck=%@&n=%d&client=%@", timestamp, [self maxSyncNum], CLIENT];
 		
-		ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+		ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[self googleURLExceptScheme:url]];
 		[request setRequestMethod:@"GET"];
 		[request addRequestHeader:@"Authorization" value:[NSString stringWithFormat:@"GoogleLogin auth=%@", [self auth]]];
 		
@@ -911,9 +934,9 @@
 	dispatch_queue_t queue = dispatch_queue_create(DISPATCH_FEED_NAME, NULL);
 	dispatch_async(queue, ^{
 		NSString * timestamp = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
-		NSString * url = [NSString stringWithFormat:@"http://www.google.com/reader/api/0/stream/contents/user/-/state/com.google/reading-list?ot=%@&r=n&ck=%@&n=%d&client=%@", [self lastUpdateTime], timestamp, [self maxSyncNum], CLIENT];
+		NSString * url = [NSString stringWithFormat:@"reader/api/0/stream/contents/user/-/state/com.google/reading-list?ot=%@&r=n&ck=%@&n=%d&client=%@", [self lastUpdateTime], timestamp, [self maxSyncNum], CLIENT];
 		
-		ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+		ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[self googleURLExceptScheme:url]];
 		[request setRequestMethod:@"GET"];
 		[request addRequestHeader:@"Authorization" value:[NSString stringWithFormat:@"GoogleLogin auth=%@", [self auth]]];
 		
@@ -972,10 +995,10 @@
 	dispatch_async(queue, ^{
 		NSString * timestamp = [NSString stringWithFormat:@"%ld", (long)[[NSDate date] timeIntervalSince1970]];
 		
-		NSString * url = [NSString stringWithFormat:@"http://www.google.com/reader/api/0/related/list?n=%d&s=%@&output=json&ck=%@&client=%@", maxNumber,
+		NSString * url = [NSString stringWithFormat:@"reader/api/0/related/list?n=%d&s=%@&output=json&ck=%@&client=%@", maxNumber,
 						  [feedURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding], timestamp, CLIENT];
 		
-		ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+		ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[self googleURLExceptScheme:url]];
 		[request setRequestMethod:@"GET"];
 		[request addRequestHeader:@"Authorization" value:[NSString stringWithFormat:@"GoogleLogin auth=%@", [self auth]]];
 		
@@ -1014,9 +1037,9 @@
 	
 #if MAIN_ASYNC
 	
-	NSString * url = [NSString stringWithFormat:@"http://www.google.com/reader/api/0/subscription/list?output=json&client=%@", CLIENT];
+	NSString * url = [NSString stringWithFormat:@"reader/api/0/subscription/list?output=json&client=%@", CLIENT];
 	
-	ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+	ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[self googleURLExceptScheme:url]];
 	[request setRequestMethod:@"GET"];
 	[request addRequestHeader:@"Authorization" value:[NSString stringWithFormat:@"GoogleLogin auth=%@", [self auth]]];
 	[request setDelegate:self];
@@ -1031,9 +1054,9 @@
 	
 	dispatch_queue_t queue = dispatch_queue_create(DISPATCH_FEED_NAME, NULL);
 	dispatch_async(queue, ^{
-		NSString * url = [NSString stringWithFormat:@"http://www.google.com/reader/api/0/subscription/list?output=json&client=%@", CLIENT];
+		NSString * url = [NSString stringWithFormat:@"reader/api/0/subscription/list?output=json&client=%@", CLIENT];
 		
-		ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+		ASIHTTPRequest * request = [ASIHTTPRequest requestWithURL:[self googleURLExceptScheme:url]];
 		[request setRequestMethod:@"GET"];
 		[request addRequestHeader:@"Authorization" value:[NSString stringWithFormat:@"GoogleLogin auth=%@", [self auth]]];
 		
@@ -1122,9 +1145,9 @@
 	
 	dispatch_queue_t queue = dispatch_queue_create(DISPATCH_FEED_MARK, NULL);
 	dispatch_async(queue, ^{
-		NSString *url = [NSString stringWithFormat:@"http://www.google.com/reader/api/0/edit-tag?client=%@", CLIENT];
+		NSString *url = [NSString stringWithFormat:@"reader/api/0/edit-tag?client=%@", CLIENT];
 		
-		ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:url]];
+		ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[self googleURLExceptScheme:url]];
 		[request setRequestMethod:@"POST"];
 		[request setPostValue:@"edit-tags" forKey:@"ac"];
 		
@@ -1180,9 +1203,9 @@
 	
 	dispatch_queue_t queue = dispatch_queue_create(DISPATCH_FEED_MARK, NULL);
 	dispatch_async(queue, ^{
-		NSString *url = [NSString stringWithFormat:@"http://www.google.com/reader/api/0/edit-tag?client=%@", CLIENT];
+		NSString *url = [NSString stringWithFormat:@"reader/api/0/edit-tag?client=%@", CLIENT];
 		
-		ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:url]];
+		ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[self googleURLExceptScheme:url]];
 		[request setRequestMethod:@"POST"];
 		[request setPostValue:@"edit-tags" forKey:@"ac"];
 		

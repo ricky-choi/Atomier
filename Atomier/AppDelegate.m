@@ -106,6 +106,10 @@ static NSString* kAppId = @"164714413630639";
 	return [self reachability] == kReachableViaWiFi;
 }
 
+- (BOOL)isWWAN {
+    return [self reachability] == kReachableViaWWAN;
+}
+
 - (BOOL)isConnectedToNetwork {
 	return [self reachability] != kNotReachable;
 }

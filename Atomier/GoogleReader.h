@@ -12,6 +12,8 @@
 
 @protocol GoogleReaderDelegate <NSObject>
 
+- (BOOL)isWWAN;
+
 - (void)googleReaderAuthenticateSuccess;
 - (void)googleReaderAuthenticateFailed:(id)info;
 

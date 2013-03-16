@@ -77,6 +77,7 @@
 
 - (NetworkStatus)reachability;
 - (BOOL)isWiFi;
+- (BOOL)isWWAN;
 - (BOOL)isConnectedToNetwork;
 
 - (void)showNoInternet;
