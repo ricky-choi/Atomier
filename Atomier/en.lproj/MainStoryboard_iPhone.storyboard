@@ -600,7 +600,7 @@
                                 <rect key="frame" x="0.0" y="436" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="bottom" image="syndi_toolbar_portrait.png" id="2cZ-CZ-eyH">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="syndi_toolbar_portrait.png" id="2cZ-CZ-eyH">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     </imageView>
@@ -935,6 +935,145 @@
         <image name="settings.png" width="42" height="40"/>
         <image name="syndi_toolbar_portrait.png" width="320" height="44"/>
     </resources>
+    <classes>
+        <class className="CoverViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CoverViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="next:"/>
+                <relationship kind="action" name="refresh:"/>
+                <relationship kind="outlet" name="spinner" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="statusLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="updateLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="FeedViewController" superclassName="WebViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FeedViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="nextFeed:"/>
+                <relationship kind="action" name="previousFeed:"/>
+                <relationship kind="action" name="shareAction:"/>
+                <relationship kind="action" name="toggleStarred:"/>
+                <relationship kind="action" name="toggleUnread:"/>
+                <relationship kind="outlet" name="actionItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="nextButtonItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="previousButtonItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="starredItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="toggleListItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="unreadItem" candidateClass="UIBarButtonItem"/>
+            </relationships>
+        </class>
+        <class className="FeedsViewCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FeedsViewCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="dateLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="descriptionLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="iconImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="starredImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="subtitleLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="titleLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="unreadImageView" candidateClass="UIImageView"/>
+            </relationships>
+        </class>
+        <class className="FeedsViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/FeedsViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="LoginViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/LoginViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="login:"/>
+                <relationship kind="outlet" name="alertField" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="backgroundImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="descriptionLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="emailField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="passwordField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="signInButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="spinner" candidateClass="UIActivityIndicatorView"/>
+            </relationships>
+        </class>
+        <class className="NewFeedViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NewFeedViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="action:"/>
+                <relationship kind="action" name="toggleStar:"/>
+                <relationship kind="outlet" name="starButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="titleLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="topBar" candidateClass="UIView"/>
+                <relationship kind="outlet" name="topBarImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
+            </relationships>
+        </class>
+        <class className="NewFeedsViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NewFeedsViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="fullscreenOff:"/>
+                <relationship kind="action" name="fullscreenOn:"/>
+                <relationship kind="action" name="goHome:"/>
+                <relationship kind="action" name="goNext:"/>
+                <relationship kind="action" name="goPrevious:"/>
+                <relationship kind="action" name="toggleFullScreen:"/>
+                <relationship kind="outlet" name="bottomImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="bottomView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="nextButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="pageLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="previousButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="topImageView" candidateClass="UIImageView"/>
+            </relationships>
+        </class>
+        <class className="NoiseTableView" superclassName="UITableView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NoiseTableView.h"/>
+        </class>
+        <class className="PortraitNavigationViewController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PortraitNavigationViewController.h"/>
+        </class>
+        <class className="SearchViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SearchViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="done:"/>
+            </relationships>
+        </class>
+        <class className="SettingsViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SettingsViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="signout:"/>
+                <relationship kind="action" name="toggleSwitch:"/>
+                <relationship kind="outlet" name="badgeSwitch" candidateClass="UISwitch"/>
+            </relationships>
+        </class>
+        <class className="SimpleFeedsViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SimpleFeedsViewController.h"/>
+        </class>
+        <class className="TopViewCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TopViewCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="countLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="descriptionLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="iconImageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="titleLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="TopViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TopViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="changeMode:"/>
+                <relationship kind="action" name="refresh:"/>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+        <class className="WebViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/WebViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="backItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="forwardItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="refreshItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="stopItem" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="webView" candidateClass="UIWebView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <nil key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
