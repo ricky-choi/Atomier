@@ -859,10 +859,10 @@
             </objects>
             <point key="canvasLocation" x="668" y="1295"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Portrait Navigation View Controller-->
         <scene sceneID="P9U-uh-4Ef">
             <objects>
-                <navigationController id="koH-t8-eBB" sceneMemberID="viewController">
+                <navigationController id="koH-t8-eBB" customClass="PortraitNavigationViewController" sceneMemberID="viewController">
                     <toolbarItems/>
                     <nil key="simulatedStatusBarMetrics"/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="nuT-Dz-St0">
@@ -896,10 +896,10 @@
             </objects>
             <point key="canvasLocation" x="2073" y="1295"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Portrait Navigation View Controller-->
         <scene sceneID="NT4-j2-1vF">
             <objects>
-                <navigationController toolbarHidden="NO" id="PIZ-FC-INv" sceneMemberID="viewController">
+                <navigationController toolbarHidden="NO" id="PIZ-FC-INv" customClass="PortraitNavigationViewController" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" id="VRq-10-0bA">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
