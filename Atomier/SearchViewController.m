@@ -121,11 +121,6 @@
 	[self.searchDisplayController.searchBar becomeFirstResponder];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
 - (void)cleanKeywordSearches {
 	[self.keywordSearchResults removeAllObjects];
 	self.hasnextpage = 0;

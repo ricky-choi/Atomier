@@ -361,7 +361,6 @@
 		}
 		
 	});
-	dispatch_release(queue);
 }
 
 - (void)quickSubscribeToRSSFeedURL:(NSString *)feedURL {
@@ -420,7 +419,6 @@
 			}
 		}
 	});
-	dispatch_release(queue);
 }
 
 - (void)searchKeyword:(NSString *)keyword {
@@ -473,7 +471,6 @@
 		}
 		
 	});
-	dispatch_release(queue);
 }
 
 - (void)unsubscribeToRSSFeedURL:(NSString *)feedURL {
@@ -509,7 +506,6 @@
 		}
 		
 	});
-	dispatch_release(queue);
 }
 
 - (void)renameRSSFeedURL:(NSString *)feedURL forNewFeedName:(NSString *)feedName {
@@ -546,7 +542,6 @@
 		}
 		
 	});
-	dispatch_release(queue);
 }
 
 - (void)editCategoryRSSFeedURL:(NSString *)feedURL toCategory:(NSString *)newCategory {
@@ -590,7 +585,6 @@
 		}
 		
 	});
-	dispatch_release(queue);
 }
 
 - (void)deleteRSSFeedURL:(NSString *)feedURL fromCategory:(NSString *)category {
@@ -627,7 +621,6 @@
 		}
 		
 	});
-	dispatch_release(queue);
 }
 
 - (void)getUnreadCount {
@@ -680,7 +673,6 @@
 			}
 		}		
 	});
-	dispatch_release(queue);
 
 }
 
@@ -961,7 +953,6 @@
 			}
 		}		
 	});
-	dispatch_release(queue);
 }
 
 - (void)getGoogleRecommendItems {
@@ -1006,7 +997,6 @@
 		}
 		
 	});
-	dispatch_release(queue);
 }
 
 - (void)getGoogleRecommendSourcesByFeedURL:(NSString *)feedURL {
@@ -1171,7 +1161,6 @@
 		}
 		
 	});
-	dispatch_release(queue);
 }
 
 - (void)addStarAtFeedID:(NSString *)feedID forFeed:(NSString *)feedURL {
@@ -1232,7 +1221,6 @@
 		}
 		
 	});
-	dispatch_release(queue);
 }
 
 - (void)markReadAtFeedID:(NSString *)feedID forFeed:(NSString *)feedURL {

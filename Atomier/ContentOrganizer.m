@@ -515,15 +515,4 @@
 	});
 }
 
-- (void)dealloc {
-	if (contentSaveQueue) {
-		dispatch_release(contentSaveQueue);
-	}
-	if (imageDownloadQueue) {
-		dispatch_release(imageDownloadQueue);
-	}
-}
-
-
-
 @end
