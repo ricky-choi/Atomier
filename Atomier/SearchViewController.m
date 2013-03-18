@@ -121,6 +121,15 @@
 	[self.searchDisplayController.searchBar becomeFirstResponder];
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+	    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+	}
+	return YES;
+}
+
 - (void)cleanKeywordSearches {
 	[self.keywordSearchResults removeAllObjects];
 	self.hasnextpage = 0;

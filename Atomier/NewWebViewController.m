@@ -290,6 +290,31 @@
     // Release any retained subviews of the main view.
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+	    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+	} else {
+	    return YES;
+	}
+}
+
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+	    return UIInterfaceOrientationMaskAllButUpsideDown;
+	}
+    
+    return UIInterfaceOrientationMaskAll;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+    return UIInterfaceOrientationPortrait;
+}
+
 #pragma mark - UIWebViewDelegate
 
 - (void)openURL:(NSURL *)url {
