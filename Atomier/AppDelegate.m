@@ -6,6 +6,7 @@
 //  Copyright (c) 2011 Appcid. All rights reserved.
 //
 
+#import <Crashlytics/Crashlytics.h>
 #import "AppDelegate.h"
 #import "Category.h"
 #import "Subscription.h"
@@ -116,6 +117,8 @@ static NSString* kAppId = @"164714413630639";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+	[Crashlytics startWithAPIKey:@"a495bc97924b4013793740e6a95dee4ebf908dd8"];
+	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 	    application.statusBarHidden = NO;
 	} else {

@@ -162,6 +162,7 @@
 		6993AA671504B7AB00CF80F5 /* search.png in Resources */ = {isa = PBXBuildFile; fileRef = 6993AA611504B7AB00CF80F5 /* search.png */; };
 		6993AA691504B7AB00CF80F5 /* search@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6993AA621504B7AB00CF80F5 /* search@2x.png */; };
 		6993AA6D1504CC7F00CF80F5 /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6993AA6C1504CC7E00CF80F5 /* SearchViewController.m */; };
+		6994A92A16F786E800CC7705 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6994A92916F786E800CC7705 /* Crashlytics.framework */; };
 		6994C26114FF8AAD0042E532 /* syndi_nav_landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = 6994C25A14FF8AAD0042E532 /* syndi_nav_landscape.png */; };
 		6994C26314FF8AAD0042E532 /* syndi_nav_landscape@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6994C25B14FF8AAD0042E532 /* syndi_nav_landscape@2x.png */; };
 		6994C26514FF8AAD0042E532 /* syndi_nav_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 6994C25C14FF8AAD0042E532 /* syndi_nav_portrait.png */; };
@@ -500,6 +501,7 @@
 		6993AA621504B7AB00CF80F5 /* search@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search@2x.png"; sourceTree = "<group>"; };
 		6993AA6B1504CC7E00CF80F5 /* SearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchViewController.h; sourceTree = "<group>"; };
 		6993AA6C1504CC7E00CF80F5 /* SearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchViewController.m; sourceTree = "<group>"; };
+		6994A92916F786E800CC7705 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		6994C25A14FF8AAD0042E532 /* syndi_nav_landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = syndi_nav_landscape.png; sourceTree = "<group>"; };
 		6994C25B14FF8AAD0042E532 /* syndi_nav_landscape@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "syndi_nav_landscape@2x.png"; sourceTree = "<group>"; };
 		6994C25C14FF8AAD0042E532 /* syndi_nav_portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = syndi_nav_portrait.png; sourceTree = "<group>"; };
@@ -642,6 +644,7 @@
 				6933994C149B141100DD4E53 /* Foundation.framework in Frameworks */,
 				6933994E149B141100DD4E53 /* CoreGraphics.framework in Frameworks */,
 				691827E614EB6B2600C6619F /* StoreKit.framework in Frameworks */,
+				6994A92A16F786E800CC7705 /* Crashlytics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -782,6 +785,7 @@
 		69339948149B141100DD4E53 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6994A92916F786E800CC7705 /* Crashlytics.framework */,
 				69339949149B141100DD4E53 /* UIKit.framework */,
 				6933994B149B141100DD4E53 /* Foundation.framework */,
 				6933994D149B141100DD4E53 /* CoreGraphics.framework */,
@@ -1318,6 +1322,7 @@
 				69339941149B141100DD4E53 /* Sources */,
 				69339942149B141100DD4E53 /* Frameworks */,
 				69339943149B141100DD4E53 /* Resources */,
+				6994A92816F7860F00CC7705 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1561,6 +1566,22 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		6994A92816F7860F00CC7705 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Crashlytics.framework/run a495bc97924b4013793740e6a95dee4ebf908dd8";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		69339941149B141100DD4E53 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -1735,6 +1756,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "Atomier/Atomier-Info.plist";
@@ -1753,6 +1778,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "Atomier/Atomier-Info.plist";
@@ -1792,6 +1821,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jaeyoung CHOI";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "Atomier/Atomier-Info.plist";
@@ -1831,6 +1864,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jaeyoung CHOI";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Atomier/Atomier-Prefix.pch";
 				INFOPLIST_FILE = "Atomier/Atomier-Info.plist";
