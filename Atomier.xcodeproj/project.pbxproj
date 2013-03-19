@@ -262,6 +262,7 @@
 		69FAA7771510D67500B9E22D /* settings~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 69FAA7731510D67500B9E22D /* settings~ipad.png */; };
 		69FAA7781510D67500B9E22D /* subscribe~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 69FAA7741510D67500B9E22D /* subscribe~ipad.png */; };
 		9C0699A116F4CC5D0016F221 /* PortraitNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C0699A016F4CC5D0016F221 /* PortraitNavigationViewController.m */; };
+		9C11E63A16F813690057FC0C /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C11E63916F813690057FC0C /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		9C9FE35715FA125B006D2CBA /* CMHTMLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C9FE35615FA125B006D2CBA /* CMHTMLView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		9CE03FD2160158F600F88078 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CE03FD1160158F600F88078 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
@@ -619,6 +620,7 @@
 		69FAA7741510D67500B9E22D /* subscribe~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "subscribe~ipad.png"; sourceTree = "<group>"; };
 		9C06999F16F4CC5D0016F221 /* PortraitNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PortraitNavigationViewController.h; sourceTree = "<group>"; };
 		9C0699A016F4CC5D0016F221 /* PortraitNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PortraitNavigationViewController.m; sourceTree = "<group>"; };
+		9C11E63916F813690057FC0C /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		9C9FE35515FA125B006D2CBA /* CMHTMLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMHTMLView.h; sourceTree = "<group>"; };
 		9C9FE35615FA125B006D2CBA /* CMHTMLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMHTMLView.m; sourceTree = "<group>"; };
 		9CE03FD1160158F600F88078 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -629,6 +631,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9C11E63A16F813690057FC0C /* Social.framework in Frameworks */,
 				69059A4215298A4E00D30AF3 /* CoreLocation.framework in Frameworks */,
 				69B3B59514D96136003249D5 /* AudioToolbox.framework in Frameworks */,
 				69C93CE614AF214000D1495B /* QuartzCore.framework in Frameworks */,
@@ -755,6 +758,7 @@
 		6933993A149B141100DD4E53 = {
 			isa = PBXGroup;
 			children = (
+				9C11E63916F813690057FC0C /* Social.framework */,
 				9CE03FD1160158F600F88078 /* Default-568h@2x.png */,
 				69059A4115298A4E00D30AF3 /* CoreLocation.framework */,
 				69328FA814E6203A0096CD7D /* StoreKit.framework */,

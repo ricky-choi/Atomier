@@ -6,6 +6,7 @@
 //  Copyright (c) 2012년 Appcid. All rights reserved.
 //
 
+#import <Social/Social.h>
 #import <Twitter/Twitter.h>
 #import "NewFeedViewController.h"
 #import "Feed.h"
