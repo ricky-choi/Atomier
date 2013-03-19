@@ -182,3 +182,16 @@
 
 "Synchronization Error Occurred" = "Synchronization Error Occurred";
 
+"Facebook" = "Facebook";
+
+"Twitter" = "Twitter";
+
+"Sina Weibo" = "Sina Weibo";
+
+/* No comment provided by engineer. */
+"Send to SinaWeibo" = "Send to Sina Weibo";
+
+"Account" = "Account";
+
+"Need Social Account Message" = "Please go to the device settings and add a %@ account in order to share through that service";
+

@@ -4,7 +4,6 @@
   Created by Choi Jaeyoung on 12/28/11.
   Copyright (c) 2011 Appcid. All rights reserved. */
 
-
 "Unread" = "Non lus";
 
 "Starred" = "Suivis";
@@ -33,19 +32,9 @@
 
 "Sort" = "Tri";
 
-"Sort by oldest" = "Afficher les éléments les plus anciens en premier";
-
-"Sort by newest" = "Afficher les éléments les plus récents en premier";
-
 "Refresh All" = "Tout mettre à jour";
 
 "Settings" = "Réglages";
-
-"You are not connected to the Internet" = "Vous n'êtes pas connecté à internet";
-
-"You aren’t connected to the internet. Please connect and try again." = "Vous n'êtes pas connecté à internet. Connectez-vous et réessayez.";
-
-"The username or password you entered is incorrect." = "Le nom d'utilisateur ou le mot-de-passe que vous avez introduit est incorrect.";
 
 "All" = "Tout";
 
@@ -115,7 +104,7 @@
 
 "Subscribing..." = "Souscription...";
 
-"Update: %@" = "Mis-à-jour: %@";//      Or can be "Màj:" if too long
+"Update: %@" = "Mis-à-jour: %@";
 
 "Updating..." = "Mise-à-jour...";
 
@@ -137,8 +126,7 @@
 
 "Send to Facebook" = "Envoyer vers Facebook";
 
-"Incorrect account name or password." = "Nom d'utilisateur ou mot-de-passe incorrect.";
-
+/* No comment provided by engineer. */
 "%d new items" = "%d nouveaux éléments";
 
 "No unread items" = "Pas d'éléments non-lus";
@@ -146,3 +134,29 @@
 "No starred items" = "Pas d'éléments suivis";
 
 "Synchronization Error Occurred" = "Erreur de synchronisation";
+
+"Sort by oldest" = "Afficher les éléments les plus anciens en premier";
+
+"Sort by newest" = "Afficher les éléments les plus récents en premier";
+
+"You are not connected to the Internet" = "Vous n'êtes pas connecté à internet";
+
+"You aren’t connected to the internet. Please connect and try again." = "Vous n'êtes pas connecté à internet. Connectez-vous et réessayez.";
+
+"The username or password you entered is incorrect." = "Le nom d'utilisateur ou le mot-de-passe que vous avez introduit est incorrect.";
+
+"Incorrect account name or password." = "Nom d'utilisateur ou mot-de-passe incorrect.";
+
+"Facebook" = "Facebook";
+
+"Twitter" = "Twitter";
+
+"Sina Weibo" = "Sina Weibo";
+
+/* No comment provided by engineer. */
+"Send to SinaWeibo" = "Envoyer vers Sina Weibo";
+
+"Account" = "Compte";
+
+"Need Social Account Message" = "Please go to the device settings and add a %@ account in order to share through that service";
+

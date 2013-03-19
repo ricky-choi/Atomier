@@ -195,38 +195,7 @@
             if ([SLComposeViewController class]) {
                 [self composeSocialMessageForServiceType:SLServiceTypeTwitter];
             } else {
-                // Set up the built-in twitter composition view controller.
-                TWTweetComposeViewController *tweetViewController = [[TWTweetComposeViewController alloc] init];
-                
-                // Set the initial tweet text. See the framework for additional properties that can be set.
-                [tweetViewController setInitialText:[self feedTitle]];
-                [tweetViewController addURL:sourceURL];
-                
-                // Create the completion handler block.
-                [tweetViewController setCompletionHandler:^(TWTweetComposeViewControllerResult result) {
-                    //NSString *output;
-                    
-                    switch (result) {
-                        case TWTweetComposeViewControllerResultCancelled:
-                            // The cancel button was tapped.
-                            //output = @"Tweet cancelled.";
-                            break;
-                        case TWTweetComposeViewControllerResultDone:
-                            // The tweet was sent.
-                            //output = @"Tweet done.";
-                            break;
-                        default:
-                            break;
-                    }
-                    
-                    //[self performSelectorOnMainThread:@selector(displayText:) withObject:output waitUntilDone:NO];
-                    
-                    // Dismiss the tweet composition view controller.
-                    [self dismissModalViewControllerAnimated:YES];
-                }];
-                
-                // Present the tweet composition view controller modally.
-                [self presentModalViewController:tweetViewController animated:YES];
+                [self composeSocialMessageForLegacyTwitter];
             }
 		}
 		else if (buttonIndex == actionSheet.firstOtherButtonIndex + 5) {
@@ -240,17 +209,88 @@
 	}
 }
 
+- (void)composeSocialMessageForLegacyTwitter {
+	if ([TWTweetComposeViewController canSendTweet]) {
+		// Set up the built-in twitter composition view controller.
+		TWTweetComposeViewController *tweetViewController = [[TWTweetComposeViewController alloc] init];
+		
+		// Set the initial tweet text. See the framework for additional properties that can be set.
+		[tweetViewController setInitialText:[self feedTitle]];
+		
+		Alternate *alternate = [self.feed.alternates anyObject];
+		NSURL *sourceURL = [NSURL URLWithString:alternate.href];
+		[tweetViewController addURL:sourceURL];
+		
+		// Create the completion handler block.
+		[tweetViewController setCompletionHandler:^(TWTweetComposeViewControllerResult result) {
+			//NSString *output;
+			
+			switch (result) {
+				case TWTweetComposeViewControllerResultCancelled:
+					// The cancel button was tapped.
+					//output = @"Tweet cancelled.";
+					break;
+				case TWTweetComposeViewControllerResultDone:
+					// The tweet was sent.
+					//output = @"Tweet done.";
+					break;
+				default:
+					break;
+			}
+			
+			//[self performSelectorOnMainThread:@selector(displayText:) withObject:output waitUntilDone:NO];
+			
+			// Dismiss the tweet composition view controller.
+			[self dismissModalViewControllerAnimated:YES];
+		}];
+		
+		// Present the tweet composition view controller modally.
+		[self presentModalViewController:tweetViewController animated:YES];
+	} else {
+		[self showUnavailableAlertForServiceName:NSLocalizedString(@"Twitter", nil)];
+	}
+}
+
 - (void)composeSocialMessageForServiceType:(NSString *)serviceType {
-    if ([SLComposeViewController class] && [SLComposeViewController isAvailableForServiceType:serviceType]) {
-        SLComposeViewController *viewController = [SLComposeViewController composeViewControllerForServiceType:serviceType];
-        [viewController setInitialText:[self feedTitle]];
-        
-        Alternate *alternate = [self.feed.alternates anyObject];
-        NSURL *sourceURL = [NSURL URLWithString:alternate.href];
-        [viewController addURL:sourceURL];
-        
-        [self presentViewController:viewController animated:YES completion:nil];
+    if ([SLComposeViewController class]) {
+		if ([SLComposeViewController isAvailableForServiceType:serviceType]) {
+			SLComposeViewController *viewController = [SLComposeViewController composeViewControllerForServiceType:serviceType];
+			[viewController setInitialText:[self feedTitle]];
+			
+			Alternate *alternate = [self.feed.alternates anyObject];
+			NSURL *sourceURL = [NSURL URLWithString:alternate.href];
+			[viewController addURL:sourceURL];
+			
+			[self presentViewController:viewController animated:YES completion:nil];
+		} else {
+			[self showUnavailableAlertForServiceType:serviceType];
+		}
     }
+}
+
+- (void)showUnavailableAlertForServiceType:(NSString *)serviceType
+{
+	NSString *serviceName = @"";
+	if (serviceType == SLServiceTypeFacebook) {
+		serviceName = NSLocalizedString(@"Facebook", nil);
+	}
+	else if (serviceType == SLServiceTypeSinaWeibo) {
+		serviceName = NSLocalizedString(@"Sina Weibo", nil);
+	}
+	else if (serviceType == SLServiceTypeTwitter) {
+		serviceName = NSLocalizedString(@"Twitter", nil);
+	}
+	
+	[self showUnavailableAlertForServiceName:serviceName];
+}
+
+- (void)showUnavailableAlertForServiceName:(NSString *)serviceName {
+	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Account", nil)
+														message:[NSString stringWithFormat:NSLocalizedString(@"Need Social Account Message", nil), serviceName]
+													   delegate:nil
+											  cancelButtonTitle:NSLocalizedString(@"OK", nil)
+											  otherButtonTitles:nil];
+	[alertView show];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil

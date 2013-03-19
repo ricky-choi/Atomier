@@ -181,3 +181,17 @@
 "No starred items" = "별표한 글이 없습니다.";
 
 "Synchronization Error Occurred" = "동기화 오류 발생";
+
+"Facebook" = "페이스북";
+
+"Twitter" = "트위터";
+
+"Sina Weibo" = "Sina Weibo";
+
+/* No comment provided by engineer. */
+"Send to SinaWeibo" = "Sina Weibo로 보내기";
+
+"Account" = "계정";
+
+"Need Social Account Message" = "이 서비스를 위해서는 %@ 계정 설정이 필요합니다. 아이폰 설정에 가서 계정 정보를 입력해주세요.";
+

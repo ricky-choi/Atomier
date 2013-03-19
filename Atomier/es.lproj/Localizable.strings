@@ -181,3 +181,17 @@
 "No starred items" = "No tienes ningún elemento destacado";
 
 "Synchronization Error Occurred" = "Se produjo un error de sincronización.";
+
+"Facebook" = "Facebook";
+
+"Twitter" = "Twitter";
+
+"Sina Weibo" = "Sina Weibo";
+
+/* No comment provided by engineer. */
+"Send to SinaWeibo" = "Publicar en Sina Weibo";
+
+"Account" = "Cuenta";
+
+"Need Social Account Message" = "Please go to the device settings and add a %@ account in order to share through that service";
+
