@@ -24,23 +24,20 @@
 
 @interface FeedsViewController ()
 
+@property (nonatomic, strong) Feed *selectedFeed;
+
 - (void)configureCell:(FeedsViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 - (void)refreshTitle;
 
 @end
 
-@implementation FeedsViewController
+@implementation FeedsViewController {
+	SEL toggleReadSelector;
+	SEL toggleStarSelector;
+}
 
-@synthesize tableView = _tableView;
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize fetchedResultsController = __fetchedResultsController;
-@synthesize currentSegment = _currentSegment;
-@synthesize category = _category;
-@synthesize subscription = _subscription;
-@synthesize sortDateAscending = _sortDateAscending;
-@synthesize actionSheet = _actionSheet;
-@synthesize toolbarItemsPortrait = _toolbarItemsPortrait;
-@synthesize toolbarItemsLandscape = _toolbarItemsLandscape;
 
 - (NSArray *)toolbarItemsPortrait {
 	if (_toolbarItemsPortrait == nil) {
@@ -88,6 +85,8 @@
 
 - (void)awakeFromNib {
 	self.sortDateAscending = [[NSUserDefaults standardUserDefaults] boolForKey:SORT_DATE];
+	toggleReadSelector = @selector(toggleReadStatus:);
+	toggleStarSelector = @selector(toggleStarStatus:);
 }
 
 - (NSManagedObjectContext *)managedObjectContext {
@@ -304,7 +303,89 @@
     FeedsViewCell *cell = (FeedsViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 	[self configureCell:cell atIndexPath:indexPath];
 	
+	UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showMenuForFeed:)];
+	[cell addGestureRecognizer:longPressGesture];
+	
     return cell;
+}
+
+- (void)showMenuForFeed:(UILongPressGestureRecognizer *)gesture {
+	if (gesture.state == UIGestureRecognizerStateBegan) {
+		if ([gesture.view isKindOfClass:[FeedsViewCell class]]) {
+			FeedsViewCell *cell = (FeedsViewCell *)gesture.view;
+			Feed *feed = [self feedForCell:cell];
+			if (feed) {
+				self.selectedFeed = feed;
+				
+				UIMenuController * menu = [UIMenuController sharedMenuController];
+				UIMenuItem *readMenuItem;
+				UIMenuItem *starMenuItem;
+				
+				if ([feed.unread boolValue]) {
+					readMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Mark as read", nil)
+															  action:toggleReadSelector];
+				} else {
+					readMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Mark as unread", nil)
+															  action:toggleReadSelector];
+				}
+				
+				if ([feed.starred boolValue]) {
+					starMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Unstar", nil)
+															  action:toggleStarSelector];
+				} else {
+					starMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Star", nil)
+															  action:toggleStarSelector];
+				}
+				
+				menu.menuItems = @[readMenuItem, starMenuItem];
+				[menu setTargetRect:cell.frame inView:self.tableView];
+				[menu setMenuVisible: YES animated: YES];
+			}
+		}
+	}
+}
+
+- (BOOL)canBecomeFirstResponder {
+	return YES;
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
+	if (action == toggleReadSelector || action == toggleStarSelector) {
+		return YES;
+	}
+	
+	return NO;
+}
+
+- (Feed *)feedForCell:(FeedsViewCell *)cell {
+	NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+	return [self.fetchedResultsController objectAtIndexPath:indexPath];
+}
+
+- (void)toggleReadStatus:(id)sender {
+	if (self.selectedFeed) {
+		AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		if ([self.selectedFeed.unread boolValue]) {
+			[appDelegate markAsRead:self.selectedFeed];
+		} else {
+			[appDelegate markAsUnread:self.selectedFeed];
+		}
+		
+		self.selectedFeed = nil;
+	}
+}
+
+- (void)toggleStarStatus:(id)sender {
+	if (self.selectedFeed) {
+		AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		if ([self.selectedFeed.starred boolValue]) {
+			[appDelegate markAsUnstarred:self.selectedFeed];
+		} else {
+			[appDelegate markAsStarred:self.selectedFeed];
+		}
+		
+		self.selectedFeed = nil;
+	}
 }
 
 #define SUMMARY_MAX_LENGTH 350

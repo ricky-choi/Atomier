@@ -135,18 +135,6 @@
 
 "Synchronization Error Occurred" = "Erreur de synchronisation";
 
-"Sort by oldest" = "Afficher les éléments les plus anciens en premier";
-
-"Sort by newest" = "Afficher les éléments les plus récents en premier";
-
-"You are not connected to the Internet" = "Vous n'êtes pas connecté à internet";
-
-"You aren’t connected to the internet. Please connect and try again." = "Vous n'êtes pas connecté à internet. Connectez-vous et réessayez.";
-
-"The username or password you entered is incorrect." = "Le nom d'utilisateur ou le mot-de-passe que vous avez introduit est incorrect.";
-
-"Incorrect account name or password." = "Nom d'utilisateur ou mot-de-passe incorrect.";
-
 "Facebook" = "Facebook";
 
 "Twitter" = "Twitter";
@@ -159,4 +147,20 @@
 "Account" = "Compte";
 
 "Need Social Account Message" = "Please go to the device settings and add a %@ account in order to share through that service";
+
+"Sort by oldest" = "Afficher les éléments les plus anciens en premier";
+
+"Sort by newest" = "Afficher les éléments les plus récents en premier";
+
+"You are not connected to the Internet" = "Vous n'êtes pas connecté à internet";
+
+"You aren’t connected to the internet. Please connect and try again." = "Vous n'êtes pas connecté à internet. Connectez-vous et réessayez.";
+
+"The username or password you entered is incorrect." = "Le nom d'utilisateur ou le mot-de-passe que vous avez introduit est incorrect.";
+
+"Incorrect account name or password." = "Nom d'utilisateur ou mot-de-passe incorrect.";
+
+"Star" = "Star";
+
+"Unstar" = "Unstar";
 
