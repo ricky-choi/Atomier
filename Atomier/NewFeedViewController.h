@@ -24,7 +24,7 @@
 @interface NewFeedViewController : UIViewController <UIWebViewDelegate, NewWebViewControllerDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
 
 @property (weak, nonatomic) id <NewFeedViewControllerDelegate> delegate;
-@property (weak, nonatomic) IBOutlet UIWebView *webView;
+@property (strong, nonatomic) IBOutlet UIWebView *webView;
 
 @property (strong, nonatomic) Feed *feed;
 

@@ -108,7 +108,7 @@
 	[picker setSubject:title];
 	[picker setMessageBody:body isHTML:YES];
 	
-	[self presentModalViewController:picker animated:YES];
+	[self presentViewController:picker animated:YES completion:nil];
 }
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error 
@@ -132,7 +132,8 @@
 		//message.text = @"Result: not sent";
 		break;
 	}
-	[self dismissModalViewControllerAnimated:YES];
+
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)mail:(NSString *)title body:(NSString *)body 
@@ -241,11 +242,11 @@
 			//[self performSelectorOnMainThread:@selector(displayText:) withObject:output waitUntilDone:NO];
 			
 			// Dismiss the tweet composition view controller.
-			[self dismissModalViewControllerAnimated:YES];
+			[self dismissViewControllerAnimated:YES completion:nil];
 		}];
 		
 		// Present the tweet composition view controller modally.
-		[self presentModalViewController:tweetViewController animated:YES];
+		[self presentViewController:tweetViewController animated:YES completion:nil];
 	} else {
 		[self showUnavailableAlertForServiceName:NSLocalizedString(@"Twitter", nil)];
 	}

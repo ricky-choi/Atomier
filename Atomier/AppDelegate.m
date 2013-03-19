@@ -26,8 +26,6 @@
 #define DEFAULT_KEY_SYNC_RULE @"DEFAULR_KEY_SYNC_RULE"
 #define DEFAULT_KEY_BADGE @"DEFAULT_KEY_BADGE"
 
-static NSString* kAppId = @"164714413630639";
-
 @interface AppDelegate ()
 
 - (BOOL)existSignInIDAndPassword;
