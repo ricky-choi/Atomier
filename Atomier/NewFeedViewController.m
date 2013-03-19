@@ -57,32 +57,34 @@
 			} else {
 				markString = NSLocalizedString(@"Mark as unread", nil);
 			}
-			
-			if ([TWTweetComposeViewController canSendTweet]) {
-				self.actionSheet = [[UIActionSheet alloc] initWithTitle:alternate.href 
-															   delegate:self
-													  cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-												 destructiveButtonTitle:markString
-													  otherButtonTitles:NSLocalizedString(@"Open in Safari", nil)
-									, NSLocalizedString(@"Copy Link", nil)
-									, NSLocalizedString(@"Mail Link", nil)
-									, NSLocalizedString(@"Mail Article", nil)
-									, NSLocalizedString(@"Send to Facebook", nil)
-									, NSLocalizedString(@"Send to Twitter", nil)
-									, nil];
-			}
-			else {
-				self.actionSheet = [[UIActionSheet alloc] initWithTitle:alternate.href 
-															   delegate:self
-													  cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-												 destructiveButtonTitle:markString
-													  otherButtonTitles:NSLocalizedString(@"Open in Safari", nil)
-									, NSLocalizedString(@"Copy Link", nil)
-									, NSLocalizedString(@"Mail Link", nil)
-									, NSLocalizedString(@"Mail Article", nil)
-									, NSLocalizedString(@"Send to Facebook", nil)
-									, nil];
-			}
+            
+            if ([SLComposeViewController class]) {
+                // enable facebook and sinaweibo
+                self.actionSheet = [[UIActionSheet alloc] initWithTitle:alternate.href
+                                                               delegate:self
+                                                      cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+                                                 destructiveButtonTitle:markString
+                                                      otherButtonTitles:NSLocalizedString(@"Open in Safari", nil)
+                                    , NSLocalizedString(@"Copy Link", nil)
+                                    , NSLocalizedString(@"Mail Link", nil)
+                                    , NSLocalizedString(@"Mail Article", nil)
+                                    , NSLocalizedString(@"Send to Twitter", nil)
+                                    , NSLocalizedString(@"Send to Facebook", nil)
+                                    , NSLocalizedString(@"Send to SinaWeibo", nil)
+                                    , nil];
+            } else {
+                // enable twitter only
+                self.actionSheet = [[UIActionSheet alloc] initWithTitle:alternate.href
+                                                               delegate:self
+                                                      cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+                                                 destructiveButtonTitle:markString
+                                                      otherButtonTitles:NSLocalizedString(@"Open in Safari", nil)
+                                    , NSLocalizedString(@"Copy Link", nil)
+                                    , NSLocalizedString(@"Mail Link", nil)
+                                    , NSLocalizedString(@"Mail Article", nil)
+                                    , NSLocalizedString(@"Send to Twitter", nil)
+                                    , nil];
+            }
 		}
 	}
 	
@@ -189,45 +191,66 @@
 			[self mail:[self feedTitle] body:body];
 		}
 		else if (buttonIndex == actionSheet.firstOtherButtonIndex + 4) {
-#warning Facebook integration for iOS6
+            // Send to Twitter
+            if ([SLComposeViewController class]) {
+                [self composeSocialMessageForServiceType:SLServiceTypeTwitter];
+            } else {
+                // Set up the built-in twitter composition view controller.
+                TWTweetComposeViewController *tweetViewController = [[TWTweetComposeViewController alloc] init];
+                
+                // Set the initial tweet text. See the framework for additional properties that can be set.
+                [tweetViewController setInitialText:[self feedTitle]];
+                [tweetViewController addURL:sourceURL];
+                
+                // Create the completion handler block.
+                [tweetViewController setCompletionHandler:^(TWTweetComposeViewControllerResult result) {
+                    //NSString *output;
+                    
+                    switch (result) {
+                        case TWTweetComposeViewControllerResultCancelled:
+                            // The cancel button was tapped.
+                            //output = @"Tweet cancelled.";
+                            break;
+                        case TWTweetComposeViewControllerResultDone:
+                            // The tweet was sent.
+                            //output = @"Tweet done.";
+                            break;
+                        default:
+                            break;
+                    }
+                    
+                    //[self performSelectorOnMainThread:@selector(displayText:) withObject:output waitUntilDone:NO];
+                    
+                    // Dismiss the tweet composition view controller.
+                    [self dismissModalViewControllerAnimated:YES];
+                }];
+                
+                // Present the tweet composition view controller modally.
+                [self presentModalViewController:tweetViewController animated:YES];
+            }
 		}
 		else if (buttonIndex == actionSheet.firstOtherButtonIndex + 5) {
-			// Send to Twitter
-			// Set up the built-in twitter composition view controller.
-			TWTweetComposeViewController *tweetViewController = [[TWTweetComposeViewController alloc] init];
-			
-			// Set the initial tweet text. See the framework for additional properties that can be set.
-			[tweetViewController setInitialText:[self feedTitle]];
-			[tweetViewController addURL:sourceURL];
-			
-			// Create the completion handler block.
-			[tweetViewController setCompletionHandler:^(TWTweetComposeViewControllerResult result) {
-				//NSString *output;
-				
-				switch (result) {
-					case TWTweetComposeViewControllerResultCancelled:
-						// The cancel button was tapped.
-						//output = @"Tweet cancelled.";
-						break;
-					case TWTweetComposeViewControllerResultDone:
-						// The tweet was sent.
-						//output = @"Tweet done.";
-						break;
-					default:
-						break;
-				}
-				
-				//[self performSelectorOnMainThread:@selector(displayText:) withObject:output waitUntilDone:NO];
-				
-				// Dismiss the tweet composition view controller.
-				[self dismissModalViewControllerAnimated:YES];
-			}];
-			
-			// Present the tweet composition view controller modally.
-			[self presentModalViewController:tweetViewController animated:YES];
-			
+            // facebook
+			[self composeSocialMessageForServiceType:SLServiceTypeFacebook];
 		}
+        else if (buttonIndex == actionSheet.firstOtherButtonIndex + 6) {
+            // Sina Weibo
+            [self composeSocialMessageForServiceType:SLServiceTypeSinaWeibo];
+        }
 	}
+}
+
+- (void)composeSocialMessageForServiceType:(NSString *)serviceType {
+    if ([SLComposeViewController class] && [SLComposeViewController isAvailableForServiceType:serviceType]) {
+        SLComposeViewController *viewController = [SLComposeViewController composeViewControllerForServiceType:serviceType];
+        [viewController setInitialText:[self feedTitle]];
+        
+        Alternate *alternate = [self.feed.alternates anyObject];
+        NSURL *sourceURL = [NSURL URLWithString:alternate.href];
+        [viewController addURL:sourceURL];
+        
+        [self presentViewController:viewController animated:YES completion:nil];
+    }
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
