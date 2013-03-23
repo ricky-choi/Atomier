@@ -176,6 +176,10 @@
 		6994C28814FF9D3A0042E532 /* syndi_tohome_landscape@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6994C28314FF9D3A0042E532 /* syndi_tohome_landscape@2x.png */; };
 		6994C28A14FF9D3A0042E532 /* syndi_tohome_portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 6994C28414FF9D3A0042E532 /* syndi_tohome_portrait.png */; };
 		6994C28C14FF9D3A0042E532 /* syndi_tohome_portrait@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6994C28514FF9D3A0042E532 /* syndi_tohome_portrait@2x.png */; };
+		699F380D16FD96ED005ACDC5 /* Cover.png in Resources */ = {isa = PBXBuildFile; fileRef = 699F380916FD96ED005ACDC5 /* Cover.png */; };
+		699F380E16FD96ED005ACDC5 /* Cover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 699F380A16FD96ED005ACDC5 /* Cover@2x.png */; };
+		699F380F16FD96ED005ACDC5 /* SyndiLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 699F380B16FD96ED005ACDC5 /* SyndiLogo.png */; };
+		699F381016FD96ED005ACDC5 /* SyndiLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 699F380C16FD96ED005ACDC5 /* SyndiLogo@2x.png */; };
 		69A4205F14D03F6F009A2DFA /* checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 69A4205B14D03F6F009A2DFA /* checkmark.png */; };
 		69A4206014D03F6F009A2DFA /* checkmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69A4205C14D03F6F009A2DFA /* checkmark@2x.png */; };
 		69B0C04F15106C4F006E2FD4 /* ATMHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B0C04315106C4F006E2FD4 /* ATMHud.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -517,6 +521,10 @@
 		6994C28314FF9D3A0042E532 /* syndi_tohome_landscape@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "syndi_tohome_landscape@2x.png"; sourceTree = "<group>"; };
 		6994C28414FF9D3A0042E532 /* syndi_tohome_portrait.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = syndi_tohome_portrait.png; sourceTree = "<group>"; };
 		6994C28514FF9D3A0042E532 /* syndi_tohome_portrait@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "syndi_tohome_portrait@2x.png"; sourceTree = "<group>"; };
+		699F380916FD96ED005ACDC5 /* Cover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Cover.png; sourceTree = "<group>"; };
+		699F380A16FD96ED005ACDC5 /* Cover@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Cover@2x.png"; sourceTree = "<group>"; };
+		699F380B16FD96ED005ACDC5 /* SyndiLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SyndiLogo.png; sourceTree = "<group>"; };
+		699F380C16FD96ED005ACDC5 /* SyndiLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SyndiLogo@2x.png"; sourceTree = "<group>"; };
 		69A4205B14D03F6F009A2DFA /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkmark.png; sourceTree = "<group>"; };
 		69A4205C14D03F6F009A2DFA /* checkmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkmark@2x.png"; sourceTree = "<group>"; };
 		69B0C04215106C4F006E2FD4 /* ATMHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATMHud.h; sourceTree = "<group>"; };
@@ -814,6 +822,7 @@
 		69339950149B141100DD4E53 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				699F380816FD96C7005ACDC5 /* ImagesForLongType */,
 				69C1CB951500CAEE0025C590 /* test images */,
 				6994C25814FF8A930042E532 /* New Design */,
 				691B2DAE14D2D9B300CB5AA0 /* free image */,
@@ -1126,6 +1135,17 @@
 				6994C27F14FF9AD80042E532 /* transparent.png */,
 			);
 			name = "New Design";
+			sourceTree = "<group>";
+		};
+		699F380816FD96C7005ACDC5 /* ImagesForLongType */ = {
+			isa = PBXGroup;
+			children = (
+				699F380916FD96ED005ACDC5 /* Cover.png */,
+				699F380A16FD96ED005ACDC5 /* Cover@2x.png */,
+				699F380B16FD96ED005ACDC5 /* SyndiLogo.png */,
+				699F380C16FD96ED005ACDC5 /* SyndiLogo@2x.png */,
+			);
+			name = ImagesForLongType;
 			sourceTree = "<group>";
 		};
 		69B0C04015106C3B006E2FD4 /* ATMHud */ = {
@@ -1565,6 +1585,10 @@
 				691647CA15FCCBE1001FF995 /* settings.png in Resources */,
 				691647CB15FCCBE1001FF995 /* settings@2x.png in Resources */,
 				9CE03FD2160158F600F88078 /* Default-568h@2x.png in Resources */,
+				699F380D16FD96ED005ACDC5 /* Cover.png in Resources */,
+				699F380E16FD96ED005ACDC5 /* Cover@2x.png in Resources */,
+				699F380F16FD96ED005ACDC5 /* SyndiLogo.png in Resources */,
+				699F381016FD96ED005ACDC5 /* SyndiLogo@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

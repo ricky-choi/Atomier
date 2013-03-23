@@ -165,7 +165,8 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 	
-	self.segmentControlPortrait.center = CGPointMake(160, 458);
+	CGRect segmentControlFrame = self.segmentControlPortrait.frame;
+	self.segmentControlPortrait.frame = CGRectOffset(segmentControlFrame, (self.view.frame.size.width - segmentControlFrame.size.width) / 2.0f, self.view.frame.size.height - segmentControlFrame.size.height);
 	
 	[self.view addSubview:self.segmentControlPortrait];
 	
