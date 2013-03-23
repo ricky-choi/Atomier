@@ -180,6 +180,10 @@
 		699F380E16FD96ED005ACDC5 /* Cover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 699F380A16FD96ED005ACDC5 /* Cover@2x.png */; };
 		699F380F16FD96ED005ACDC5 /* SyndiLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 699F380B16FD96ED005ACDC5 /* SyndiLogo.png */; };
 		699F381016FD96ED005ACDC5 /* SyndiLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 699F380C16FD96ED005ACDC5 /* SyndiLogo@2x.png */; };
+		699F381516FDA2EA005ACDC5 /* Login_Submit.png in Resources */ = {isa = PBXBuildFile; fileRef = 699F381116FDA2EA005ACDC5 /* Login_Submit.png */; };
+		699F381616FDA2EA005ACDC5 /* Login_Submit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 699F381216FDA2EA005ACDC5 /* Login_Submit@2x.png */; };
+		699F381716FDA2EA005ACDC5 /* Login_SyndiLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 699F381316FDA2EA005ACDC5 /* Login_SyndiLogo.png */; };
+		699F381816FDA2EA005ACDC5 /* Login_SyndiLogo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 699F381416FDA2EA005ACDC5 /* Login_SyndiLogo@2x.png */; };
 		69A4205F14D03F6F009A2DFA /* checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 69A4205B14D03F6F009A2DFA /* checkmark.png */; };
 		69A4206014D03F6F009A2DFA /* checkmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 69A4205C14D03F6F009A2DFA /* checkmark@2x.png */; };
 		69B0C04F15106C4F006E2FD4 /* ATMHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 69B0C04315106C4F006E2FD4 /* ATMHud.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -525,6 +529,10 @@
 		699F380A16FD96ED005ACDC5 /* Cover@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Cover@2x.png"; sourceTree = "<group>"; };
 		699F380B16FD96ED005ACDC5 /* SyndiLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SyndiLogo.png; sourceTree = "<group>"; };
 		699F380C16FD96ED005ACDC5 /* SyndiLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SyndiLogo@2x.png"; sourceTree = "<group>"; };
+		699F381116FDA2EA005ACDC5 /* Login_Submit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Login_Submit.png; sourceTree = "<group>"; };
+		699F381216FDA2EA005ACDC5 /* Login_Submit@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Login_Submit@2x.png"; sourceTree = "<group>"; };
+		699F381316FDA2EA005ACDC5 /* Login_SyndiLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Login_SyndiLogo.png; sourceTree = "<group>"; };
+		699F381416FDA2EA005ACDC5 /* Login_SyndiLogo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Login_SyndiLogo@2x.png"; sourceTree = "<group>"; };
 		69A4205B14D03F6F009A2DFA /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkmark.png; sourceTree = "<group>"; };
 		69A4205C14D03F6F009A2DFA /* checkmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkmark@2x.png"; sourceTree = "<group>"; };
 		69B0C04215106C4F006E2FD4 /* ATMHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ATMHud.h; sourceTree = "<group>"; };
@@ -1140,6 +1148,10 @@
 		699F380816FD96C7005ACDC5 /* ImagesForLongType */ = {
 			isa = PBXGroup;
 			children = (
+				699F381116FDA2EA005ACDC5 /* Login_Submit.png */,
+				699F381216FDA2EA005ACDC5 /* Login_Submit@2x.png */,
+				699F381316FDA2EA005ACDC5 /* Login_SyndiLogo.png */,
+				699F381416FDA2EA005ACDC5 /* Login_SyndiLogo@2x.png */,
 				699F380916FD96ED005ACDC5 /* Cover.png */,
 				699F380A16FD96ED005ACDC5 /* Cover@2x.png */,
 				699F380B16FD96ED005ACDC5 /* SyndiLogo.png */,
@@ -1589,6 +1601,10 @@
 				699F380E16FD96ED005ACDC5 /* Cover@2x.png in Resources */,
 				699F380F16FD96ED005ACDC5 /* SyndiLogo.png in Resources */,
 				699F381016FD96ED005ACDC5 /* SyndiLogo@2x.png in Resources */,
+				699F381516FDA2EA005ACDC5 /* Login_Submit.png in Resources */,
+				699F381616FDA2EA005ACDC5 /* Login_Submit@2x.png in Resources */,
+				699F381716FDA2EA005ACDC5 /* Login_SyndiLogo.png in Resources */,
+				699F381816FDA2EA005ACDC5 /* Login_SyndiLogo@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,13 +12,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="center" id="c5l-iL-LtO">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="c5l-iL-LtO">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="Login_SyndiLogo.png" id="OA7-Gs-egN">
+                                <rect key="frame" x="80" y="20" width="160" height="200"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="Login_Submit.png" id="jfd-gr-ccM">
+                                <rect key="frame" x="20" y="260" width="280" height="120"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Sign In with Google" lineBreakMode="tailTruncation" numberOfLines="0" minimumFontSize="10" id="kY1-A7-CVg">
                                 <rect key="frame" x="29" y="241" width="262" height="28"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -27,7 +35,7 @@
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Email" minimumFontSize="17" id="7ju-zf-d7k">
                                 <rect key="frame" x="38" y="283" width="241" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="emailAddress" returnKeyType="next"/>
                                 <connections>
@@ -36,7 +44,7 @@
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" minimumFontSize="17" id="NRa-cc-pwm">
                                 <rect key="frame" x="38" y="325" width="241" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="go" secureTextEntry="YES"/>
                                 <connections>
@@ -45,7 +53,7 @@
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="utc-LD-cNO">
                                 <rect key="frame" x="29" y="381" width="262" height="44"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                 <state key="normal" title="Sign In">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -60,11 +68,11 @@
                             </button>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" style="gray" id="ZQM-IZ-8bZ">
                                 <rect key="frame" x="150" y="199" width="20" height="20"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
                             <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="로그인 실패 : 다시 시도하세요" lineBreakMode="tailTruncation" numberOfLines="2" minimumFontSize="10" id="Z7e-hu-SC6">
                                 <rect key="frame" x="29" y="199" width="262" height="41"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -79,9 +87,11 @@
                         <outlet property="backgroundImageView" destination="c5l-iL-LtO" id="szt-cP-t9s"/>
                         <outlet property="descriptionLabel" destination="kY1-A7-CVg" id="jso-Hu-jQi"/>
                         <outlet property="emailField" destination="7ju-zf-d7k" id="Zdf-OQ-Ziy"/>
+                        <outlet property="logoImageView" destination="OA7-Gs-egN" id="aRs-pR-agn"/>
                         <outlet property="passwordField" destination="NRa-cc-pwm" id="mfF-kg-Xbr"/>
                         <outlet property="signInButton" destination="utc-LD-cNO" id="sKS-dt-wgM"/>
                         <outlet property="spinner" destination="ZQM-IZ-8bZ" id="kYk-r6-LKZ"/>
+                        <outlet property="submitFormBackgroundImageView" destination="jfd-gr-ccM" id="xkS-hv-iZH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
@@ -930,6 +940,8 @@
         <image name="Back.png" width="20" height="21"/>
         <image name="Cover.png" width="320" height="436"/>
         <image name="Forward.png" width="20" height="21"/>
+        <image name="Login_Submit.png" width="280" height="120"/>
+        <image name="Login_SyndiLogo.png" width="160" height="200"/>
         <image name="SyndiLogo.png" width="160" height="80"/>
         <image name="addrss.png" width="41" height="40"/>
         <image name="feedAction.png" width="30" height="28"/>

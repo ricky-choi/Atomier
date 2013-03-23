@@ -14,16 +14,6 @@
 
 @implementation LoginViewController
 
-@synthesize delegate = _delegate;
-
-@synthesize emailField;
-@synthesize passwordField;
-@synthesize spinner;
-@synthesize alertField;
-@synthesize descriptionLabel;
-@synthesize backgroundImageView;
-@synthesize signInButton;
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -46,6 +36,8 @@
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
 		self.backgroundImageView.image = [UIImage imageNamed:@"syndi-login~ipad"];
+		self.logoImageView.hidden = YES;
+		self.submitFormBackgroundImageView.hidden = YES;
 	} else {
 		self.backgroundImageView.image = [UIImage imageNamed:@"syndi_login"];
 	}
@@ -106,6 +98,8 @@
 	[self setDescriptionLabel:nil];
 	[self setBackgroundImageView:nil];
 	[self setSignInButton:nil];
+    [self setLogoImageView:nil];
+    [self setSubmitFormBackgroundImageView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
