@@ -673,6 +673,12 @@
     // e.g. self.myOutlet = nil;
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+	return YES;
+}
+
 - (void)navbarImageChangeForOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	if (UIInterfaceOrientationIsPortrait(interfaceOrientation)) {
 		[self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"SyndiNav-Portrait~ipad"] forBarMetrics:UIBarMetricsDefault];
