@@ -324,10 +324,6 @@
     return UIInterfaceOrientationMaskAll;
 }
 
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
-    return UIInterfaceOrientationPortrait;
-}
-
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
 	pendingOrientationChange = YES;
 	

@@ -311,10 +311,6 @@
     return UIInterfaceOrientationMaskAll;
 }
 
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
-    return UIInterfaceOrientationPortrait;
-}
-
 #pragma mark - UIWebViewDelegate
 
 - (void)openURL:(NSURL *)url {

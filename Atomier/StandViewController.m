@@ -523,7 +523,7 @@
 			NewFeedsViewController *feedsViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"NewFeedsViewController"];
 			feedsViewController.feeds = feeds;
 			//feedsViewController.delegate = self;
-			feedsViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+			feedsViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 			[self presentViewController:feedsViewController animated:YES completion:nil];
 		}
 	}

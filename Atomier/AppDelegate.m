@@ -402,6 +402,15 @@
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+- (StandViewController *)standViewController {
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+		UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
+	    return (StandViewController *)navigationController.topViewController;
+	}
+	
+	return nil;
+}
+
 - (void)signout {
 	GoogleReader *reader = [GoogleReader sharedInstance];
 	[reader cancelMainRequest];
@@ -417,9 +426,7 @@
 	[userDefaults synchronize];
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-		UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
-	    StandViewController *viewController = (StandViewController *)navigationController.topViewController;
-		[viewController notifyUpdateDone];
+		[[self standViewController] notifyUpdateDone];
 	} else {
 	    CoverViewController *viewController = (CoverViewController *)self.window.rootViewController;
 		[viewController notifyUpdateDone];
@@ -846,9 +853,7 @@
 	loadingForStarreds = YES;
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-	    UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
-	    StandViewController *viewController = (StandViewController *)navigationController.topViewController;
-		[viewController notifyUpdating];
+	    [[self standViewController] notifyUpdating];
 	} else {
 	    CoverViewController *viewController = (CoverViewController *)self.window.rootViewController;
 		[viewController notifyUpdating];
@@ -907,9 +912,7 @@
 		[userDefaults synchronize];
 		
 		if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-			UINavigationController *navigationController = (UINavigationController *)self.window.rootViewController;
-			StandViewController *viewController = (StandViewController *)navigationController.topViewController;
-			[viewController notifyUpdateDone];
+			[[self standViewController] notifyUpdateDone];
 		} else {
 			CoverViewController *viewController = (CoverViewController *)self.window.rootViewController;
 			[viewController notifyUpdateDone];

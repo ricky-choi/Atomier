@@ -27,6 +27,7 @@
 #define MY_BANNER_UNIT_ID @"a14f26a1d66744d"
 
 @class LoginViewController;
+@class StandViewController;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, GoogleReaderDelegate, LoginViewControllerDelegate>
 
@@ -44,6 +45,8 @@
 @property (strong, nonatomic) NSMutableArray *readyGetIcons;
 
 @property (strong, nonatomic) LoginViewController *loginViewController;
+
+- (StandViewController *)standViewController;
 
 - (NSString *)savedGoogleID;
 

@@ -18,7 +18,7 @@
 #import "NSString+HTML.h"
 #import "Element.h"
 #import "DocumentRoot.h"
-
+#import "StandViewController.h"
 
 #define SORT_DATE @"sortDateAscending"
 
@@ -482,13 +482,16 @@
 		
 		UIStoryboard *ipadStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:nil];
 		
+		AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+		StandViewController *modalParentViewController = [appDelegate standViewController];
+		
 		NewFeedsViewController *feedsViewController = [ipadStoryboard instantiateViewControllerWithIdentifier:@"NewFeedsViewController"];
 		feedsViewController.feeds = [self.fetchedResultsController fetchedObjects];
 		feedsViewController.pageIndex = [feedsViewController.feeds indexOfObject:feed];
-		feedsViewController.delegate = self;
+		//feedsViewController.delegate = self;
 		feedsViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 		
-		[self presentViewController:feedsViewController animated:YES completion:nil];
+		[modalParentViewController presentViewController:feedsViewController animated:YES completion:nil];
 	} else {
 		[self performSegueWithIdentifier:@"NewPushForIPhone" sender:feed];
 	}

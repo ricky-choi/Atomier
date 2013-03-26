@@ -826,7 +826,7 @@
                         <outlet property="statusLabel" destination="pM3-jS-g6L" id="6F8-Fk-o6C"/>
                         <outlet property="updateLabel" destination="xUl-EK-ywL" id="Dyo-ON-il4"/>
                         <segue destination="lAr-1w-Y6a" kind="modal" identifier="ShowMainView" modalTransitionStyle="crossDissolve" id="zaz-10-ZcG"/>
-                        <segue destination="WQ7-dI-7zI" kind="modal" identifier="ShowAllUnreads" modalTransitionStyle="flipHorizontal" id="QIQ-ga-OXh"/>
+                        <segue destination="WQ7-dI-7zI" kind="modal" identifier="ShowAllUnreads" modalTransitionStyle="crossDissolve" id="QIQ-ga-OXh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="926-v3-Kk4" userLabel="First Responder" sceneMemberID="firstResponder"/>
